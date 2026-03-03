@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->foreignId('jabatan_id')->nullable()->constrained('jabatan');
             $table->foreignId('atasan_id')->nullable()->constrained('users');
             $table->boolean('is_active')->default(true);
+            $table->boolean('must_change_password')->default(true);
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
