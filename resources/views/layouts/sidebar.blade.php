@@ -55,8 +55,8 @@
         </div>
     </div>
 
-    <div class="sb-item has-sub">
-        <div class="sb-link">
+    <div class="sb-item has-sub {{ request()->routeIs('finance.*') ? 'open' : '' }}">
+        <div class="sb-link {{ request()->routeIs('finance.*') ? 'active' : '' }}">
             <svg class="sb-icon" viewBox="0 0 24 24">
                 <line x1="12" y1="1" x2="12" y2="23" />
                 <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
@@ -68,6 +68,8 @@
         </div>
         <div class="sub-nav">
             <a href="{{ route('finance.index') }}" class="sub-link">Overview Finance</a>
+            <a href="{{ route('finance.customers.index') }}"
+                class="sub-link {{ request()->routeIs('finance.customers.*') ? 'text-white' : '' }}">Customer List</a>
         </div>
     </div>
 

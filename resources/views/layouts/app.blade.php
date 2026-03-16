@@ -769,6 +769,8 @@
             localStorage.setItem('sb_collapsed', sidebar.classList.contains('collapsed'));
         });
     </script>
+
+    @stack('scripts')
 </body>
 
 </html>

@@ -23,16 +23,45 @@ Route::middleware(['auth'])->group(function () {
 
         // Placeholder menus
         Route::get('/inventory', function () {
+<<<<<<< HEAD
             return "Inventory Module (Coming Soon)"; })->name('inventory.index');
         Route::get('/inventory/fixed-assets', [FixedAssetController::class, 'index'])->name('inventory.fixed_assets');
 Route::get('/a/{code}', [FixedAssetController::class, 'showPublic'])->name('asset.scan');
         Route::get('/finance', function () {
             return "Finance Module (Coming Soon)"; })->name('finance.index');
+=======
+            return "Inventory Module (Coming Soon)";
+        })->name('inventory.index');
+        // Finance Module
+        Route::prefix('finance')->name('finance.')->group(function () {
+            Route::get('/', function () {
+                return "Finance Module (Coming Soon)"; })->name('index');
+
+            // Customers
+            Route::prefix('customers')->name('customers.')->group(function () {
+                Route::get('/', [\App\Http\Controllers\Finance\CustomerController::class, 'index'])->name('index');
+                Route::get('/detail', [\App\Http\Controllers\Finance\CustomerController::class, 'detail'])->name('detail.create');
+                Route::get('/{customer}/detail', [\App\Http\Controllers\Finance\CustomerController::class, 'show'])->name('detail.show');
+                Route::post('/store', [\App\Http\Controllers\Finance\CustomerController::class, 'store'])->name('store');
+                Route::put('/{customer}/update', [\App\Http\Controllers\Finance\CustomerController::class, 'update'])->name('update');
+
+                // Placeholder routes for other tabs
+                Route::get('/{customer}/list', [\App\Http\Controllers\Finance\CustomerController::class, 'list'])->name('list');
+                Route::get('/{customer}/statistic', [\App\Http\Controllers\Finance\CustomerController::class, 'statistic'])->name('statistic');
+                Route::get('/{customer}/activity', [\App\Http\Controllers\Finance\CustomerController::class, 'activity'])->name('activity');
+                Route::get('/{customer}/backdate', [\App\Http\Controllers\Finance\CustomerController::class, 'backdate'])->name('backdate');
+                Route::get('/{customer}/summary', [\App\Http\Controllers\Finance\CustomerController::class, 'summary'])->name('summary');
+            });
+        });
+>>>>>>> 277573dde1a0edba97b3c6a0c40466dfb486e112
         Route::get('/accounting', function () {
-            return "Accounting Module (Coming Soon)"; })->name('accounting.index');
+            return "Accounting Module (Coming Soon)";
+        })->name('accounting.index');
         Route::get('/administrator', function () {
-            return "Administrator Module (Coming Soon)"; })->name('administrator.index');
+            return "Administrator Module (Coming Soon)";
+        })->name('administrator.index');
         Route::get('/help', function () {
-            return "Help Module (Coming Soon)"; })->name('help.index');
+            return "Help Module (Coming Soon)";
+        })->name('help.index');
     });
 });
