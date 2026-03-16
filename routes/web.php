@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FixedAssetController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -23,6 +24,8 @@ Route::middleware(['auth'])->group(function () {
         // Placeholder menus
         Route::get('/inventory', function () {
             return "Inventory Module (Coming Soon)"; })->name('inventory.index');
+        Route::get('/inventory/fixed-assets', [FixedAssetController::class, 'index'])->name('inventory.fixed_assets');
+Route::get('/a/{code}', [FixedAssetController::class, 'showPublic'])->name('asset.scan');
         Route::get('/finance', function () {
             return "Finance Module (Coming Soon)"; })->name('finance.index');
         Route::get('/accounting', function () {

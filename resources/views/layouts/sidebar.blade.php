@@ -28,8 +28,8 @@
         </a>
     </div>
 
-    <div class="sb-item has-sub">
-        <div class="sb-link">
+    <div class="sb-item has-sub {{ request()->routeIs('inventory.*') ? 'open' : '' }}">
+        <div class="sb-link {{ request()->routeIs('inventory.*') ? 'active' : '' }}">
             <svg class="sb-icon" viewBox="0 0 24 24">
                 <path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z" />
                 <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
@@ -41,7 +41,7 @@
         </div>
         <div class="sub-nav">
             <a href="{{ route('inventory.index') }}" class="sub-link">Overview Inventory</a>
-            <a href="#" class="sub-link">Fixed Assets</a>
+            <a href="{{ route('inventory.fixed_assets') }}" class="sub-link {{ request()->routeIs('inventory.fixed_assets') ? 'active' : '' }}">Fixed Assets</a>
             <a href="#" class="sub-link">Product Services</a>
             <a href="#" class="sub-link">Human Resources</a>
             <a href="#" class="sub-link">Order Request</a>
