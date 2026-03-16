@@ -23,15 +23,11 @@ Route::middleware(['auth'])->group(function () {
 
         // Placeholder menus
         Route::get('/inventory', function () {
-<<<<<<< HEAD
-            return "Inventory Module (Coming Soon)"; })->name('inventory.index');
-        Route::get('/inventory/fixed-assets', [FixedAssetController::class, 'index'])->name('inventory.fixed_assets');
-Route::get('/a/{code}', [FixedAssetController::class, 'showPublic'])->name('asset.scan');
-        Route::get('/finance', function () {
-            return "Finance Module (Coming Soon)"; })->name('finance.index');
-=======
             return "Inventory Module (Coming Soon)";
         })->name('inventory.index');
+        Route::get('/inventory/fixed-assets', [FixedAssetController::class, 'index'])->name('inventory.fixed_assets');
+        Route::get('/a/{code}', [FixedAssetController::class, 'showPublic'])->name('asset.scan');
+
         // Finance Module
         Route::prefix('finance')->name('finance.')->group(function () {
             Route::get('/', function () {
@@ -53,7 +49,6 @@ Route::get('/a/{code}', [FixedAssetController::class, 'showPublic'])->name('asse
                 Route::get('/{customer}/summary', [\App\Http\Controllers\Finance\CustomerController::class, 'summary'])->name('summary');
             });
         });
->>>>>>> 277573dde1a0edba97b3c6a0c40466dfb486e112
         Route::get('/accounting', function () {
             return "Accounting Module (Coming Soon)";
         })->name('accounting.index');
