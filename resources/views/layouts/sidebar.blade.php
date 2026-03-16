@@ -41,6 +41,17 @@
         </div>
         <div class="sub-nav">
             <a href="{{ route('inventory.index') }}" class="sub-link">Overview Inventory</a>
+            <a href="#" class="sub-link">Fixed Assets</a>
+            <a href="#" class="sub-link">Product Services</a>
+            <a href="#" class="sub-link">Human Resources</a>
+            <a href="#" class="sub-link">Order Request</a>
+            <a href="#" class="sub-link">Advance Request</a>
+            <a href="#" class="sub-link">Goods Request</a>
+            <a href="#" class="sub-link">HR. E-Banking</a>
+            <a href="#" class="sub-link">Cost Estimation</a>
+            <a href="#" class="sub-link">Quotation Letters</a>
+            <a href="#" class="sub-link">Resource Services</a>
+            <a href="#" class="sub-link">LSI Status</a>
         </div>
     </div>
 
