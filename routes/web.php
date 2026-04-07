@@ -5,6 +5,15 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FixedAssetController;
+use App\Http\Controllers\ProductAssetController;
+use App\Http\Controllers\HumanResourceController;
+use App\Http\Controllers\AdvanceRequestController;
+use App\Http\Controllers\GoodsRequestController;
+use App\Http\Controllers\HrEbankingController;
+use App\Http\Controllers\CostEstimationController;
+use App\Http\Controllers\QuotationController;
+use App\Http\Controllers\ResourceServiceController;
+use App\Http\Controllers\LsiStatusController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -13,6 +22,7 @@ Route::get('/', function () {
 Route::get('/login', [AuthController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'login'])->middleware('guest');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/password/change', [PasswordController::class, 'showChangeForm'])->name('password.change');
@@ -26,6 +36,18 @@ Route::middleware(['auth'])->group(function () {
             return "Inventory Module (Coming Soon)";
         })->name('inventory.index');
         Route::get('/inventory/fixed-assets', [FixedAssetController::class, 'index'])->name('inventory.fixed_assets');
+        Route::get('/inventory/product-assets', [ProductAssetController::class, 'index'])->name('inventory.product_assets');
+        Route::get('/inventory/product-assets/{id}/details', [ProductAssetController::class, 'getDetails'])->name('inventory.product_assets.details');
+        Route::get('/inventory/human-resources', [HumanResourceController::class, 'index'])->name('inventory.human_resources');
+        Route::get('/inventory/human-resources/{id}/details', [HumanResourceController::class, 'getDetails'])->name('inventory.human_resources.details');
+        Route::get('/inventory/order-requests', [\App\Http\Controllers\OrderRequestController::class, 'index'])->name('inventory.order_requests');
+        Route::get('/inventory/advance-requests', [AdvanceRequestController::class, 'index'])->name('inventory.advance_requests');
+        Route::get('/inventory/goods-requests', [GoodsRequestController::class, 'index'])->name('inventory.goods_requests');
+        Route::get('/inventory/hr-ebanking', [HrEbankingController::class, 'index'])->name('inventory.hr_ebanking');
+        Route::get('/inventory/cost-estimations', [CostEstimationController::class, 'index'])->name('inventory.cost_estimations');
+        Route::get('/inventory/quotations', [QuotationController::class, 'index'])->name('inventory.quotations');
+        Route::get('/inventory/resource-services', [ResourceServiceController::class, 'index'])->name('inventory.resource_services');
+        Route::get('/inventory/lsi-status', [LsiStatusController::class, 'index'])->name('inventory.lsi_status');
         Route::get('/a/{code}', [FixedAssetController::class, 'showPublic'])->name('asset.scan');
 
         // Finance Module

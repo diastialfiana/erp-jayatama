@@ -42,16 +42,16 @@
         <div class="sub-nav">
             <a href="{{ route('inventory.index') }}" class="sub-link">Overview Inventory</a>
             <a href="{{ route('inventory.fixed_assets') }}" class="sub-link {{ request()->routeIs('inventory.fixed_assets') ? 'active' : '' }}">Fixed Assets</a>
-            <a href="#" class="sub-link">Product Services</a>
-            <a href="#" class="sub-link">Human Resources</a>
-            <a href="#" class="sub-link">Order Request</a>
-            <a href="#" class="sub-link">Advance Request</a>
-            <a href="#" class="sub-link">Goods Request</a>
-            <a href="#" class="sub-link">HR. E-Banking</a>
-            <a href="#" class="sub-link">Cost Estimation</a>
-            <a href="#" class="sub-link">Quotation Letters</a>
-            <a href="#" class="sub-link">Resource Services</a>
-            <a href="#" class="sub-link">LSI Status</a>
+            <a href="{{ route('inventory.product_assets') }}" class="sub-link {{ request()->routeIs('inventory.product_assets') ? 'active' : '' }}">Product Assets</a>
+            <a href="{{ route('inventory.human_resources') }}" class="sub-link {{ request()->routeIs('inventory.human_resources') ? 'active' : '' }}">Human Resources</a>
+            <a href="{{ route('inventory.order_requests') }}" class="sub-link {{ request()->routeIs('inventory.order_requests') ? 'active' : '' }}">Order Request</a>
+            <a href="{{ route('inventory.advance_requests') }}" class="sub-link {{ request()->routeIs('inventory.advance_requests') ? 'active' : '' }}">Advance Request</a>
+            <a href="{{ route('inventory.goods_requests') }}" class="sub-link {{ request()->routeIs('inventory.goods_requests') ? 'active' : '' }}">Goods Request</a>
+            <a href="{{ route('inventory.hr_ebanking') }}" class="sub-link {{ request()->routeIs('inventory.hr_ebanking') ? 'active' : '' }}">HR. E-Banking</a>
+            <a href="{{ route('inventory.cost_estimations') }}" class="sub-link {{ request()->routeIs('inventory.cost_estimations') ? 'active' : '' }}">Cost Estimation</a>
+            <a href="{{ route('inventory.quotations') }}" class="sub-link {{ request()->routeIs('inventory.quotations') ? 'active' : '' }}">Quotations</a>
+            <a href="{{ route('inventory.resource_services') }}" class="sub-link {{ request()->routeIs('inventory.resource_services') ? 'active' : '' }}">Resource Services</a>
+            <a href="{{ route('inventory.lsi_status') }}" class="sub-link {{ request()->routeIs('inventory.lsi_status') ? 'active' : '' }}">LSI Status</a>
         </div>
     </div>
 
