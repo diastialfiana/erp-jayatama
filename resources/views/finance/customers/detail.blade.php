@@ -606,7 +606,7 @@
                                 @else NEW @endif
                             </span>
                             <div class="nav-divider"></div>
-                            <a href="{{ $navigation['first'] ? route('finance.customers.detail.show', $navigation['first']) : '#' }}"
+                            <a href="{{ $navigation['first'] ? route('finance.customers.detail', ['id' => $navigation['first']]) : '#' }}"
                                 class="nav-btn {{ (!$navigation['first'] || ($customer->exists && $navigation['first'] == $customer->id)) ? 'dim' : '' }}"
                                 title="First">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -615,21 +615,21 @@
                                     <path d="m18 17-5-5 5-5" />
                                 </svg>
                             </a>
-                            <a href="{{ $navigation['prev'] ? route('finance.customers.detail.show', $navigation['prev']) : '#' }}"
+                            <a href="{{ $navigation['prev'] ? route('finance.customers.detail', ['id' => $navigation['prev']]) : '#' }}"
                                 class="nav-btn {{ !$navigation['prev'] ? 'dim' : '' }}" title="Previous">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2.5" stroke-linecap="round">
                                     <path d="m15 18-6-6 6-6" />
                                 </svg>
                             </a>
-                            <a href="{{ $navigation['next'] ? route('finance.customers.detail.show', $navigation['next']) : '#' }}"
+                            <a href="{{ $navigation['next'] ? route('finance.customers.detail', ['id' => $navigation['next']]) : '#' }}"
                                 class="nav-btn {{ !$navigation['next'] ? 'dim' : '' }}" title="Next">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2.5" stroke-linecap="round">
                                     <path d="m9 18 6-6-6-6" />
                                 </svg>
                             </a>
-                            <a href="{{ $navigation['last'] ? route('finance.customers.detail.show', $navigation['last']) : '#' }}"
+                            <a href="{{ $navigation['last'] ? route('finance.customers.detail', ['id' => $navigation['last']]) : '#' }}"
                                 class="nav-btn {{ (!$navigation['last'] || ($customer->exists && $navigation['last'] == $customer->id)) ? 'dim' : '' }}"
                                 title="Last">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -640,7 +640,7 @@
                             </a>
                         </div>
                     @endif
-                    <a href="{{ route('finance.customers.detail.create') }}" class="btn-outline btn-new">
+                    <a href="{{ route('finance.customers.detail') }}" class="btn-outline btn-new">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
                             stroke-linecap="round">
                             <path d="M5 12h14" />
@@ -678,32 +678,50 @@
             @endif
 
             {{-- ── TAB BAR ── --}}
-            <div class="g-card"
-                style="border-radius:20px 20px 0 0; border-bottom:0; box-shadow:none; border-color:#e2e8f0;">
-                <div class="tab-bar">
-                    <a href="{{ $customer->exists ? route('finance.customers.detail.show', $customer->id) : route('finance.customers.detail.create') }}"
-                        class="tab-item active">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round">
-                            <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
-                            <path d="M14 2v4a2 2 0 0 0 2 2h4" />
-                        </svg>
-                        Detail View
+            <div
+                style="display:flex; gap:24px; border-bottom:1px solid #e2e8f0; padding-bottom:8px; margin-bottom:20px; overflow-x:auto;">
+                <a href="{{ $customer->exists ? route('finance.customers.detail', ['id' => $customer->id]) : route('finance.customers.detail') }}"
+                    style="color:#2563EB; font-weight:600; border-bottom:2px solid #2563EB; text-decoration:none; padding-bottom:8px; margin-bottom:-9px; white-space:nowrap;">
+                    Detail View
+                </a>
+                @if($customer->exists)
+                    <a href="{{ route('finance.customers.index') }}"
+                        style="color:#64748b; text-decoration:none; padding-bottom:8px; margin-bottom:-9px; white-space:nowrap; transition:all .2s;"
+                        onmouseover="this.style.color='#2563EB';" onmouseout="this.style.color='#64748b';">
+                        List All
                     </a>
-                    @if($customer->exists)
-                        <a href="{{ route('finance.customers.list', $customer->id) }}" class="tab-item">List All</a>
-                        <a href="{{ route('finance.customers.statistic', $customer->id) }}" class="tab-item">Statistic</a>
-                        <a href="{{ route('finance.customers.activity', $customer->id) }}" class="tab-item">Activity</a>
-                        <a href="{{ route('finance.customers.backdate', $customer->id) }}" class="tab-item">Backdate</a>
-                        <a href="{{ route('finance.customers.summary', $customer->id) }}" class="tab-item">Summary</a>
-                    @else
-                        <span class="tab-item disabled">List All</span>
-                        <span class="tab-item disabled">Statistic</span>
-                        <span class="tab-item disabled">Activity</span>
-                        <span class="tab-item disabled">Backdate</span>
-                        <span class="tab-item disabled">Summary</span>
-                    @endif
-                </div>
+                    <a href="{{ route('finance.customers.statistic') }}"
+                        style="color:#64748b; text-decoration:none; padding-bottom:8px; margin-bottom:-9px; white-space:nowrap; transition:all .2s;"
+                        onmouseover="this.style.color='#2563EB';" onmouseout="this.style.color='#64748b';">
+                        Statistic
+                    </a>
+                    <a href="{{ route('finance.customers.activity') }}"
+                        style="color:#64748b; text-decoration:none; padding-bottom:8px; margin-bottom:-9px; white-space:nowrap; transition:all .2s;"
+                        onmouseover="this.style.color='#2563EB';" onmouseout="this.style.color='#64748b';">
+                        Activity
+                    </a>
+                    <a href="{{ route('finance.customers.backdate') }}"
+                        style="color:#64748b; text-decoration:none; padding-bottom:8px; margin-bottom:-9px; white-space:nowrap; transition:all .2s;"
+                        onmouseover="this.style.color='#2563EB';" onmouseout="this.style.color='#64748b';">
+                        Backdate
+                    </a>
+                    <a href="{{ route('finance.customers.summary') }}"
+                        style="color:#64748b; text-decoration:none; padding-bottom:8px; margin-bottom:-9px; white-space:nowrap; transition:all .2s;"
+                        onmouseover="this.style.color='#2563EB';" onmouseout="this.style.color='#64748b';">
+                        Summary
+                    </a>
+                @else
+                    <span style="color:#94a3b8; padding-bottom:8px; margin-bottom:-9px; white-space:nowrap; opacity:.4;">List
+                        All</span>
+                    <span
+                        style="color:#94a3b8; padding-bottom:8px; margin-bottom:-9px; white-space:nowrap; opacity:.4;">Statistic</span>
+                    <span
+                        style="color:#94a3b8; padding-bottom:8px; margin-bottom:-9px; white-space:nowrap; opacity:.4;">Activity</span>
+                    <span
+                        style="color:#94a3b8; padding-bottom:8px; margin-bottom:-9px; white-space:nowrap; opacity:.4;">Backdate</span>
+                    <span
+                        style="color:#94a3b8; padding-bottom:8px; margin-bottom:-9px; white-space:nowrap; opacity:.4;">Summary</span>
+                @endif
             </div>
 
             {{-- ── MAIN FORM ── --}}
@@ -956,9 +974,11 @@
                                         <select name="receivable_account_id" class="f-select f-input" required
                                             style="border-color:#DDD6FE;">
                                             <option value="">Select receivable account…</option>
-                                            <option value="11" {{ old('receivable_account_id', $customer->receivable_account_id) == '11' ? 'selected' : '' }}>110.10.10 – Trade
+                                            <option value="11" {{ old('receivable_account_id', $customer->receivable_account_id) == '11' ? 'selected' : '' }}>110.10.10 –
+                                                Trade
                                                 Receivables (IDR)</option>
-                                            <option value="12" {{ old('receivable_account_id', $customer->receivable_account_id) == '12' ? 'selected' : '' }}>110.10.20 – Trade
+                                            <option value="12" {{ old('receivable_account_id', $customer->receivable_account_id) == '12' ? 'selected' : '' }}>110.10.20 –
+                                                Trade
                                                 Receivables (USD)</option>
                                         </select>
                                         <svg class="arr" width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -973,9 +993,11 @@
                                     <div class="select-wrap">
                                         <select name="prepaid_account_id" class="f-select f-input">
                                             <option value="">Select prepaid account…</option>
-                                            <option value="21" {{ old('prepaid_account_id', $customer->prepaid_account_id) == '21' ? 'selected' : '' }}>130.10.10 – Prepaid
+                                            <option value="21" {{ old('prepaid_account_id', $customer->prepaid_account_id) == '21' ? 'selected' : '' }}>130.10.10 –
+                                                Prepaid
                                                 Tax</option>
-                                            <option value="22" {{ old('prepaid_account_id', $customer->prepaid_account_id) == '22' ? 'selected' : '' }}>130.20.10 – Prepaid
+                                            <option value="22" {{ old('prepaid_account_id', $customer->prepaid_account_id) == '22' ? 'selected' : '' }}>130.20.10 –
+                                                Prepaid
                                                 Expenses</option>
                                         </select>
                                         <svg class="arr" width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -991,7 +1013,8 @@
                                         <div class="select-wrap">
                                             <select name="pph23_account_id" class="f-select f-input">
                                                 <option value="">Select PPh 23…</option>
-                                                <option value="31" {{ old('pph23_account_id', $customer->pph23_account_id) == '31' ? 'selected' : '' }}>210.10.10 – Accrued
+                                                <option value="31" {{ old('pph23_account_id', $customer->pph23_account_id) == '31' ? 'selected' : '' }}>210.10.10 –
+                                                    Accrued
                                                     PPh 23</option>
                                             </select>
                                             <svg class="arr" width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -1045,9 +1068,11 @@
                                         <select name="sales_return_account_id" class="f-select f-input"
                                             style="border-color:#FECACA;">
                                             <option value="">Select return account…</option>
-                                            <option value="61" {{ old('sales_return_account_id', $customer->sales_return_account_id) == '61' ? 'selected' : '' }}>420.10.10 – Sales
+                                            <option value="61" {{ old('sales_return_account_id', $customer->sales_return_account_id) == '61' ? 'selected' : '' }}>420.10.10 –
+                                                Sales
                                                 Return Domestic</option>
-                                            <option value="62" {{ old('sales_return_account_id', $customer->sales_return_account_id) == '62' ? 'selected' : '' }}>420.10.20 – Sales
+                                            <option value="62" {{ old('sales_return_account_id', $customer->sales_return_account_id) == '62' ? 'selected' : '' }}>420.10.20 –
+                                                Sales
                                                 Return Export</option>
                                         </select>
                                         <svg class="arr" width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -1119,7 +1144,8 @@
                                         <div class="fin-label">Down Payment</div>
                                         <div class="fin-value">
                                             {{ number_format($customer->down_payment, 0, ',', '.') }}<span
-                                                class="fin-currency">{{ $customer->currency ?? 'IDR' }}</span></div>
+                                                class="fin-currency">{{ $customer->currency ?? 'IDR' }}</span>
+                                        </div>
                                         <div class="fin-sub">Total advance payment received</div>
                                     </div>
 
@@ -1135,7 +1161,8 @@
                                         <div class="fin-label">DP (Converted)</div>
                                         <div class="fin-value">
                                             {{ number_format($customer->down_payment, 0, ',', '.') }}<span
-                                                class="fin-currency">IDR</span></div>
+                                                class="fin-currency">IDR</span>
+                                        </div>
                                         <div class="fin-sub">Converted to base currency</div>
                                     </div>
                                 </div>

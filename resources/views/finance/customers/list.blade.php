@@ -1,319 +1,431 @@
 @extends('layouts.app')
-@section('title', 'Customer List – Finance')
+@section('title', 'Customer List All – Finance')
 
 @push('styles')
     <style>
         :root {
-            --jes-primary: #1E3A8A;
-            --jes-blue: #2563EB;
-            --jes-accent: #4F46E5;
+            --pri: #1E3A8A;
+            --blue: #2563EB;
+            --acc: #4F46E5;
             --jes-bg: #F8FAFC;
         }
 
-        .page-bg {
-            background: var(--jes-bg);
-        }
-
-        /* ── Gradient Heading ── */
-        .grad-text {
-            background: linear-gradient(135deg, var(--jes-primary) 0%, var(--jes-accent) 100%);
+        /* ── Gradient text ── */
+        .g-text {
+            background: linear-gradient(135deg, var(--pri) 0%, var(--acc) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        /* ── Glass Card ── */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.92);
+        /* ── Glass card ── */
+        .g-card {
+            background: rgba(255, 255, 255, 0.94);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(226, 232, 240, 0.7);
+            border: 1px solid rgba(226, 232, 240, 0.75);
             border-radius: 20px;
-            box-shadow: 0 4px 24px rgba(30, 58, 138, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
-            transition: box-shadow 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 24px rgba(30, 58, 138, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+            transition: box-shadow .3s;
         }
 
-        .glass-card:hover {
-            box-shadow: 0 12px 40px rgba(30, 58, 138, 0.1);
+        /* ── Tab bar ── */
+        .tab-bar {
+            display: flex;
+            padding: 6px 6px 0;
+            overflow-x: auto;
+            gap: 2px;
         }
 
-        /* ── Action Buttons ── */
-        .btn-primary {
-            background: linear-gradient(135deg, var(--jes-blue) 0%, var(--jes-accent) 100%);
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 12px;
+        .tab-bar::-webkit-scrollbar {
+            height: 3px;
+        }
+
+        .tab-bar::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        .tab-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 18px;
+            border-radius: 12px 12px 0 0;
             font-size: 13px;
             font-weight: 600;
+            color: #94a3b8;
+            text-decoration: none;
+            white-space: nowrap;
+            border-bottom: 2px solid transparent;
+            transition: all .2s;
+        }
+
+        .tab-item:hover {
+            color: #475569;
+            background: #F8FAFC;
+            text-decoration: none;
+        }
+
+        .tab-item.active {
+            color: var(--blue);
+            border-bottom-color: var(--blue);
+            background: #fff;
+        }
+
+        .tab-item.disabled {
+            pointer-events: none;
+            opacity: .4;
+        }
+
+        /* ── Action buttons ── */
+        .btn-p {
             display: inline-flex;
             align-items: center;
             gap: 7px;
-            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
-            transition: all 0.25s ease;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--blue), var(--acc));
+            color: #fff;
+            border: none;
             cursor: pointer;
             text-decoration: none;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, .3);
+            transition: all .22s;
             white-space: nowrap;
         }
 
-        .btn-primary:hover {
+        .btn-p:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.45);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, .4);
             color: #fff;
         }
 
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-
-        .btn-secondary {
-            background: #fff;
-            color: #374151;
-            border: 1px solid #e2e8f0;
+        .btn-s {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
             padding: 9px 16px;
             border-radius: 12px;
             font-size: 13px;
             font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-            transition: all 0.25s ease;
+            background: #fff;
+            color: #374151;
+            border: 1.5px solid #e2e8f0;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, .06);
             cursor: pointer;
             text-decoration: none;
             white-space: nowrap;
+            transition: all .22s;
         }
 
-        .btn-secondary:hover {
-            background: #f1f5f9;
+        .btn-s:hover {
+            background: #F8FAFC;
             transform: translateY(-1px);
             color: #374151;
         }
 
-        /* ── Search Box ── */
-        .search-box {
+        /* ── Search / Filter bar ── */
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-wrap {
             position: relative;
             flex: 1;
+            min-width: 220px;
             max-width: 340px;
         }
 
-        .search-box svg {
+        .search-wrap svg {
             position: absolute;
-            left: 14px;
+            left: 13px;
             top: 50%;
             transform: translateY(-50%);
             color: #94a3b8;
             pointer-events: none;
         }
 
-        .search-box input {
+        .search-wrap input {
             width: 100%;
             padding: 10px 14px 10px 40px;
-            border: 1px solid #e2e8f0;
+            border: 1.5px solid #e2e8f0;
             border-radius: 12px;
             font-size: 13px;
             background: #fff;
-            color: #1e293b;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+            color: #0f172a;
             outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, .05);
+            transition: border-color .2s, box-shadow .2s;
         }
 
-        .search-box input:focus {
-            border-color: var(--jes-blue);
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+        .search-wrap input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, .13);
         }
 
-        /* ── Data Table ── */
-        .data-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            font-size: 13.5px;
+        .sel-wrap {
+            position: relative;
         }
 
-        .data-table thead th {
-            background: #F1F5FB;
-            color: #64748b;
+        .sel-wrap select {
+            appearance: none;
+            -webkit-appearance: none;
+            padding: 10px 34px 10px 14px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 13px;
+            background: #fff;
+            color: #374151;
+            font-weight: 500;
+            cursor: pointer;
+            outline: none;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, .05);
+            transition: border-color .2s;
+        }
+
+        .sel-wrap select:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, .13);
+        }
+
+        .sel-wrap svg {
+            position: absolute;
+            right: 11px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #94a3b8;
+        }
+
+        /* ── Stats chips ── */
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 12px;
             font-weight: 700;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            padding: 13px 18px;
-            border-bottom: 1px solid #e2e8f0;
-            position: sticky;
-            top: 0;
-            z-index: 2;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, .04);
             white-space: nowrap;
         }
 
-        .data-table thead th.sortable {
+        .chip .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        /* ── Wide Table ── */
+        .tbl-wrap {
+            overflow-x: auto;
+        }
+
+        .tbl-wrap::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .tbl-wrap::-webkit-scrollbar-track {
+            background: #F8FAFC;
+        }
+
+        .tbl-wrap::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 10px;
+        }
+
+        .tbl-wrap::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+
+        table.erp-tbl {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 12.5px;
+            min-width: 1800px;
+        }
+
+        table.erp-tbl thead th {
+            background: #F0F4FF;
+            color: #475569;
+            font-weight: 700;
+            font-size: 10.5px;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            padding: 12px 14px;
+            border-bottom: 1px solid #E0E7FF;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            white-space: nowrap;
             cursor: pointer;
             user-select: none;
         }
 
-        .data-table thead th.sortable:hover {
-            color: var(--jes-blue);
-            background: #EEF2FF;
+        table.erp-tbl thead th:hover {
+            background: #E8EDFF;
+            color: var(--blue);
         }
 
-        .data-table tbody tr {
-            transition: background 0.18s, transform 0.18s;
-            cursor: pointer;
+        table.erp-tbl thead th .sort-arr {
+            display: inline-block;
+            margin-left: 4px;
+            opacity: .5;
         }
 
-        .data-table tbody tr:nth-child(even) {
+        table.erp-tbl thead th.sorted .sort-arr {
+            opacity: 1;
+            color: var(--blue);
+        }
+
+        table.erp-tbl tbody tr {
+            transition: background .18s, transform .18s;
+        }
+
+        table.erp-tbl tbody tr:nth-child(even) {
             background: #FAFBFF;
         }
 
-        .data-table tbody tr:hover {
-            background: linear-gradient(90deg, #EEF2FF 0%, #F0F4FF 100%);
-            transform: scale(1.003);
-            box-shadow: 0 2px 12px rgba(37, 99, 235, 0.08);
+        table.erp-tbl tbody tr:hover {
+            background: linear-gradient(90deg, #EEF2FF, #F0F4FF);
+            transform: scale(1.002);
+            box-shadow: inset 4px 0 0 var(--blue);
         }
 
-        .data-table tbody td {
-            padding: 13px 18px;
-            border-bottom: 1px solid #f1f5f9;
+        table.erp-tbl tbody td {
+            padding: 11px 14px;
+            border-bottom: 1px solid #F1F5F9;
             color: #1e293b;
             vertical-align: middle;
+            white-space: nowrap;
         }
 
-        /* ── Status Badge ── */
+        table.erp-tbl tbody td.td-num {
+            font-family: monospace;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        table.erp-tbl tbody td.td-code {
+            font-family: monospace;
+            font-weight: 700;
+            color: var(--blue);
+        }
+
+        table.erp-tbl tbody td.td-name {
+            font-weight: 600;
+            color: #0f172a;
+            max-width: 220px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        table.erp-tbl tbody td.td-muted {
+            color: #64748b;
+            font-size: 12px;
+            max-width: 160px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        table.erp-tbl tbody td.td-bal-pos {
+            color: #065F46;
+            font-family: monospace;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        table.erp-tbl tbody td.td-bal-neg {
+            color: #991B1B;
+            font-family: monospace;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        /* ── Badge ── */
         .badge {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            padding: 4px 10px;
+            gap: 4px;
+            padding: 3px 9px;
             border-radius: 20px;
-            font-size: 11px;
+            font-size: 10.5px;
             font-weight: 700;
         }
 
-        .badge-active {
-            background: #ECFDF5;
-            color: #065F46;
-        }
-
-        .badge-inactive {
-            background: #FEF2F2;
-            color: #991B1B;
-        }
-
-        .badge-currency {
+        .badge-curr {
             background: #EEF2FF;
             color: #4338CA;
         }
 
-        /* ── Action Dropdown ── */
-        .action-cell {
-            position: relative;
-            text-align: right;
+        .badge-region {
+            background: #F0FDF4;
+            color: #065F46;
         }
 
-        .action-dropdown {
-            position: absolute;
-            right: 16px;
-            top: calc(100% + 4px);
-            background: #fff;
-            border: 1px solid #e2e8f0;
-            border-radius: 14px;
-            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
-            min-width: 150px;
-            z-index: 50;
-            overflow: hidden;
-            display: none;
-            animation: popIn 0.15s ease forwards;
+        .badge-audit {
+            background: #FFF7ED;
+            color: #92400E;
+            font-size: 10px;
         }
 
-        @keyframes popIn {
-            from {
-                opacity: 0;
-                transform: scale(0.95) translateY(-4px);
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-
-        .action-dropdown.open {
-            display: block;
-        }
-
-        .action-dropdown a,
-        .action-dropdown button {
+        /* ── Row Action ── */
+        .row-action {
             display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 16px;
-            font-size: 13px;
-            font-weight: 500;
-            color: #374151;
-            text-decoration: none;
-            background: none;
-            border: none;
-            width: 100%;
-            cursor: pointer;
-            transition: background 0.15s;
+            gap: 5px;
+            justify-content: flex-end;
         }
 
-        .action-dropdown a:hover,
-        .action-dropdown button:hover {
-            background: #F8FAFC;
-        }
-
-        .action-dropdown .action-delete {
-            color: #EF4444;
-        }
-
-        .action-dropdown .action-delete:hover {
-            background: #FEF2F2;
-        }
-
-        .action-separator {
-            height: 1px;
-            background: #f1f5f9;
-            margin: 4px 0;
-        }
-
-        .action-btn {
+        .icon-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 7px 10px;
-            border-radius: 9px;
-            background: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
             border: 1px solid #e2e8f0;
+            background: #fff;
             color: #64748b;
             cursor: pointer;
-            gap: 4px;
-            font-size: 12px;
-            font-weight: 600;
-            transition: all 0.2s;
+            transition: all .18s;
+            text-decoration: none;
         }
 
-        .action-btn:hover {
-            background: #F1F5FB;
-            color: #1e293b;
-            border-color: #cbd5e1;
+        .icon-btn:hover {
+            background: #EEF2FF;
+            color: var(--blue);
+            border-color: var(--blue);
             transform: translateY(-1px);
         }
 
+        .icon-btn.danger:hover {
+            background: #FEF2F2;
+            color: #EF4444;
+            border-color: #FECACA;
+        }
+
         /* ── Pagination ── */
-        .pagination {
+        .pg-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 16px 20px;
-            border-top: 1px solid #f1f5f9;
-            gap: 12px;
+            padding: 14px 20px;
+            border-top: 1px solid #F1F5F9;
             flex-wrap: wrap;
+            gap: 10px;
         }
 
         .pg-info {
-            font-size: 12px;
+            font-size: 12.5px;
             color: #94a3b8;
             font-weight: 500;
         }
@@ -324,33 +436,67 @@
         }
 
         .pg-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            border: 1.5px solid #e2e8f0;
             background: #fff;
             color: #374151;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 700;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.18s;
+            transition: all .18s;
             text-decoration: none;
         }
 
         .pg-btn:hover {
             background: #EEF2FF;
-            border-color: var(--jes-blue);
-            color: var(--jes-blue);
+            border-color: var(--blue);
+            color: var(--blue);
         }
 
         .pg-btn.active {
-            background: linear-gradient(135deg, var(--jes-blue), var(--jes-accent));
+            background: linear-gradient(135deg, var(--blue), var(--acc));
             color: #fff;
             border-color: transparent;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, .3);
+        }
+
+        .pg-btn:disabled {
+            opacity: .4;
+            cursor: not-allowed;
+        }
+
+        /* ── Frozen first 2 cols ── */
+        table.erp-tbl th:nth-child(1),
+        table.erp-tbl td:nth-child(1) {
+            position: sticky;
+            left: 0;
+            z-index: 3;
+            background: inherit;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        table.erp-tbl th:nth-child(2),
+        table.erp-tbl td:nth-child(2) {
+            position: sticky;
+            left: 100px;
+            z-index: 3;
+            background: inherit;
+            border-right: 1px solid #E0E7FF;
+        }
+
+        table.erp-tbl thead th:nth-child(1),
+        table.erp-tbl thead th:nth-child(2) {
+            z-index: 6;
+        }
+
+        /* ── Column group separator ── */
+        .col-sep {
+            border-left: 2px solid #E0E7FF !important;
         }
 
         /* ── Empty State ── */
@@ -363,120 +509,70 @@
         .empty-state svg {
             margin: 0 auto 16px;
             display: block;
-            opacity: 0.4;
+            opacity: .35;
         }
 
         .empty-state h3 {
             font-size: 18px;
             font-weight: 700;
             color: #64748b;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .empty-state p {
             font-size: 13.5px;
         }
-
-        /* ── Stats Strip ── */
-        .stat-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: #fff;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 8px 16px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #374151;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-        }
-
-        .stat-chip .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
     </style>
 @endpush
 
 @section('content')
-    <div style="background:var(--jes-bg); min-height:calc(100vh - 62px); padding: 28px 24px;">
-        <div style="max-width:1280px; margin:0 auto;">
+    <div style="background:var(--jes-bg); min-height:calc(100vh - 62px); padding:28px 24px;">
+        <div style="max-width:1400px; margin:0 auto;">
 
             {{-- ── BREADCRUMB ── --}}
-            <div style="display:flex; align-items:center; gap:6px; font-size:12px; color:#94a3b8; margin-bottom:20px;">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                    <polyline points="9 22 9 12 15 12 15 22" />
-                </svg>
-                <span>Finance</span>
+            <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#94a3b8;margin-bottom:18px;">
+                <a href="{{ route('finance.customers.index') }}"
+                    style="color:#94a3b8;text-decoration:none;display:flex;align-items:center;gap:5px;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                        <polyline points="9 22 9 12 15 12 15 22" />
+                    </svg>
+                    Finance
+                </a>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
                     stroke-linecap="round">
                     <path d="m9 18 6-6-6-6" />
                 </svg>
-                <span style="color:#2563EB; font-weight:600;">Customer List</span>
+                <a href="{{ route('finance.customers.index') }}" style="color:#94a3b8;text-decoration:none;">Customer List</a>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round">
+                    <path d="m9 18 6-6-6-6" />
+                </svg>
+                <span style="color:var(--blue);font-weight:600;">List All</span>
             </div>
 
             {{-- ── PAGE HEADER ── --}}
             <div
-                style="display:flex; flex-wrap:wrap; gap:16px; align-items:flex-end; justify-content:space-between; margin-bottom:24px;">
+                style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between;margin-bottom:20px;">
                 <div>
-                    <h1 style="font-size:28px; font-weight:800; margin:0 0 4px;" class="grad-text">Customer List</h1>
-                    <p style="font-size:13.5px; color:#64748b; margin:0;">Manage all customer financial data and account
+                    <h1 style="font-size:28px;font-weight:800;margin:0 0 4px;" class="g-text">Customer List</h1>
+                    <p style="font-size:13px;color:#64748b;margin:0;">Manage all customer financial data and account
                         relationships</p>
                 </div>
-                <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                    <div class="stat-chip">
-                        <span class="dot" style="background:#3B82F6;"></span>
-                        {{ $customers->count() }} Total Records
-                    </div>
-                    <a href="{{ route('finance.customers.detail.create') }}" class="btn-primary">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                    <span class="chip"><span class="dot" style="background:#3B82F6;"></span>{{ $total }} Total
+                        Records</span>
+                    <a href="{{ route('finance.customers.detail') }}" class="btn-p">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
                             stroke-linecap="round">
                             <path d="M5 12h14" />
                             <path d="M12 5v14" />
                         </svg>
                         New Customer
                     </a>
-                </div>
-            </div>
-
-            {{-- ── ACTION BAR ── --}}
-            <div class="glass-card"
-                style="padding:16px 20px; margin-bottom:16px; display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;">
-                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; flex:1;">
-                    <div class="search-box">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round">
-                            <circle cx="11" cy="11" r="8" />
-                            <path d="m21 21-4.35-4.35" />
-                        </svg>
-                        <input type="text" id="searchInput" placeholder="Search by code, name, phone..."
-                            oninput="filterTable()">
-                    </div>
-                    <div style="position:relative;">
-                        <select id="regionFilter" onchange="filterTable()"
-                            style="appearance:none; padding:10px 36px 10px 14px; border:1px solid #e2e8f0; border-radius:12px; font-size:13px; background:#fff; color:#374151; font-weight:500; cursor:pointer; outline:none; box-shadow:0 1px 4px rgba(0,0,0,0.05);">
-                            <option value="">All Regions</option>
-                            <option value="Jawa">Jawa</option>
-                            <option value="Sumatera">Sumatera</option>
-                            <option value="Kalimantan">Kalimantan</option>
-                            <option value="Sulawesi">Sulawesi</option>
-                            <option value="Bali / Nusa Tenggara">Bali / NTT</option>
-                            <option value="Maluku / Papua">Maluku / Papua</option>
-                        </select>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"
-                            stroke-linecap="round"
-                            style="position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none;">
-                            <polyline points="6 9 12 15 18 9" />
-                        </svg>
-                    </div>
-                </div>
-                <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                    <button class="btn-secondary" onclick="exportCSV()" title="Export Data">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    <button class="btn-s" onclick="exportCSV()" title="Export to CSV">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                             stroke-linecap="round">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                             <polyline points="7 10 12 15 17 10" />
@@ -487,143 +583,210 @@
                 </div>
             </div>
 
-            {{-- ── DATA TABLE CARD ── --}}
-            <div class="glass-card" style="overflow:hidden;">
-                <div style="overflow-x:auto;">
-                    <table class="data-table" id="customerTable">
+            {{-- ── TAB BAR ── --}}
+            <div style="display:flex; gap:24px; border-bottom:1px solid #e2e8f0; padding-bottom:8px; margin-bottom:20px; overflow-x:auto;">
+                <a href="{{ route('finance.customers.detail') }}" style="color:#64748b; text-decoration:none; padding-bottom:8px; margin-bottom:-9px; white-space:nowrap; transition:all .2s;" onmouseover="this.style.color='#2563EB';" onmouseout="this.style.color='#64748b';">
+                    Detail View
+                </a>
+                <a href="{{ route('finance.customers.index') }}" style="color:#2563EB; font-weight:600; border-bottom:2px solid #2563EB; text-decoration:none; padding-bottom:8px; margin-bottom:-9px; white-space:nowrap;">
+                    List All
+                </a>
+                <a href="{{ route('finance.customers.statistic') }}" style="color:#64748b; text-decoration:none; padding-bottom:8px; margin-bottom:-9px; white-space:nowrap; transition:all .2s;" onmouseover="this.style.color='#2563EB';" onmouseout="this.style.color='#64748b';">
+                    Statistic
+                </a>
+                <a href="{{ route('finance.customers.activity') }}" style="color:#64748b; text-decoration:none; padding-bottom:8px; margin-bottom:-9px; white-space:nowrap; transition:all .2s;" onmouseover="this.style.color='#2563EB';" onmouseout="this.style.color='#64748b';">
+                    Activity
+                </a>
+                <a href="{{ route('finance.customers.backdate') }}" style="color:#64748b; text-decoration:none; padding-bottom:8px; margin-bottom:-9px; white-space:nowrap; transition:all .2s;" onmouseover="this.style.color='#2563EB';" onmouseout="this.style.color='#64748b';">
+                    Backdate
+                </a>
+                <a href="{{ route('finance.customers.summary') }}" style="color:#64748b; text-decoration:none; padding-bottom:8px; margin-bottom:-9px; white-space:nowrap; transition:all .2s;" onmouseover="this.style.color='#2563EB';" onmouseout="this.style.color='#64748b';">
+                    Summary
+                </a>
+            </div>
+
+            {{-- ── FILTER & SEARCH BAR ── --}}
+            <div class="g-card"
+                style="border-radius:0; border-top:0; border-bottom:0; padding:14px 20px; box-shadow:none; border-color:#e2e8f0;">
+                <div class="filter-bar">
+                    <div class="search-wrap">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round">
+                            <circle cx="11" cy="11" r="8" />
+                            <path d="m21 21-4.35-4.35" />
+                        </svg>
+                        <input type="text" id="searchInput" placeholder="Search code, name, phone, region…"
+                            oninput="applyFilters()">
+                    </div>
+
+                    <div class="sel-wrap">
+                        <select id="regionFilter" onchange="applyFilters()">
+                            <option value="">All Regions</option>
+                            @foreach(['Jawa', 'Sumatera', 'Kalimantan', 'Sulawesi', 'Bali / Nusa Tenggara', 'Maluku / Papua'] as $r)
+                                <option value="{{ $r }}">{{ $r }}</option>
+                            @endforeach
+                        </select>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                            stroke-linecap="round">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg>
+                    </div>
+
+                    <div class="sel-wrap">
+                        <select id="currencyFilter" onchange="applyFilters()">
+                            <option value="">All Currencies</option>
+                            <option value="IDR">IDR</option>
+                            <option value="USD">USD</option>
+                            <option value="SGD">SGD</option>
+                        </select>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                            stroke-linecap="round">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg>
+                    </div>
+
+                    <div class="sel-wrap">
+                        <select id="perPageSel" onchange="renderPage(1)">
+                            <option value="20">20 / page</option>
+                            <option value="50">50 / page</option>
+                            <option value="100">100 / page</option>
+                        </select>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                            stroke-linecap="round">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg>
+                    </div>
+
+                    <span id="filterResult"
+                        style="font-size:12px;color:#94a3b8;font-weight:600;margin-left:auto;white-space:nowrap;"></span>
+                </div>
+            </div>
+
+            {{-- ── TABLE CARD ── --}}
+            <div class="g-card" style="border-radius:0 0 20px 20px; border-top:1px solid #E0E7FF; overflow:hidden;">
+                <div class="tbl-wrap">
+                    <table class="erp-tbl" id="mainTable">
                         <thead>
                             <tr>
-                                <th class="sortable" onclick="sortTable(0)" style="min-width:100px;">
-                                    Code <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2.5" style="vertical-align:middle;margin-left:4px;">
-                                        <path d="m7 15 5 5 5-5" />
-                                        <path d="m7 9 5-5 5 5" />
-                                    </svg>
+                                <th onclick="sortBy(0)" data-col="0">Code <span class="sort-arr">↕</span></th>
+                                <th onclick="sortBy(1)" data-col="1">Currency <span class="sort-arr">↕</span></th>
+                                <th onclick="sortBy(2)" data-col="2" class="col-sep">Customer Name <span
+                                        class="sort-arr">↕</span></th>
+                                <th onclick="sortBy(3)" data-col="3">Address 1 <span class="sort-arr">↕</span></th>
+                                <th onclick="sortBy(4)" data-col="4">Address 2 <span class="sort-arr">↕</span></th>
+                                <th onclick="sortBy(5)" data-col="5">Region <span class="sort-arr">↕</span></th>
+                                <th onclick="sortBy(6)" data-col="6">Cat <span class="sort-arr">↕</span></th>
+                                <th onclick="sortBy(7)" data-col="7" class="col-sep">Phone <span class="sort-arr">↕</span>
                                 </th>
-                                <th class="sortable" onclick="sortTable(1)" style="min-width:200px;">
-                                    Customer Name <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="2.5"
-                                        style="vertical-align:middle;margin-left:4px;">
-                                        <path d="m7 15 5 5 5-5" />
-                                        <path d="m7 9 5-5 5 5" />
-                                    </svg>
+                                <th onclick="sortBy(8)" data-col="8">Fax <span class="sort-arr">↕</span></th>
+                                <th onclick="sortBy(9)" data-col="9">Mobile <span class="sort-arr">↕</span></th>
+                                <th onclick="sortBy(10)" data-col="10">Initial <span class="sort-arr">↕</span></th>
+                                <th onclick="sortBy(11)" data-col="11" class="col-sep" style="text-align:right;">Balance
+                                    <span class="sort-arr">↕</span></th>
+                                <th onclick="sortBy(12)" data-col="12" style="text-align:right;">[Balance] <span
+                                        class="sort-arr">↕</span></th>
+                                <th onclick="sortBy(13)" data-col="13" style="text-align:right;">DN Payment <span
+                                        class="sort-arr">↕</span></th>
+                                <th onclick="sortBy(14)" data-col="14" style="text-align:right;">[DN Payment] <span
+                                        class="sort-arr">↕</span></th>
+                                <th onclick="sortBy(15)" data-col="15" class="col-sep">Audit <span class="sort-arr">↕</span>
                                 </th>
-                                <th style="min-width:100px;">Currency</th>
-                                <th style="min-width:120px;">Region</th>
-                                <th style="min-width:120px;">Phone</th>
-                                <th style="min-width:140px; text-align:right;">Balance (IDR)</th>
-                                <th style="text-align:center; min-width:80px;">Status</th>
-                                <th style="text-align:right; min-width:100px;">Actions</th>
+                                <th style="text-align:right; min-width:90px;">Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="customerTbody">
+                        <tbody id="tblBody">
                             @forelse($customers as $c)
                                 <tr data-code="{{ strtolower($c->code) }}" data-name="{{ strtolower($c->counter_name) }}"
-                                    data-phone="{{ strtolower($c->phone ?? '') }}" data-region="{{ $c->region ?? '' }}">
-                                    <td>
-                                        <span
-                                            style="font-family:monospace; font-weight:700; color:#2563EB; font-size:13px;">{{ $c->code }}</span>
-                                    </td>
-                                    <td>
-                                        <div style="display:flex; align-items:center; gap:10px;">
+                                    data-phone="{{ strtolower($c->phone ?? '') }}" data-region="{{ $c->region ?? '' }}"
+                                    data-currency="{{ $c->currency ?? '' }}">
+                                    <td class="td-code">{{ $c->code }}</td>
+                                    <td><span class="badge badge-curr">{{ $c->currency ?? '–' }}</span></td>
+                                    <td class="td-name col-sep">
+                                        <div style="display:flex;align-items:center;gap:9px;">
                                             <div
-                                                style="width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg,#dbeafe,#ede9fe); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                                style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#dbeafe,#ede9fe);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                                                 <span
-                                                    style="font-size:13px; font-weight:800; color:#4338CA;">{{ strtoupper(substr($c->counter_name, 0, 1)) }}</span>
+                                                    style="font-size:12px;font-weight:800;color:#4338CA;">{{ strtoupper(substr($c->counter_name, 0, 1)) }}</span>
                                             </div>
-                                            <div>
-                                                <div style="font-weight:700; color:#0f172a; font-size:13.5px;">
-                                                    {{ $c->counter_name }}</div>
-                                                @if($c->initial_name)
-                                                    <div style="font-size:11.5px; color:#94a3b8;">{{ $c->initial_name }}</div>
-                                                @endif
-                                            </div>
+                                            {{ $c->counter_name }}
                                         </div>
                                     </td>
+                                    <td class="td-muted">{{ $c->address ? Str::limit($c->address, 30) : '–' }}</td>
+                                    <td class="td-muted">–</td>
                                     <td>
-                                        <span class="badge badge-currency">{{ $c->currency ?? '–' }}</span>
-                                    </td>
-                                    <td style="font-size:13px; color:#475569;">{{ $c->region ?? '–' }}</td>
-                                    <td style="font-size:13px; color:#475569;">{{ $c->phone ?? '–' }}</td>
-                                    <td
-                                        style="text-align:right; font-family:monospace; font-weight:700; color:#065F46; font-size:13.5px;">
-                                        {{ number_format($c->balance, 0, ',', '.') }}
-                                    </td>
-                                    <td style="text-align:center;">
-                                        @if($c->balance >= 0)
-                                            <span class="badge badge-active">
-                                                <svg width="7" height="7" viewBox="0 0 10 10">
-                                                    <circle cx="5" cy="5" r="5" fill="#10B981" />
-                                                </svg>
-                                                Active
-                                            </span>
+                                        @if($c->region)
+                                            <span class="badge badge-region">{{ $c->region }}</span>
                                         @else
-                                            <span class="badge badge-inactive">
-                                                <svg width="7" height="7" viewBox="0 0 10 10">
-                                                    <circle cx="5" cy="5" r="5" fill="#EF4444" />
-                                                </svg>
-                                                Overdue
-                                            </span>
+                                            <span style="color:#CBD5E1;">–</span>
                                         @endif
                                     </td>
-                                    <td class="action-cell">
-                                        <button class="action-btn" onclick="toggleAction(event, {{ $c->id }})">
-                                            Actions
-                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2.5" stroke-linecap="round">
-                                                <polyline points="6 9 12 15 18 9" />
-                                            </svg>
-                                        </button>
-                                        <div class="action-dropdown" id="action-{{ $c->id }}">
-                                            <a href="{{ route('finance.customers.detail.show', $c->id) }}">
-                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                                                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-                                                    <circle cx="12" cy="12" r="3" />
-                                                </svg>
-                                                View Detail
-                                            </a>
-                                            <a href="{{ route('finance.customers.detail.show', $c->id) }}">
-                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                                    <td style="color:#64748b;font-size:12px;">
+                                        @if($c->is_corporate_group)
+                                            <span class="badge" style="background:#FEF3C7;color:#92400E;">Group</span>
+                                        @else
+                                            <span style="color:#CBD5E1;">–</span>
+                                        @endif
+                                    </td>
+                                    <td class="td-muted col-sep">{{ $c->phone ?? '–' }}</td>
+                                    <td class="td-muted">{{ $c->fax ?? '–' }}</td>
+                                    <td class="td-muted">{{ $c->mobile_phone ?? '–' }}</td>
+                                    <td style="font-size:12px;font-weight:600;color:#475569;font-family:monospace;">
+                                        {{ $c->initial_name ?? '–' }}</td>
+                                    <td class="{{ $c->balance < 0 ? 'td-bal-neg' : 'td-bal-pos' }} col-sep">
+                                        {{ number_format($c->balance, 0, ',', '.') }}</td>
+                                    <td class="{{ $c->balance < 0 ? 'td-bal-neg' : 'td-bal-pos' }}">
+                                        {{ number_format($c->balance, 0, ',', '.') }}</td>
+                                    <td class="{{ $c->down_payment < 0 ? 'td-bal-neg' : 'td-bal-pos' }}">
+                                        {{ number_format($c->down_payment, 0, ',', '.') }}</td>
+                                    <td class="{{ $c->down_payment < 0 ? 'td-bal-neg' : 'td-bal-pos' }}">
+                                        {{ number_format($c->down_payment, 0, ',', '.') }}</td>
+                                    <td class="col-sep">
+                                        <span class="badge badge-audit"
+                                            title="Updated: {{ $c->updated_at?->format('d M Y H:i') }}">
+                                            {{ $c->updated_at?->format('d/m/y') ?? '–' }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="row-action">
+                                            <a href="{{ route('finance.customers.detail', ['id' => $c->id]) }}" class="icon-btn"
+                                                title="View / Edit">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round">
                                                     <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
                                                 </svg>
-                                                Edit
                                             </a>
-                                            <div class="action-separator"></div>
-                                            <button class="action-delete" onclick="confirmDelete({{ $c->id }})">
-                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                                            <button class="icon-btn danger" title="Delete" onclick="confirmDel({{ $c->id }})">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round">
                                                     <polyline points="3 6 5 6 21 6" />
                                                     <path
                                                         d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
                                                 </svg>
-                                                Delete
                                             </button>
                                         </div>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="8">
+                                    <td colspan="17">
                                         <div class="empty-state">
                                             <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                 stroke-width="1.2" stroke-linecap="round">
-                                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                                                <circle cx="9" cy="7" r="4" />
-                                                <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                                <rect width="18" height="18" x="3" y="3" rx="2" />
+                                                <path d="M7 7h10" />
+                                                <path d="M7 12h10" />
+                                                <path d="M7 17h10" />
                                             </svg>
-                                            <h3>No Customers Yet</h3>
-                                            <p>Create your first customer record to get started.</p>
-                                            <a href="{{ route('finance.customers.detail.create') }}" class="btn-primary"
-                                                style="margin-top:18px; display:inline-flex;">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            <h3>No customers found</h3>
+                                            <p>Start by adding your first customer record.</p>
+                                            <a href="{{ route('finance.customers.detail') }}" class="btn-p"
+                                                style="margin-top:18px;display:inline-flex;">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
                                                     <path d="M5 12h14" />
                                                     <path d="M12 5v14" />
                                                 </svg>
-                                                New Customer
+                                                Add Customer
                                             </a>
                                         </div>
                                     </td>
@@ -633,10 +796,10 @@
                     </table>
                 </div>
 
-                {{-- Pagination Info --}}
-                @if($customers->count() > 0)
-                    <div class="pagination">
-                        <span class="pg-info" id="paginationInfo">Showing {{ $customers->count() }} records</span>
+                {{-- ── PAGINATION ── --}}
+                @if($total > 0)
+                    <div class="pg-bar">
+                        <span class="pg-info" id="pgInfo">Showing all {{ $total }} customers</span>
                         <div class="pg-btns" id="pgBtns"></div>
                     </div>
                 @endif
@@ -644,79 +807,156 @@
 
         </div>
     </div>
-
-    {{-- Delete Form (hidden) --}}
-    {{-- Add real delete route when needed --}}
 @endsection
 
 @push('scripts')
     <script>
-        let sortDir = {};
+        // ── Data Layer ──
+        const allRows = Array.from(document.querySelectorAll('#tblBody tr[data-code]'));
+        let filteredRows = [...allRows];
+        let sortCol = -1, sortAsc = true;
         let currentPage = 1;
-        const rowsPerPage = 15;
 
-        // ── Filter & Search
-        function filterTable() {
-            const q = document.getElementById('searchInput').value.toLowerCase();
-            const region = document.getElementById('regionFilter').value.toLowerCase();
-            const rows = document.querySelectorAll('#customerTbody tr[data-code]');
-            let visible = 0;
-            rows.forEach(row => {
+        // ── Filters ──
+        function applyFilters() {
+            const q = document.getElementById('searchInput').value.toLowerCase().trim();
+            const reg = document.getElementById('regionFilter').value.toLowerCase();
+            const cur = document.getElementById('currencyFilter').value.toLowerCase();
+
+            filteredRows = allRows.filter(row => {
                 const code = row.dataset.code || '';
                 const name = row.dataset.name || '';
                 const phone = row.dataset.phone || '';
-                const reg = row.dataset.region.toLowerCase();
-                const matchQ = !q || code.includes(q) || name.includes(q) || phone.includes(q);
-                const matchR = !region || reg.includes(region);
-                const show = matchQ && matchR;
-                row.style.display = show ? '' : 'none';
-                if (show) visible++;
+                const region = row.dataset.region.toLowerCase();
+                const curr = row.dataset.currency.toLowerCase();
+
+                const matchQ = !q || code.includes(q) || name.includes(q) || phone.includes(q) || region.includes(q);
+                const matchReg = !reg || region.includes(reg);
+                const matchCur = !cur || curr === cur;
+                return matchQ && matchReg && matchCur;
             });
-            document.getElementById('paginationInfo')?.setAttribute('data-count', visible);
+
+            renderPage(1);
         }
 
-        // ── Sort
-        function sortTable(colIdx) {
-            const tbody = document.getElementById('customerTbody');
-            const rows = Array.from(tbody.querySelectorAll('tr[data-code]'));
-            sortDir[colIdx] = !sortDir[colIdx];
-            rows.sort((a, b) => {
-                const aT = a.cells[colIdx]?.innerText.trim() || '';
-                const bT = b.cells[colIdx]?.innerText.trim() || '';
-                return sortDir[colIdx] ? aT.localeCompare(bT) : bT.localeCompare(aT);
+        // ── Sort ──
+        function sortBy(col) {
+            if (sortCol === col) { sortAsc = !sortAsc; }
+            else { sortCol = col; sortAsc = true; }
+
+            // update header arrows
+            document.querySelectorAll('#mainTable thead th').forEach((th, i) => {
+                th.classList.remove('sorted');
+                th.querySelector('.sort-arr') && (th.querySelector('.sort-arr').textContent = '↕');
             });
-            rows.forEach(r => tbody.appendChild(r));
+            const ths = document.querySelectorAll('#mainTable thead th');
+            if (ths[col]) {
+                ths[col].classList.add('sorted');
+                const arr = ths[col].querySelector('.sort-arr');
+                if (arr) arr.textContent = sortAsc ? ' ↑' : ' ↓';
+            }
+
+            filteredRows.sort((a, b) => {
+                const aT = (a.cells[col]?.innerText || '').trim();
+                const bT = (b.cells[col]?.innerText || '').trim();
+                // numeric?
+                const aNum = parseFloat(aT.replace(/[^0-9.-]/g, ''));
+                const bNum = parseFloat(bT.replace(/[^0-9.-]/g, ''));
+                if (!isNaN(aNum) && !isNaN(bNum)) return sortAsc ? aNum - bNum : bNum - aNum;
+                return sortAsc ? aT.localeCompare(bT) : bT.localeCompare(aT);
+            });
+
+            renderPage(currentPage);
         }
 
-        // ── Action Dropdown
-        function toggleAction(e, id) {
-            e.stopPropagation();
-            document.querySelectorAll('.action-dropdown').forEach(d => {
-                if (d.id !== 'action-' + id) d.classList.remove('open');
-            });
-            document.getElementById('action-' + id).classList.toggle('open');
-        }
-        document.addEventListener('click', () => document.querySelectorAll('.action-dropdown').forEach(d => d.classList.remove('open')));
+        // ── Paginate ──
+        function renderPage(page) {
+            currentPage = page;
+            const perPage = parseInt(document.getElementById('perPageSel').value);
+            const total = filteredRows.length;
+            const pages = Math.max(1, Math.ceil(total / perPage));
+            if (currentPage > pages) currentPage = pages;
 
-        // ── Delete confirm
-        function confirmDelete(id) {
-            if (confirm('Are you sure you want to delete this customer? This action cannot be undone.')) {
-                // Add real delete logic here
-                alert('Delete functionality will be connected to DELETE route.');
+            const start = (currentPage - 1) * perPage;
+            const end = Math.min(start + perPage, total);
+
+            allRows.forEach(r => r.style.display = 'none');
+            filteredRows.slice(start, end).forEach(r => r.style.display = '');
+
+            // info
+            const info = document.getElementById('pgInfo');
+            if (info) info.textContent = total === 0 ? 'No records found'
+                : `Showing ${start + 1}–${end} of ${total} customers`;
+
+            // update filter result chip
+            const chip = document.getElementById('filterResult');
+            if (chip) chip.textContent = total !== allRows.length ? `${total} of ${allRows.length} shown` : '';
+
+            // render page buttons
+            const pgBtns = document.getElementById('pgBtns');
+            if (!pgBtns) return;
+            pgBtns.innerHTML = '';
+
+            const addBtn = (lbl, pg, disabled = false) => {
+                const b = document.createElement('button');
+                b.className = 'pg-btn' + (pg === currentPage ? ' active' : '');
+                b.textContent = lbl;
+                if (disabled) { b.disabled = true; b.classList.add('disabled'); }
+                else b.onclick = () => renderPage(pg);
+                pgBtns.appendChild(b);
+            };
+
+            addBtn('‹', currentPage - 1, currentPage === 1);
+            // show up to 7 page numbers
+            let startP = Math.max(1, currentPage - 3);
+            let endP = Math.min(pages, startP + 6);
+            startP = Math.max(1, endP - 6);
+            for (let i = startP; i <= endP; i++) addBtn(i, i);
+            addBtn('›', currentPage + 1, currentPage === pages || pages === 0);
+        }
+
+        // ── Export CSV ──
+        function exportCSV() {
+            const headers = ['Code', 'Currency', 'Customer Name', 'Address', 'Region', 'Cat', 'Phone', 'Fax', 'Mobile', 'Initial', 'Balance', 'Balance Conv', 'DN Payment', 'DN Payment Conv', 'Audit'];
+            const visibleRows = filteredRows;
+            let csv = headers.join(',') + '\n';
+            visibleRows.forEach(r => {
+                const cells = r.cells;
+                const row = [
+                    cells[0]?.innerText.trim(),
+                    cells[1]?.innerText.trim(),
+                    cells[2]?.innerText.trim(),
+                    cells[3]?.innerText.trim(),
+                    cells[4]?.innerText.trim(),
+                    cells[5]?.innerText.trim(),
+                    cells[6]?.innerText.trim(),
+                    cells[7]?.innerText.trim(),
+                    cells[8]?.innerText.trim(),
+                    cells[9]?.innerText.trim(),
+                    cells[10]?.innerText.trim(),
+                    cells[11]?.innerText.trim(),
+                    cells[12]?.innerText.trim(),
+                    cells[13]?.innerText.trim(),
+                    cells[14]?.innerText.trim(),
+                    cells[15]?.innerText.trim(),
+                ].map(v => `"${(v || '').replace(/"/g, '""')}"`);
+                csv += row.join(',') + '\n';
+            });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'customer-list-all.csv';
+            a.click();
+        }
+
+        // ── Delete ──
+        function confirmDel(id) {
+            if (confirm('Delete this customer? This action cannot be undone.')) {
+                alert('Delete route is not yet implemented. Add proper DELETE route to enable this.');
             }
         }
 
-        // ── Export CSV
-        function exportCSV() {
-            const rows = document.querySelectorAll('#customerTbody tr[data-code]');
-            let csv = 'Code,Customer Name,Currency,Region,Phone,Balance\n';
-            rows.forEach(r => {
-                if (r.style.display === 'none') return;
-                const cells = r.cells;
-                csv += [cells[0].innerText.trim(), cells[1].innerText.trim(), cells[2].innerText.trim(), cells[3].innerText.trim(), cells[4].innerText.trim(), cells[5].innerText.trim()].join(',') + '\n';
-            });
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'customers.csv'; a.click();
-        }
+        // ── Init ──
+        document.addEventListener('DOMContentLoaded', () => renderPage(1));
     </script>
 @endpush

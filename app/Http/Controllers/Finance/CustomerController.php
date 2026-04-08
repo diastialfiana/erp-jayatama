@@ -9,27 +9,22 @@ use Illuminate\Http\Request;
 class CustomerController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource. (List All)
      */
     public function index()
     {
-        // Get all customers to display on the list page
-        $customers = Customer::orderBy('id', 'asc')->get();
-        return view('finance.customers.list', compact('customers'));
+        $customers = Customer::orderBy('code', 'asc')->get();
+        $total = $customers->count();
+        return view('finance.customers.list', compact('customers', 'total'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating/editing a customer detail
      */
     public function detail()
     {
         $customer = new Customer();
-
         $navigation = $this->getNavigation(null);
-
-        // Required master data can be passed here (like COA list, cost centers, etc)
-        // For now, we will pass empty arrays or fetch from respective models if they existed.
-
         return view('finance.customers.detail', compact('customer', 'navigation'));
     }
 
@@ -147,25 +142,43 @@ class CustomerController extends Controller
         ];
     }
 
-    // Placeholders for other tabs
-    public function list(Customer $customer)
+    // Placed tabs logic without {customer} parameters per user request
+    public function statistic()
     {
-        return view('finance.customers.list', compact('customer'));
+        return view('finance.customers.statistic');
     }
-    public function statistic(Customer $customer)
+    public function activity()
     {
-        return view('finance.customers.statistic', compact('customer'));
+        return view('finance.customers.activity');
     }
-    public function activity(Customer $customer)
+    public function backdate()
     {
-        return view('finance.customers.activity', compact('customer'));
+        return view('finance.customers.backdate');
     }
-    public function backdate(Customer $customer)
+    public function summary()
     {
-        return view('finance.customers.backdate', compact('customer'));
-    }
-    public function summary(Customer $customer)
-    {
-        return view('finance.customers.summary', compact('customer'));
+        $rows = [
+            ['code'=>'001','name'=>'PT. JASA SWADAYA UTAMA','beg'=>12500000,'invoice'=>28750000,'return'=>1250000],
+            ['code'=>'002','name'=>'PT. GLOBAL MANDIRI',    'beg'=>4250000, 'invoice'=>15000000,'return'=>500000],
+            ['code'=>'003','name'=>'CV. CIPTA KARYA',       'beg'=>0,       'invoice'=>6500000, 'return'=>0],
+            ['code'=>'004','name'=>'PT. SINAR JAYA ABADI',  'beg'=>25750000,'invoice'=>42000000,'return'=>3200000],
+            ['code'=>'005','name'=>'EUROTECH INDONESIA',     'beg'=>1200000, 'invoice'=>8800000, 'return'=>800000],
+            ['code'=>'006','name'=>'UD. MAJU BERSAMA',       'beg'=>6300000, 'invoice'=>12500000,'return'=>250000],
+            ['code'=>'007','name'=>'PT. NUSA BANGSA',        'beg'=>0,       'invoice'=>3200000, 'return'=>0],
+            ['code'=>'008','name'=>'LION CITY TRADING',      'beg'=>5400000, 'invoice'=>19500000,'return'=>1500000],
+            ['code'=>'009','name'=>'BINTANG GEMILANG',       'beg'=>8900000, 'invoice'=>22000000,'return'=>700000],
+            ['code'=>'010','name'=>'KOPERASI SEJAHTERA',     'beg'=>1150000, 'invoice'=>5000000, 'return'=>0],
+        ];
+
+        $labels = collect($rows)->pluck('name')->take(5)->values();
+        $invoice = collect($rows)->pluck('invoice')->take(5)->values();
+        $return = collect($rows)->pluck('return')->take(5)->values();
+
+        return view('finance.customers.summary', [
+            'rows' => $rows,
+            'labels' => $labels,
+            'invoice' => $invoice,
+            'return' => $return
+        ]);
     }
 }
