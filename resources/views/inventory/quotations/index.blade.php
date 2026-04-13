@@ -77,26 +77,36 @@
                 <div>
                     <div class="form-group">
                         <div class="form-label">Date</div>
-                        <select class="form-select" style="width: 140px;" disabled><option></option></select>
+                        <input type="date" class="form-input" style="width: 140px;" x-model="formData.date">
                     </div>
                     <div class="form-group">
                         <div class="form-label">Customer Name</div>
-                         <select class="form-select" style="width: 250px;" disabled><option></option></select>
+                         <select class="form-select" style="width: 250px;" x-model="formData.customerId">
+                            <option value="">Select Customer</option>
+                            <template x-for="cust in customers" :key="cust.id">
+                                <option :value="cust.id" x-text="cust.name"></option>
+                            </template>
+                         </select>
                     </div>
                     <div class="form-group">
                         <div class="form-label">Attentions 1</div>
-                        <input type="text" class="form-input" style="width: 250px;" readonly>
+                        <input type="text" class="form-input" style="width: 250px;" x-model="formData.attn1">
                     </div>
                     <div class="form-group">
                         <div class="form-label">Attentions 2</div>
-                        <input type="text" class="form-input" style="width: 250px;" readonly>
+                        <input type="text" class="form-input" style="width: 250px;" x-model="formData.attn2">
                     </div>
                     <div class="form-group">
                         <div class="form-label">Select Estimation</div>
                         <div style="display:flex;">
-                            <input type="text" class="form-input" style="width: 200px;" readonly>
-                            <span style="border: 1px solid var(--hr-border); background:#f1f5f9; padding: 4px 6px; border-left:none; cursor: pointer;">📁</span>
-                            <span style="border: 1px solid var(--hr-border); background:#f1f5f9; padding: 4px 6px; border-left:none; cursor: pointer;">✕</span>
+                            <select class="form-select" style="width: 200px;" x-model="formData.estimationCode" @change="loadEstimationItems()">
+                                <option value="">Select Estimation</option>
+                                <template x-for="est in estimations" :key="est.code">
+                                    <option :value="est.code" x-text="est.code + ' - ' + est.name"></option>
+                                </template>
+                            </select>
+                            <span style="border: 1px solid var(--hr-border); background:#f1f5f9; padding: 4px 6px; border-left:none; cursor: pointer;" @click="selectRandomEstimation()">📁</span>
+                            <span style="border: 1px solid var(--hr-border); background:#f1f5f9; padding: 4px 6px; border-left:none; cursor: pointer;" @click="formData.estimationCode = ''; loadEstimationItems()">✕</span>
                         </div>
                     </div>
                 </div>
@@ -105,7 +115,12 @@
                     <div class="form-group">
                         <div class="form-label" style="text-align: left; width: 80px;">Sales Name</div>
                         <div style="display:flex;">
-                            <input type="text" class="form-input" style="width: 150px;" readonly>
+                            <select class="form-select" style="width: 150px;" x-model="formData.salesName">
+                                <option value="">Select Sales</option>
+                                <template x-for="name in salesNames" :key="name">
+                                    <option :value="name" x-text="name"></option>
+                                </template>
+                            </select>
                             <span style="border: 1px solid var(--hr-border); background:white; padding: 4px 6px; border-left:none; cursor: pointer;">
                                 <div style="width:8px; height:8px; background:#3b82f6;"></div>
                             </span>
@@ -113,7 +128,7 @@
                     </div>
                     <div class="form-group">
                         <div class="form-label" style="text-align: left; width: 80px;">PO. No.</div>
-                        <input type="text" class="form-input" style="width: 175px;" readonly>
+                        <input type="text" class="form-input" style="width: 175px;" x-model="formData.poNo">
                     </div>
                 </div>
             </div>
@@ -141,19 +156,33 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- Empty body -->
+                                    <template x-for="(row, index) in selectedEstimationItems" :key="index">
+                                        <tr>
+                                            <td><input type="text" class="form-input" style="width:100%; border:none;" x-model="row.estNo"></td>
+                                            <td><input type="text" class="form-input" style="width:100%; border:none;" x-model="row.productName"></td>
+                                            <td><input type="number" class="form-input" style="width:100%; border:none;" x-model="row.qty" @input="updateCalculations(row)"></td>
+                                            <td><input type="number" class="form-input" style="width:100%; border:none;" x-model="row.price" @input="updateCalculations(row)"></td>
+                                            <td style="text-align:right;" x-text="formatCurrency(row.amount)"></td>
+                                            <td><input type="text" class="form-input" style="width:100%; border:none;" x-model="row.unitOff"></td>
+                                            <td style="text-align:right;" x-text="formatCurrency(row.tlOffers)"></td>
+                                        </tr>
+                                    </template>
                                 </tbody>
                             </table>
                         </div>
                         <div style="display:flex; justify-content:center; gap:60px; padding: 10px 20px; border-top:1px solid var(--hr-border);">
-                            <input type="text" class="form-input" style="width: 100px; text-align:right;" value="0" readonly>
-                            <input type="text" class="form-input" style="width: 100px; text-align:right;" value="0" readonly>
+                            <input type="text" class="form-input" style="width: 100px; text-align:right;" :value="formatCurrency(totalOffers)" readonly>
+                            <input type="text" class="form-input" style="width: 100px; text-align:right;" :value="formatCurrency(totalOffers)" readonly>
                         </div>
                         <div class="grid-footer" style="padding: 2px 4px;">
-                            <button class="pager-btn">|◀</button> <button class="pager-btn">◀◀</button> <button class="pager-btn">◀</button>
-                            <span class="pager-btn" style="border:none; background:transparent;">Record 0 of 0</span>
-                            <button class="pager-btn">▶</button> <button class="pager-btn">▶▶</button> <button class="pager-btn">▶|</button>
-                            <button class="pager-btn" style="margin-left:5px;">+</button> <button class="pager-btn">-</button>
+                            <button class="pager-btn" @click="navigate('first')">|◀</button> 
+                            <button class="pager-btn" @click="navigate('prev')">◀◀</button> 
+                            <button class="pager-btn" @click="navigate('prev')">◀</button>
+                            <span class="pager-btn" style="border:none; background:transparent;">Record <span x-text="currentIndex + 1"></span> of <span x-text="quotationsHistory.length"></span></span>
+                            <button class="pager-btn" @click="navigate('next')">▶</button> 
+                            <button class="pager-btn" @click="navigate('next')">▶▶</button> 
+                            <button class="pager-btn" @click="navigate('last')">▶|</button>
+                            <button class="pager-btn" style="margin-left:5px;" @click="addRow()">+</button> <button class="pager-btn" @click="removeRow(selectedEstimationItems.length - 1)">-</button>
                         </div>
                     </div>
                 </div>
@@ -164,7 +193,7 @@
                 <div>
                     <div style="font-size: 0.75rem; font-weight: bold; color: #475569; margin-bottom: 2px; padding-left:2px; background:#e2e8f0; border:1px solid #cbd5e1; border-bottom:0; width:300px;">NOTES</div>
                     <div style="display:flex;">
-                        <textarea style="width: 300px; height: 50px; border: 1px solid var(--hr-border); resize:none;"></textarea>
+                        <textarea style="width: 300px; height: 50px; border: 1px solid var(--hr-border); resize:none;" x-model="formData.notes"></textarea>
                         <div style="display:flex; flex-direction:column; border: 1px solid var(--hr-border); border-left:none; background:#f8fafc; justify-content:space-between;">
                            <span style="font-size:0.5rem; padding: 2px 4px; cursor:pointer; color:#64748b;">▲</span>
                            <span style="font-size:0.5rem; padding: 2px 4px; cursor:pointer; color:#64748b;">▼</span>
@@ -173,7 +202,7 @@
                 </div>
                 <div style="display:flex; align-items:center; gap:10px;">
                     <span style="font-size: 0.75rem; font-weight: bold; color: #334155;">Total Offers</span>
-                    <input type="text" class="form-input" style="width: 120px;" readonly>
+                    <input type="text" class="form-input" style="width: 120px; text-align:right;" :value="formatCurrency(totalOffers)" readonly>
                 </div>
             </div>
         </div>
@@ -197,25 +226,50 @@
                             <th style="width: 80px; text-align:right;">TAX</th>
                             <th style="width: 100px; text-align:right;">TOTAL</th>
                             <th style="width: 150px;">NOTE</th>
-                            <th style="width: 50px;">E...</th>
+                            <th style="width: 120px;">EST. SELECTED</th>
+                            <th style="width: 100px;">ORDER NO.</th>
+                            <th style="width: 100px;">PO. REF</th>
+                            <th style="width: 80px;">RECID</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- History data mapped over if needed; leaving empty logic -->
+                        <template x-for="(q, i) in quotationsHistory" :key="i">
+                            <tr>
+                                <td style="text-align:center;"><div style="width:8px; height:8px; background:#3b82f6; margin:0 auto;"></div></td>
+                                <td x-text="q.date"></td>
+                                <td x-text="q.userno"></td>
+                                <td x-text="q.customer"></td>
+                                <td x-text="q.attn1"></td>
+                                <td x-text="q.sales"></td>
+                                <td style="text-align:right;" x-text="q.amount"></td>
+                                <td style="text-align:right;" x-text="q.discount"></td>
+                                <td style="text-align:right;" x-text="q.tax"></td>
+                                <td style="text-align:right;" x-text="q.total"></td>
+                                <td x-text="q.note"></td>
+                                <td x-text="q.est_selected"></td>
+                                <td x-text="q.order_no"></td>
+                                <td x-text="q.po_ref"></td>
+                                <td x-text="q.recid"></td>
+                            </tr>
+                        </template>
                     </tbody>
                 </table>
             </div>
             <div class="grid-footer" style="padding: 4px; background: transparent; border-top: 1px solid var(--hr-border); border-bottom: 1px solid var(--hr-border); display:flex; justify-content:space-between; min-height: 38px;">
                 <div style="display:flex; align-items:center;">
-                    <button class="pager-btn">|◀</button> <button class="pager-btn">◀◀</button> <button class="pager-btn">◀</button>
-                    <span class="pager-btn" style="border:none; background:transparent;">Record 0 of 0</span>
-                    <button class="pager-btn">▶</button> <button class="pager-btn">▶▶</button> <button class="pager-btn">▶|</button>
+                    <button class="pager-btn" @click="navigate('first')">|◀</button> 
+                    <button class="pager-btn" @click="navigate('prev')">◀◀</button> 
+                    <button class="pager-btn" @click="navigate('prev')">◀</button>
+                    <span class="pager-btn" style="border:none; background:transparent;">Record <span x-text="currentIndex + 1"></span> of <span x-text="quotationsHistory.length"></span></span>
+                    <button class="pager-btn" @click="navigate('next')">▶</button> 
+                    <button class="pager-btn" @click="navigate('next')">▶▶</button> 
+                    <button class="pager-btn" @click="navigate('last')">▶|</button>
                 </div>
                 <div style="display:flex; gap:30px; padding-right:120px;">
-                    <input type="text" class="form-input" style="width: 100px; text-align:right;" value="0" readonly>
-                    <input type="text" class="form-input" style="width: 100px; text-align:right;" value="0" readonly>
-                    <input type="text" class="form-input" style="width: 100px; text-align:right;" value="0" readonly>
-                    <input type="text" class="form-input" style="width: 100px; text-align:right;" value="0" readonly>
+                    <input type="text" class="form-input" style="width: 100px; text-align:right;" value="23.500.000" readonly>
+                    <input type="text" class="form-input" style="width: 100px; text-align:right;" value="500.000" readonly>
+                    <input type="text" class="form-input" style="width: 100px; text-align:right;" value="2.530.000" readonly>
+                    <input type="text" class="form-input" style="width: 100px; text-align:right;" value="25.530.000" readonly>
                 </div>
             </div>
         </div>
@@ -245,22 +299,52 @@
                             <th style="width: 100px; text-align:right;">AMOUNT</th>
                             <th style="width: 60px;">%DISC</th>
                             <th style="width: 100px; text-align:right;">DISCOUNT</th>
+                            <th style="width: 100px; text-align:right;">TAX</th>
+                            <th style="width: 100px; text-align:right;">TOTAL</th>
+                            <th style="width: 120px;">EST. SELECTED</th>
+                            <th style="width: 100px;">ORDER NO.</th>
+                            <th style="width: 100px;">PO. REF</th>
+                            <th style="width: 150px;">NOTE</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Empty logic -->
+                        <template x-for="(item, i) in detailedQuotationItems" :key="i">
+                            <tr>
+                                <td style="text-align:center;"><div style="width:8px; height:8px; background:#3b82f6; margin:0 auto;"></div></td>
+                                <td x-text="item.date"></td>
+                                <td x-text="item.userno"></td>
+                                <td x-text="item.customer"></td>
+                                <td x-text="item.attn1"></td>
+                                <td x-text="item.attn2"></td>
+                                <td x-text="item.sales"></td>
+                                <td x-text="item.product"></td>
+                                <td style="text-align:center;" x-text="item.qty"></td>
+                                <td style="text-align:right;" x-text="item.price"></td>
+                                <td style="text-align:right;" x-text="item.amount"></td>
+                                <td style="text-align:center;" x-text="item.disc_pct"></td>
+                                <td style="text-align:right;" x-text="item.discount"></td>
+                                <td style="text-align:right;" x-text="item.tax"></td>
+                                <td style="text-align:right;" x-text="item.total"></td>
+                                <td x-text="item.est_selected"></td>
+                                <td x-text="item.order_no"></td>
+                                <td x-text="item.po_ref"></td>
+                                <td x-text="item.note"></td>
+                            </tr>
+                        </template>
                     </tbody>
                 </table>
             </div>
             <div class="grid-footer" style="padding: 4px; background: transparent; border-top: 1px solid var(--hr-border); border-bottom: 1px solid var(--hr-border); display:flex; justify-content:space-between; min-height: 38px;">
                 <div style="display:flex; align-items:center;">
                     <button class="pager-btn">|◀</button> <button class="pager-btn">◀◀</button> <button class="pager-btn">◀</button>
-                    <span class="pager-btn" style="border:none; background:transparent;">Record 0 of 0</span>
+                    <span class="pager-btn" style="border:none; background:transparent;">Record <span x-text="detailedQuotationItems.length"></span> of <span x-text="detailedQuotationItems.length"></span></span>
                     <button class="pager-btn">▶</button> <button class="pager-btn">▶▶</button> <button class="pager-btn">▶|</button>
                 </div>
                 <div style="display:flex; gap:10px; padding-right:10px;">
+                    <input type="text" class="form-input" style="width: 100px; text-align:right;" value="15.000.000" readonly>
                     <input type="text" class="form-input" style="width: 100px; text-align:right;" value="0" readonly>
-                    <input type="text" class="form-input" style="width: 100px; text-align:right;" value="0" readonly>
+                    <input type="text" class="form-input" style="width: 100px; text-align:right;" value="1.650.000" readonly>
+                    <input type="text" class="form-input" style="width: 100px; text-align:right;" value="16.650.000" readonly>
                 </div>
             </div>
         </div>
@@ -275,10 +359,106 @@
     function quotationManager() {
         return {
             activeMainTab: 'detail',
-            quotations: @json($quotations),
+            customers: @json($customers),
+            salesNames: @json($salesNames),
+            estimations: @json($estimations),
+            quotationsHistory: @json($quotationsHistory),
+            detailedQuotationItems: @json($detailedQuotationItems),
+            estimationItems: @json($estimationItems),
+            currentIndex: -1,
+
+            formData: {
+                date: new Date().toISOString().split('T')[0],
+                customerId: '',
+                attn1: '',
+                attn2: '',
+                estimationCode: '',
+                salesName: '',
+                poNo: '',
+                notes: ''
+            },
+
+            selectedEstimationItems: [],
 
             init() {
-               // Initialization logic here
+                this.addRow();
+            },
+
+            addRow() {
+                this.selectedEstimationItems.push({
+                    estNo: '',
+                    productName: '',
+                    qty: 1,
+                    price: 0,
+                    amount: 0,
+                    unitOff: '',
+                    tlOffers: 0
+                });
+            },
+
+            removeRow(index) {
+                this.selectedEstimationItems.splice(index, 1);
+            },
+
+            loadEstimationItems() {
+                const items = this.estimationItems[this.formData.estimationCode] || [];
+                // Fresh copy to avoid reference issues
+                this.selectedEstimationItems = JSON.parse(JSON.stringify(items));
+                if (this.selectedEstimationItems.length === 0) {
+                    this.addRow();
+                }
+            },
+
+            selectRandomEstimation() {
+                const codes = Object.keys(this.estimationItems);
+                this.formData.estimationCode = codes[Math.floor(Math.random() * codes.length)];
+                this.loadEstimationItems();
+            },
+
+            navigate(direction) {
+                const total = this.quotationsHistory.length;
+                if (total === 0) return;
+
+                if (direction === 'first') this.currentIndex = 0;
+                else if (direction === 'last') this.currentIndex = total - 1;
+                else if (direction === 'next') this.currentIndex = Math.min(this.currentIndex + 1, total - 1);
+                else if (direction === 'prev') this.currentIndex = Math.max(this.currentIndex - 1, 0);
+
+                if (this.currentIndex === -1) this.currentIndex = 0;
+                
+                this.loadCurrentRecord();
+            },
+
+            loadCurrentRecord() {
+                const record = this.quotationsHistory[this.currentIndex];
+                if (!record) return;
+
+                this.formData = {
+                    date: record.date,
+                    customerId: this.customers.find(c => c.name === record.customer)?.id || '',
+                    attn1: record.attn1,
+                    attn2: '',
+                    estimationCode: record.est_selected,
+                    salesName: record.sales,
+                    poNo: record.order_no,
+                    notes: record.note
+                };
+
+                // Load items for this estimation
+                this.loadEstimationItems();
+            },
+
+            updateCalculations(row) {
+                row.amount = Number(row.qty || 0) * Number(row.price || 0);
+                row.tlOffers = Number(row.qty || 0) * Number(row.price || 0);
+            },
+
+            formatCurrency(value) {
+                return new Intl.NumberFormat('id-ID').format(Math.round(value));
+            },
+
+            get totalOffers() {
+                return this.selectedEstimationItems.reduce((acc, row) => acc + Number(row.tlOffers || 0), 0);
             }
         }
     }
