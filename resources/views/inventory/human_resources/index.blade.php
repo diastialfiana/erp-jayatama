@@ -405,10 +405,25 @@
                         <input type="text" class="hr-input" x-model="form.mobile">
 
                         <div class="hr-label">Position</div>
-                        <input type="text" class="hr-input" x-model="form.position">
+                        <div>
+                            <input type="text" class="hr-input" x-model="form.position" list="position-list">
+                            <datalist id="position-list">
+                                <option value="Manager"></option>
+                                <option value="Staff"></option>
+                                <option value="Director"></option>
+                                <option value="Supervisor"></option>
+                            </datalist>
+                        </div>
 
                         <div class="hr-label">Work at</div>
-                        <input type="text" class="hr-input" x-model="form.work_at">
+                        <div>
+                            <input type="text" class="hr-input" x-model="form.work_at" list="workat-list">
+                            <datalist id="workat-list">
+                                <option value="Head Office"></option>
+                                <option value="Branch Office"></option>
+                                <option value="Remote"></option>
+                            </datalist>
+                        </div>
 
                         <div class="hr-label">Locations</div>
                         <input type="text" class="hr-input" x-model="form.location">

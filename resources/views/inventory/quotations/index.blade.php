@@ -82,12 +82,16 @@
                     </div>
                     <div class="form-group">
                         <div class="form-label">Customer Name</div>
-                         <select class="form-select" style="width: 250px;" x-model="formData.customerId">
-                            <option value="">Select Customer</option>
-                            <template x-for="cust in customers" :key="cust.id">
-                                <option :value="cust.id" x-text="cust.name"></option>
-                            </template>
-                         </select>
+                        <div style="display: flex; align-items: center; background: white; border: 1px solid var(--hr-border); width: 250px;">
+                            <input type="text" style="flex: 1; border: none; font-size: 0.75rem; padding: 4px 8px; outline: none;" 
+                                   x-model="customerNameInput" list="customer-names" placeholder="Type or Select Customer" @change="onCustomerSelect">
+                            <datalist id="customer-names">
+                                <template x-for="cust in customers" :key="cust.id">
+                                    <option :value="cust.name"></option>
+                                </template>
+                            </datalist>
+                            <span style="background: #f1f5f9; padding: 4px 6px; border-left: 1px solid var(--hr-border); color: #64748b; pointer-events: none;">▼</span>
+                        </div>
                     </div>
                     <div class="form-group">
                         <div class="form-label">Attentions 1</div>
@@ -144,6 +148,12 @@
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #64748b;"><circle cx="11" cy="11" r="8"></circle> <line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                         </div>
                         <div style="flex: 1; overflow: auto; border-top:1px solid var(--hr-border);">
+                            <datalist id="est-product-names">
+                                <option value="SERVER RACK 42U"></option>
+                                <option value="CISCO SWITCH 24P"></option>
+                                <option value="APC UPS 3000VA"></option>
+                                <option value="CAT6 CABLE BOX"></option>
+                            </datalist>
                             <table class="list-grid">
                                 <thead>
                                     <tr>
@@ -160,7 +170,7 @@
                                     <template x-for="(row, index) in selectedEstimationItems" :key="index">
                                         <tr>
                                             <td><input type="text" class="form-input" style="width:100%; border:none;" x-model="row.estNo"></td>
-                                            <td><input type="text" class="form-input" style="width:100%; border:none;" x-model="row.productName"></td>
+                                            <td><input type="text" class="form-input" style="width:100%; border:none;" x-model="row.productName" list="est-product-names"></td>
                                             <td><input type="number" class="form-input" style="width:100%; border:none;" x-model="row.qty" @input="updateCalculations(row)"></td>
                                             <td><input type="number" class="form-input" style="width:100%; border:none;" x-model="row.price" @input="updateCalculations(row)"></td>
                                             <td style="text-align:right;" x-text="formatCurrency(row.amount)"></td>
@@ -378,6 +388,7 @@
                 poNo: '',
                 notes: ''
             },
+            customerNameInput: '',
 
             selectedEstimationItems: [],
 
@@ -444,9 +455,20 @@
                     poNo: record.order_no,
                     notes: record.note
                 };
+                this.customerNameInput = record.customer || '';
 
                 // Load items for this estimation
                 this.loadEstimationItems();
+            },
+
+            onCustomerSelect() {
+                const cust = this.customers.find(c => c.name === this.customerNameInput);
+                if(cust) {
+                    this.formData.customerId = cust.id;
+                } else {
+                    // Custom typed customer support
+                    this.formData.customerId = 'CUST-NEW';
+                }
             },
 
             updateCalculations(row) {

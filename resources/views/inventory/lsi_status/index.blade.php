@@ -110,7 +110,17 @@
                     </div>
                     <div class="form-row">
                         <div class="form-label">Vendors / Employee</div>
-                        <input type="text" class="form-input" style="width: 150px;">
+                        <div style="display: flex; align-items: center; background: white; border: 1px solid var(--hr-border); width: 175px;">
+                            <input type="text" style="flex: 1; border: none; font-size: 0.75rem; padding: 3px 6px; outline: none;" 
+                                   list="vendor-list" placeholder="Type or Select">
+                            <datalist id="vendor-list">
+                                <option value="PT JAYATAMA"></option>
+                                <option value="PT MAJU SELALU"></option>
+                                <option value="ALICE WONDER"></option>
+                                <option value="JOHN SMITH"></option>
+                            </datalist>
+                            <span style="border:none; border-left:1px solid var(--hr-border); background:#f1f5f9; cursor:pointer; padding: 3px 6px;">▼</span>
+                        </div>
                     </div>
                 </div>
                 

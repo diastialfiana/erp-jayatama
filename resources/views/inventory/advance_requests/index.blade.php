@@ -95,9 +95,15 @@
                     </div>
                     <div class="form-group" style="gap: 5px;">
                         <div class="form-label" style="width: 80px;">Employes Name</div>
-                        <div style="display:flex;">
-                            <input type="text" class="form-input" style="width: 250px;" x-model="selectedRequest.employees_name" readonly>
-                            <span style="border: 1px solid var(--hr-border); background:#f1f5f9; padding: 4px 6px; border-left:none; cursor: pointer;">▼</span>
+                        <div style="display: flex; align-items: center; background: white; border: 1px solid var(--hr-border); width: 275px;">
+                            <input type="text" style="flex: 1; border: none; font-size: 0.75rem; padding: 4px 8px; outline: none;" 
+                                   x-model="employeeNameInput" list="employee-names" placeholder="Type or Select Employee" @change="onEmployeeSelect">
+                            <datalist id="employee-names">
+                                <template x-for="emp in employees" :key="emp">
+                                    <option :value="emp"></option>
+                                </template>
+                            </datalist>
+                            <span style="border:none; border-left:1px solid var(--hr-border); background:#f1f5f9; cursor:pointer; padding: 4px 6px;">▼</span>
                         </div>
                     </div>
                     <div class="form-group" style="gap: 5px;">
@@ -140,23 +146,45 @@
                             <th style="width: 200px;">ACCOUNT NAME</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <template x-for="(item, idx) in selectedRequest.items" :key="idx">
+                        <template x-for="(item, idx) in (selectedRequest ? selectedRequest.items || [] : [])" :key="idx">
                             <tr>
                                 <td style="text-align: center; font-size: 0.5rem; color: #475569;">
-                                    <span x-show="idx === 0">▶</span>
+                                    <span x-show="idx === selectedItemIdx">▶</span>
+                                    <button @click="removeItem(idx)" x-show="idx === selectedItemIdx" style="background:#ef4444; color:white; border:none; border-radius:2px; font-size:8px; padding:2px 4px; cursor:pointer;" title="Remove Item">✕</button>
                                 </td>
-                                <td x-text="item.code"></td>
-                                <td x-text="item.bank_name"></td>
-                                <td x-text="item.cost"></td>
-                                <td x-text="item.dept"></td>
-                                <td x-text="item.amount" style="text-align: right;"></td>
-                                <td>
-                                    <span x-text="item.description"></span>
-                                </td>
-                                <td x-text="item.account_name"></td>
+                                <td><input type="text" x-model="item.code" class="form-input" style="width: 100%; box-sizing: border-box; border:none; background:transparent;" @change="saveCurrentChanges()"></td>
+                                <td><input type="text" x-model="item.bank_name" class="form-input" style="width: 100%; box-sizing: border-box; border:none; background:transparent;" list="bank-list" @change="saveCurrentChanges()"></td>
+                                <td><input type="text" x-model="item.cost" class="form-input" style="width: 100%; box-sizing: border-box; border:none; background:transparent;" @change="saveCurrentChanges()"></td>
+                                <td><input type="text" x-model="item.dept" class="form-input" style="width: 100%; box-sizing: border-box; border:none; background:transparent;" list="dept-list" @change="saveCurrentChanges()"></td>
+                                <td><input type="number" x-model="item.amount" class="form-input" style="width: 100%; box-sizing: border-box; text-align: right; border:none; background:transparent;" @change="saveCurrentChanges()"></td>
+                                <td><input type="text" x-model="item.description" class="form-input" style="width: 100%; box-sizing: border-box; border:none; background:transparent;" @change="saveCurrentChanges()"></td>
+                                <td><input type="text" x-model="item.account_name" class="form-input" style="width: 100%; box-sizing: border-box; border:none; background:transparent;" @change="saveCurrentChanges()"></td>
                             </tr>
                         </template>
+                        <!-- New Item Row -->
+                        <tr style="background: #f8fafc; border-top: 2px solid #cbd5e1;">
+                            <td style="text-align: center; color: #10b981; font-weight: bold; cursor: pointer;" @click="addNewItem()" title="Add item">+</td>
+                            <td style="padding: 2px;"><input type="text" x-model="newItem.code" class="form-input" style="width: 100%; box-sizing: border-box;" placeholder="Code..." @keydown.enter="addNewItem"></td>
+                            <td style="padding: 2px;">
+                                <input type="text" x-model="newItem.bank_name" class="form-input" style="width: 100%; box-sizing: border-box;" placeholder="Bank..." list="bank-list" @keydown.enter="addNewItem">
+                                <datalist id="bank-list">
+                                    <template x-for="b in ['BCA', 'MANDIRI', 'BNI', 'BRI']"><option :value="b"></option></template>
+                                </datalist>
+                            </td>
+                            <td style="padding: 2px;"><input type="text" x-model="newItem.cost" class="form-input" style="width: 100%; box-sizing: border-box;" placeholder="Cost..." @keydown.enter="addNewItem"></td>
+                            <td style="padding: 2px;">
+                                <input type="text" x-model="newItem.dept" class="form-input" style="width: 100%; box-sizing: border-box;" placeholder="Dept..." list="dept-list" @keydown.enter="addNewItem">
+                                <datalist id="dept-list">
+                                    <template x-for="d in ['IT', 'HR', 'FINANCE', 'MARKETING']"><option :value="d"></option></template>
+                                </datalist>
+                            </td>
+                            <td style="padding: 2px;"><input type="number" x-model="newItem.amount" class="form-input" style="width: 100%; box-sizing: border-box; text-align: right;" placeholder="0" @keydown.enter="addNewItem"></td>
+                            <td style="padding: 2px;"><input type="text" x-model="newItem.description" class="form-input" style="width: 100%; box-sizing: border-box;" placeholder="Desc..." @keydown.enter="addNewItem"></td>
+                            <td style="padding: 2px; display:flex;">
+                                <input type="text" x-model="newItem.account_name" class="form-input" style="flex:1; box-sizing: border-box;" placeholder="Acc Name..." @keydown.enter="addNewItem">
+                                <button @click="addNewItem()" style="background:#2563eb; color:white; border:none; padding: 2px 8px; cursor:pointer;" title="Add Item">Add</button>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -476,6 +504,10 @@
             currentIdx: 0,
             expandedIds: [],
             activeSubTabs: {},
+            employees: ['JANE DOE', 'JOHN SMITH', 'ALICE WONDER', 'BOB BUILDER'],
+            employeeNameInput: '',
+            selectedItemIdx: 0,
+            newItem: { code: 'ADV-NEW', bank_name: '', cost: '', dept: '', amount: 0, description: '', account_name: '' },
             
             // Mock workflow steps for Advance Status as seen in screenshot
             statusSteps: [
@@ -518,6 +550,29 @@
                     this.expandedStatusIds = this.expandedStatusIds.filter(i => i !== id);
                 } else {
                     this.expandedStatusIds = [...this.expandedStatusIds, id];
+                }
+            },
+
+            onEmployeeSelect() {
+                if (this.selectedRequest) {
+                    this.selectedRequest.employees_name = this.employeeNameInput;
+                    this.saveCurrentChanges();
+                }
+            },
+
+            addNewItem() {
+                if(!this.newItem.description) return;
+                if(!this.selectedRequest.items) this.selectedRequest.items = [];
+                
+                this.selectedRequest.items.push({...this.newItem});
+                this.newItem = { code: 'ADV-NEW', bank_name: '', cost: '', dept: '', amount: 0, description: '', account_name: '' };
+                this.saveCurrentChanges();
+            },
+
+            removeItem(idx) {
+                if(confirm('Remove this item?')) {
+                    this.selectedRequest.items.splice(idx, 1);
+                    this.saveCurrentChanges();
                 }
             },
 

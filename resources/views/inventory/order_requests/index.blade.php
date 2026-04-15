@@ -247,18 +247,14 @@
                         <template x-for="(item, idx) in selectedRequest.items" :key="idx">
                             <tr>
                                 <td style="text-align: center; font-size: 0.5rem; color: #475569;">
-                                    <span x-show="idx === 0">▶</span>
+                                    <span x-show="idx === selectedItemIdx">▶</span>
+                                    <button @click="removeItem(idx)" x-show="idx === selectedItemIdx" style="background:#ef4444; color:white; border:none; border-radius:2px; font-size:8px; padding:2px 4px; cursor:pointer;" title="Remove Item">✕</button>
                                 </td>
-                                <td x-text="item.code"></td>
-                                <td style="color:#64748b;">
-                                    <span x-text="item.name"></span>
-                                    <span style="color:#cbd5e1; float:right;">...</span>
-                                </td>
-                                <td x-text="item.qty" style="text-align: right;"></td>
-                                <td x-text="item.unit"></td>
-                                <td>
-                                    <span x-text="item.description"></span>
-                                </td>
+                                <td><input type="text" x-model="item.code" class="form-input" style="width: 100%; box-sizing: border-box; border:none; background:transparent;" @change="saveCurrentChanges()"></td>
+                                <td><input type="text" x-model="item.name" class="form-input" style="width: 100%; box-sizing: border-box; border:none; background:transparent;" @change="saveCurrentChanges()"></td>
+                                <td><input type="number" x-model="item.qty" class="form-input" style="width: 100%; box-sizing: border-box; text-align: center; border:none; background:transparent;" @change="saveCurrentChanges()"></td>
+                                <td><input type="text" x-model="item.unit" class="form-input" style="width: 100%; box-sizing: border-box; text-align: center; border:none; background:transparent;" @change="saveCurrentChanges()"></td>
+                                <td><input type="text" x-model="item.description" class="form-input" style="width: 100%; box-sizing: border-box; border:none; background:transparent;" @change="saveCurrentChanges()"></td>
                                 <td x-text="item.receive" style="text-align: right; color:#cbd5e1;"></td>
                                 <td style="text-align: center;">
                                     <input type="checkbox" :checked="item.cancel" disabled style="width:12px; height:12px; margin:0;">
@@ -271,6 +267,30 @@
                                 </td>
                             </tr>
                         </template>
+                        <!-- New Item Row -->
+                        <tr style="background: #f8fafc; border-top: 2px solid #cbd5e1;">
+                            <td style="text-align: center; color: #10b981; font-weight: bold; cursor: pointer;" @click="addNewItem()" title="Add item">+</td>
+                            <td style="padding: 2px;">
+                                <input type="text" x-model="newItem.code" class="form-input" style="width: 100%; box-sizing: border-box;" placeholder="Code..." list="inv-product-codes" @change="onProductSelect">
+                                <datalist id="inv-product-codes">
+                                    <template x-for="prod in availableProducts"><option :value="prod.code"></option></template>
+                                </datalist>
+                            </td>
+                            <td style="padding: 2px;">
+                                <input type="text" x-model="newItem.name" class="form-input" style="width: 100%; box-sizing: border-box;" placeholder="Name or select..." list="inv-product-names" @change="onProductSelectName">
+                                <datalist id="inv-product-names">
+                                    <template x-for="prod in availableProducts"><option :value="prod.name"></option></template>
+                                </datalist>
+                            </td>
+                            <td style="padding: 2px;"><input type="number" x-model="newItem.qty" class="form-input" style="width: 100%; box-sizing: border-box; text-align: center;" @keydown.enter="addNewItem"></td>
+                            <td style="padding: 2px;"><input type="text" x-model="newItem.unit" class="form-input" style="width: 100%; box-sizing: border-box; text-align: center;" placeholder="Unit..." @keydown.enter="addNewItem"></td>
+                            <td style="padding: 2px;"><input type="text" x-model="newItem.description" class="form-input" style="width: 100%; box-sizing: border-box;" placeholder="Desc..." @keydown.enter="addNewItem"></td>
+                            <td style="padding: 2px;"><input type="number" x-model="newItem.receive" class="form-input" style="width: 100%; box-sizing: border-box; text-align: center;" @keydown.enter="addNewItem"></td>
+                            <td style="text-align: center; padding: 2px;"><input type="checkbox" x-model="newItem.cancel" style="width:12px; height:12px; margin:0;"></td>
+                            <td style="padding: 2px; text-align: center;">
+                                <button @click="addNewItem()" style="background:#2563eb; color:white; border:none; padding: 2px 8px; cursor:pointer;" title="Add Item">Add</button>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -340,6 +360,15 @@
 
             expandedIds: [],
             activeSubTabs: {},
+            selectedItemIdx: 0,
+            availableProducts: [
+                {code: 'INV-001', name: 'PRINTER INK BLACK', unit: 'BTL'},
+                {code: 'INV-002', name: 'A4 PAPER RIM', unit: 'RIM'},
+                {code: 'INV-003', name: 'MASKING TAPE', unit: 'ROLL'},
+                {code: 'INV-004', name: 'BALLPOINT PEN', unit: 'BOX'},
+                {code: 'MCH-01', name: 'CPU FAN', unit: 'PCS'}
+            ],
+            newItem: { code: '', name: '', qty: 1, unit: '', description: '', receive: 0, cancel: false, reload: true },
 
             get currentIndex() {
                 if (!this.selectedRequest) return -1;
@@ -356,6 +385,8 @@
                 const req = this.requests.find(r => r.id === id);
                 if (req) {
                     this.selectedRequest = { ...req };
+                    this.selectedItemIdx = 0;
+                    this.newItem = { code: '', name: '', qty: 1, unit: '', description: '', receive: 0, cancel: false, reload: true };
                 }
             },
 
@@ -369,11 +400,51 @@
 
             saveCurrentChanges() {
                 if (this.selectedRequest) {
+                    // Update main total_qty based on items before saving
+                    if(this.selectedRequest.items) {
+                        this.selectedRequest.tl_qty = this.selectedRequest.items.reduce((acc, it) => acc + Number(it.qty || 0), 0).toString();
+                    }
                     const idx = this.requests.findIndex(r => r.id === this.selectedRequest.id);
                     if (idx !== -1) {
                         this.requests[idx] = { ...this.selectedRequest };
                     }
                 }
+            },
+
+            addNewItem() {
+                if(!this.newItem.code && !this.newItem.name) return;
+                if(!this.selectedRequest.items) this.selectedRequest.items = [];
+                
+                this.selectedRequest.items.push({
+                    code: this.newItem.code,
+                    name: this.newItem.name,
+                    qty: this.newItem.qty,
+                    unit: this.newItem.unit,
+                    description: this.newItem.description,
+                    receive: this.newItem.receive,
+                    cancel: this.newItem.cancel,
+                    reload: this.newItem.reload
+                });
+                this.newItem = { code: '', name: '', qty: 1, unit: '', description: '', receive: 0, cancel: false, reload: true };
+                this.saveCurrentChanges();
+                showToast('Item added', 'success');
+            },
+
+            removeItem(idx) {
+                if(confirm('Remove this item?')) {
+                    this.selectedRequest.items.splice(idx, 1);
+                    this.saveCurrentChanges();
+                }
+            },
+
+            onProductSelect(e) {
+                const prod = this.availableProducts.find(p => p.code === e.target.value);
+                if(prod) { this.newItem.name = prod.name; this.newItem.unit = prod.unit; }
+            },
+
+            onProductSelectName(e) {
+                const prod = this.availableProducts.find(p => p.name === e.target.value);
+                if(prod) { this.newItem.code = prod.code; this.newItem.unit = prod.unit; }
             },
 
             onDateChange(e) {

@@ -96,11 +96,15 @@
 
                 <div class="form-group-center" style="margin-top: 5px;">
                     <div class="form-label-center">Invoice No</div>
-                    <select class="form-select" style="width: 140px;" x-model="selectedRecord.invoice_no" @change="saveCurrentChanges()">
-                        <option value=""></option>
-                        <option value="INV-2026-001">INV-2026-001</option>
-                        <option value="INV-2026-002">INV-2026-002</option>
-                    </select>
+                    <div style="display: flex; align-items: center; background: white; border: 1px solid var(--hr-border); width: 140px;">
+                        <input type="text" style="flex: 1; border: none; font-size: 0.75rem; padding: 4px 8px; outline: none;" 
+                               x-model="selectedRecord.invoice_no" list="invoice-list" placeholder="Invoice..." @change="saveCurrentChanges()">
+                        <datalist id="invoice-list">
+                            <option value="INV-2026-001"></option>
+                            <option value="INV-2026-002"></option>
+                        </datalist>
+                        <span style="border:none; border-left:1px solid var(--hr-border); background:#f1f5f9; cursor:pointer; padding: 4px 6px;">▼</span>
+                    </div>
                 </div>
 
                 <div class="form-group-center" style="margin-top: 5px;">

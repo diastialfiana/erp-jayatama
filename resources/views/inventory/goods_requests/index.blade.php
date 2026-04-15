@@ -104,10 +104,15 @@
                             <!-- Employee Name Row -->
                             <div style="display: flex; align-items: center; gap: 8px;">
                                 <span style="font-size: 0.75rem; color: #475569; width: 100px;">Employee Name</span>
-                                <div style="display: flex; align-items: center; background: white; border: 1px solid var(--hr-border); width: 350px; cursor: pointer;" @click="alert('Employee selection list would open here')">
-                                    <input type="text" style="flex: 1; border: none; font-size: 0.75rem; padding: 4px 8px; cursor: pointer;" 
-                                           x-model="selectedRequest.employees_name" readonly>
-                                    <span style="background: #f1f5f9; padding: 4px 6px; border-left: 1px solid var(--hr-border); color: #64748b;">▼</span>
+                                <div style="display: flex; align-items: center; background: white; border: 1px solid var(--hr-border); width: 350px;">
+                                    <input type="text" style="flex: 1; border: none; font-size: 0.75rem; padding: 4px 8px; outline: none;" 
+                                           x-model="selectedRequest.employees_name" list="employee-names" placeholder="Type or Select Employee" @change="saveCurrentChanges()">
+                                    <datalist id="employee-names">
+                                        <template x-for="emp in availableEmployees">
+                                            <option :value="emp"></option>
+                                        </template>
+                                    </datalist>
+                                    <span style="background: #f1f5f9; padding: 4px 6px; border-left: 1px solid var(--hr-border); color: #64748b; pointer-events: none;">▼</span>
                                 </div>
                             </div>
                         </div>
@@ -147,13 +152,35 @@
                                     <tr @click="selectedItemIdx = idx" :class="selectedItemIdx === idx ? 'status-active-row' : ''" style="cursor: pointer;">
                                         <td style="text-align: center; color: #475569;">
                                             <span style="font-size: 8px;" x-show="selectedItemIdx === idx">▶</span>
+                                            <button @click="removeItem(idx)" x-show="selectedItemIdx === idx" style="background:#ef4444; color:white; border:none; border-radius:2px; font-size:8px; padding:2px 4px; cursor:pointer;" title="Remove Item">✕</button>
                                         </td>
-                                        <td x-text="item.code"></td>
-                                        <td x-text="item.product_name"></td>
-                                        <td x-text="item.qty" style="text-align: center;"></td>
-                                        <td x-text="item.description"></td>
+                                        <td><input type="text" x-model="item.code" class="form-input" style="width: 100%; box-sizing: border-box; border:none; background:transparent;" @change="saveCurrentChanges()"></td>
+                                        <td><input type="text" x-model="item.product_name" class="form-input" style="width: 100%; box-sizing: border-box; border:none; background:transparent;" @change="saveCurrentChanges()"></td>
+                                        <td><input type="number" x-model="item.qty" class="form-input" style="width: 100%; box-sizing: border-box; text-align: center; border:none; background:transparent;" @change="saveCurrentChanges()"></td>
+                                        <td><input type="text" x-model="item.description" class="form-input" style="width: 100%; box-sizing: border-box; border:none; background:transparent;" @change="saveCurrentChanges()"></td>
                                     </tr>
                                 </template>
+                                <!-- New Item Row -->
+                                <tr style="background: #f8fafc; border-top: 2px solid #cbd5e1;">
+                                    <td style="text-align: center; color: #10b981; font-weight: bold; cursor: pointer;" @click="addNewItem()" title="Save item">+</td>
+                                    <td style="padding: 2px;">
+                                        <input type="text" x-model="newItem.code" class="form-input" style="width: 100%; box-sizing: border-box;" placeholder="Code..." list="product-codes" @change="onProductSelect">
+                                        <datalist id="product-codes">
+                                            <template x-for="prod in availableProducts"><option :value="prod.code"></option></template>
+                                        </datalist>
+                                    </td>
+                                    <td style="padding: 2px;">
+                                        <input type="text" x-model="newItem.product_name" class="form-input" style="width: 100%; box-sizing: border-box;" placeholder="Name or select..." list="product-names" @change="onProductSelectName">
+                                        <datalist id="product-names">
+                                            <template x-for="prod in availableProducts"><option :value="prod.name"></option></template>
+                                        </datalist>
+                                    </td>
+                                    <td style="padding: 2px;"><input type="number" x-model="newItem.qty" class="form-input" style="width: 100%; box-sizing: border-box; text-align: center;" @keydown.enter="addNewItem"></td>
+                                    <td style="padding: 2px; display:flex; gap:2px; border:none;">
+                                        <input type="text" x-model="newItem.description" class="form-input" style="flex:1;" placeholder="Desc..." @keydown.enter="addNewItem">
+                                        <button @click="addNewItem()" style="background:#2563eb; color:white; border:none; padding: 2px 8px; cursor:pointer;" title="Add Item">Add</button>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -406,6 +433,17 @@
             activeSubTabs: {},
             selectedItemIdx: 0,
             selectedSubItemIdxs: {},
+            availableEmployees: ['ENDANG HIDAYAT', 'YUNITA CHAERUNISSA', 'ANNE MARIE', 'SINGGIH', 'JOHN DOE', 'BAMBANG', 'PUTRI'],
+            availableProducts: [
+                {code: '010170072084', name: 'BEARING SKF 6206 ZZ'},
+                {code: 'OFF-001', name: 'PAPER A4 80G'},
+                {code: 'OFF-002', name: 'PEN BLUE'},
+                {code: 'ELC-001', name: 'CABLE TIE'},
+                {code: '006671113', name: '3M CREAM CLEANSER'},
+                {code: '0210269804', name: 'AC COIL CLEANER'},
+                {code: '009140269150', name: 'AC DAIKIN 1 PK'}
+            ],
+            newItem: { code: '', product_name: '', qty: 1, description: '' },
 
             init() {
                 if (this.requests && this.requests.length > 0) {
@@ -422,6 +460,7 @@
                     this.selectedRequest = { ...req };
                     this.currentIdx = idx;
                     this.selectedItemIdx = 0; // Reset sub-item focus on main record change
+                    this.newItem = { code: '', product_name: '', qty: 1, description: '' };
                 }
             },
 
@@ -433,6 +472,38 @@
                         this.requests[idx] = { ...this.selectedRequest };
                     }
                 }
+            },
+
+            addNewItem() {
+                if(!this.newItem.code && !this.newItem.product_name) return;
+                this.selectedRequest.items.push({
+                    code: this.newItem.code,
+                    product_name: this.newItem.product_name,
+                    qty: this.newItem.qty,
+                    description: this.newItem.description,
+                    req_date: this.selectedRequest.date, 
+                    hold: false, dimensions: '', volume: '', otw: '0'
+                });
+                this.newItem = { code: '', product_name: '', qty: 1, description: '' };
+                this.saveCurrentChanges();
+                showToast('Item added', 'success');
+            },
+
+            removeItem(idx) {
+                if(confirm('Remove this item?')) {
+                    this.selectedRequest.items.splice(idx, 1);
+                    this.saveCurrentChanges();
+                }
+            },
+
+            onProductSelect(e) {
+                const prod = this.availableProducts.find(p => p.code === e.target.value);
+                if(prod) this.newItem.product_name = prod.name;
+            },
+
+            onProductSelectName(e) {
+                const prod = this.availableProducts.find(p => p.name === e.target.value);
+                if(prod) this.newItem.code = prod.code;
             },
 
             onDateChange(e) {

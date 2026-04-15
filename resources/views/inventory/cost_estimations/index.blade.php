@@ -86,21 +86,29 @@
                         <div class="form-label">Date</div>
                         <input type="date" class="form-input" style="width: 140px;" x-model="formData.date">
                         <div class="form-label" style="width: 60px;">Location</div>
-                        <select class="form-select" style="width: 250px;" x-model="formData.location">
-                            <option value="">Select Location</option>
-                            <template x-for="loc in locations" :key="loc">
-                                <option :value="loc" x-text="loc"></option>
-                            </template>
-                        </select>
+                        <div style="display: flex; align-items: center; background: white; border: 1px solid var(--hr-border); width: 250px;">
+                            <input type="text" style="flex: 1; border: none; font-size: 0.75rem; padding: 4px 8px; outline: none;" 
+                                   x-model="locationInput" list="location-names" placeholder="Type or Select Location" @change="onLocationSelect">
+                            <datalist id="location-names">
+                                <template x-for="loc in locations" :key="loc">
+                                    <option :value="loc"></option>
+                                </template>
+                            </datalist>
+                            <span style="background: #f1f5f9; padding: 4px 6px; border-left: 1px solid var(--hr-border); color: #64748b; pointer-events: none;">▼</span>
+                        </div>
                     </div>
                     <div class="form-group">
                         <div class="form-label">Customer Name</div>
-                        <select class="form-select" style="width: 250px;" x-model="formData.customerId">
-                            <option value="">Select Customer</option>
-                            <template x-for="cust in customers" :key="cust.id">
-                                <option :value="cust.id" x-text="cust.name"></option>
-                            </template>
-                        </select>
+                        <div style="display: flex; align-items: center; background: white; border: 1px solid var(--hr-border); width: 250px;">
+                            <input type="text" style="flex: 1; border: none; font-size: 0.75rem; padding: 4px 8px; outline: none;" 
+                                   x-model="customerNameInput" list="customer-names" placeholder="Type or Select Customer" @change="onCustomerSelect">
+                            <datalist id="customer-names">
+                                <template x-for="cust in customers" :key="cust.id">
+                                    <option :value="cust.name"></option>
+                                </template>
+                            </datalist>
+                            <span style="background: #f1f5f9; padding: 4px 6px; border-left: 1px solid var(--hr-border); color: #64748b; pointer-events: none;">▼</span>
+                        </div>
                     </div>
                     <div class="form-group">
                         <div class="form-label">Product Services</div>
@@ -447,6 +455,8 @@
                 customerId: '',
                 productService: ''
             },
+            customerNameInput: '',
+            locationInput: '',
 
             serviceCosts: [],
             directCosts: [],
@@ -598,8 +608,11 @@
                     estimationName: '',
                     project: '',
                     customerId: '',
-                    productService: ''
+                    productService: '',
+                    location: ''
                 };
+                this.customerNameInput = '';
+                this.locationInput = '';
                 this.serviceCosts = [];
                 this.directCosts = [];
                 this.indirectCosts = [];
@@ -608,6 +621,19 @@
                 this.addRow('indirect');
                 this.activeMainTab = 'detail';
                 showToast('New cost estimation created', 'success');
+            },
+
+            onCustomerSelect() {
+                const cust = this.customers.find(c => c.name === this.customerNameInput);
+                if(cust) {
+                    this.formData.customerId = cust.id;
+                } else {
+                    this.formData.customerId = 'CUST-NEW';
+                }
+            },
+            
+            onLocationSelect() {
+                this.formData.location = this.locationInput;
             },
 
             saveCurrentChanges() {

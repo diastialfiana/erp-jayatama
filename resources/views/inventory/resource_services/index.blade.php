@@ -88,9 +88,15 @@
                         </div>
                         <div class="form-group">
                             <div class="form-label">Customer</div>
-                            <div style="display:flex;">
-                                <input type="text" class="form-input" style="width: 250px;" x-model="selectedContract.customer_name">
-                                <span class="pager-btn" style="border-left:none;" @click="lookup('Customer')">...</span>
+                            <div style="display: flex; align-items: center; background: white; border: 1px solid var(--hr-border); width: 275px;">
+                                <input type="text" style="flex: 1; border: none; font-size: 0.75rem; padding: 4px 8px; outline: none;" 
+                                       x-model="customerNameInput" list="customer-names" placeholder="Type or Select Customer" @change="onCustomerSelect">
+                                <datalist id="customer-names">
+                                    <template x-for="cust in customers" :key="cust">
+                                        <option :value="cust"></option>
+                                    </template>
+                                </datalist>
+                                <span class="pager-btn" style="border:none; border-left:1px solid var(--hr-border); background:#f1f5f9; cursor:pointer;" @click="lookup('Customer')">...</span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -152,14 +158,31 @@
                         <tbody>
                             <template x-for="(sub, sidx) in (selectedContract ? selectedContract.services : [])" :key="sidx">
                                 <tr>
-                                    <td x-text="sidx === 0 ? '▶' : ''"></td>
-                                    <td x-text="sub.name" style="background:#f8fafc;"></td>
-                                    <td style="text-align:right; background:#f8fafc;" x-text="sub.qty"></td>
-                                    <td style="text-align:right; background:#f8fafc;" x-text="sub.price"></td>
-                                    <td style="text-align:right; background:#f8fafc;" x-text="sub.amount"></td>
-                                    <td x-text="sub.description"></td>
+                                    <td style="text-align: center; font-size: 0.5rem; color: #475569;">
+                                        <span x-show="sidx === selectedItemIdx">▶</span>
+                                        <button @click="removeServiceItem(sidx)" x-show="sidx === selectedItemIdx" style="background:#ef4444; color:white; border:none; border-radius:2px; font-size:8px; padding:2px 4px; cursor:pointer;" title="Remove Item">✕</button>
+                                    </td>
+                                    <td><input type="text" x-model="sub.name" class="form-input" style="width: 100%; box-sizing: border-box; border:none; background:transparent;" @change="saveCurrentChanges()"></td>
+                                    <td><input type="number" x-model="sub.qty" class="form-input" style="width: 100%; box-sizing: border-box; text-align: center; border:none; background:transparent;" @change="saveCurrentChanges()"></td>
+                                    <td><input type="number" x-model="sub.price" class="form-input" style="width: 100%; box-sizing: border-box; text-align: center; border:none; background:transparent;" @change="saveCurrentChanges()"></td>
+                                    <td><input type="number" x-model="sub.amount" class="form-input" style="width: 100%; box-sizing: border-box; text-align: center; border:none; background:transparent;" @change="saveCurrentChanges()"></td>
+                                    <td><input type="text" x-model="sub.description" class="form-input" style="width: 100%; box-sizing: border-box; border:none; background:transparent;" @change="saveCurrentChanges()"></td>
                                 </tr>
                             </template>
+                            <!-- New Item Row -->
+                            <tr style="background: #f8fafc; border-top: 2px solid #cbd5e1;">
+                                <td style="text-align: center; color: #10b981; font-weight: bold; cursor: pointer;" @click="addNewServiceItem()" title="Add item">+</td>
+                                <td style="padding: 2px;">
+                                    <input type="text" x-model="newServiceItem.name" class="form-input" style="width: 100%; box-sizing: border-box;" placeholder="Services name..." @keydown.enter="addNewServiceItem">
+                                </td>
+                                <td style="padding: 2px;"><input type="number" x-model="newServiceItem.qty" class="form-input" style="width: 100%; box-sizing: border-box; text-align: center;" @keydown.enter="addNewServiceItem"></td>
+                                <td style="padding: 2px;"><input type="number" x-model="newServiceItem.price" class="form-input" style="width: 100%; box-sizing: border-box; text-align: center;" placeholder="Price..." @keydown.enter="addNewServiceItem"></td>
+                                <td style="padding: 2px;"><input type="number" x-model="newServiceItem.amount" class="form-input" style="width: 100%; box-sizing: border-box; text-align: center;" placeholder="Amount..." @keydown.enter="addNewServiceItem"></td>
+                                <td style="padding: 2px; display:flex;">
+                                    <input type="text" x-model="newServiceItem.description" class="form-input" style="flex:1; box-sizing: border-box;" placeholder="Desc..." @keydown.enter="addNewServiceItem">
+                                    <button @click="addNewServiceItem()" style="background:#2563eb; color:white; border:none; padding: 2px 8px; cursor:pointer;" title="Add Item">Add</button>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -356,8 +379,12 @@
         return {
             activeMainTab: 'detail',
             contracts: @json($contracts),
+            customers: ['PT JAYATAMA', 'PT MAJU SELALU', 'PT ANGIN RIBUT'],
+            customerNameInput: '',
             selectedContract: null,
             expandedIds: [],
+            selectedItemIdx: 0,
+            newServiceItem: { code: 'SRV-NEW', name: '', qty: 1, price: 0, amount: 0, description: '' },
 
             get currentIndex() {
                 if (!this.selectedContract) return -1;
@@ -375,6 +402,31 @@
                 if (contract) {
                     this.selectedContract = JSON.parse(JSON.stringify(contract));
                     this.activeMainTab = 'detail';
+                    this.selectedItemIdx = 0;
+                    this.customerNameInput = this.selectedContract.customer_name;
+                }
+            },
+
+            onCustomerSelect() {
+                if (this.selectedContract) {
+                    this.selectedContract.customer_name = this.customerNameInput;
+                    this.saveCurrentChanges();
+                }
+            },
+
+            addNewServiceItem() {
+                if(!this.newServiceItem.name) return;
+                if(!this.selectedContract.services) this.selectedContract.services = [];
+                
+                this.selectedContract.services.push({...this.newServiceItem});
+                this.newServiceItem = { code: 'SRV-NEW', name: '', qty: 1, price: 0, amount: 0, description: '' };
+                this.saveCurrentChanges();
+            },
+
+            removeServiceItem(idx) {
+                if(confirm('Remove this service?')) {
+                    this.selectedContract.services.splice(idx, 1);
+                    this.saveCurrentChanges();
                 }
             },
 
