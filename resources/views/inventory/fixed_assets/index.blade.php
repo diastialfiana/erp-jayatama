@@ -425,9 +425,9 @@
 @endpush
 
 @section('content')
-<div x-data="fixedAssetManager()" x-init="init()" class="fa-window">
+<div x-data="fixedAssetManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)" class="fa-window">
     <!-- Title Bar -->
-    <div class="fa-title-bar">
+    <div class="window-title-bar">
         <div style="display:flex;gap:8px;align-items:center;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7" fill="#dc2626"></rect><rect x="14" y="14" width="7" height="7" fill="#2563eb"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
             <span style="font-weight:600;">Fixed Asset</span>
@@ -438,6 +438,8 @@
             <span style="cursor:pointer;">✕</span>
         </div>
     </div>
+
+    @include('partials.ribbon_toolbar')
 
     <!-- Tabs -->
     <div class="fa-tabs">
@@ -816,6 +818,116 @@
                     this.saveCurrentChanges();
                     this.currentIndex = idx;
                     this.activeTab = 'detail';
+                },
+
+                handleRibbonAction(action) {
+                    switch(action) {
+                        case 'new': this.createNew(); break;
+                        case 'save': 
+                            this.saveCurrentChanges(); 
+                            if(typeof exportToJSONFile === 'function') {
+                                exportToJSONFile(this.records[this.currentIndex], 'FixedAsset_' + this.records[this.currentIndex].code + '.json');
+                            }
+                            showToast('Record saved to file folder', 'success'); 
+                            break;
+                        case 'delete': this.deleteRecord(); break;
+                        case 'refresh': this.refreshData(); break;
+                        case 'preview': window.print(); break;
+                        case 'find': this.activeTab = 'list'; this.$nextTick(() => { if(typeof erpFindOpen === 'function') erpFindOpen(); }); break;
+                        case 'undo': this.undoChanges(); break;
+                        case 'save-as': 
+                            this.saveAsNew(); 
+                            if(typeof exportToJSONFile === 'function') {
+                                exportToJSONFile(this.records[this.records.length-1], 'FixedAsset_' + this.records[this.records.length-1].code + '.json');
+                            }
+                            break;
+                        case 'edit': this.focusFirstField(); break;
+                        case 'barcode': showToast('Generating barcode...', 'info'); break;
+                        case 'resend': showToast('Re-sending document...', 'info'); break;
+                    }
+                },
+
+                undoChanges() {
+                    if (confirm('Revert all unsaved changes for this record?')) {
+                        // For simplicity in this mock, we reload or re-fetch (simulated)
+                        showToast('Changes reverted', 'info');
+                        this.refreshData();
+                    }
+                },
+
+                saveAsNew() {
+                    const clone = JSON.parse(JSON.stringify(this.records[this.currentIndex]));
+                    clone.code = (Number(this.records[this.records.length-1]?.code || 0) + 1).toString().padStart(6, '0');
+                    clone.name += ' (Copy)';
+                    this.records.push(clone);
+                    this.currentIndex = this.records.length - 1;
+                    showToast('Record duplicated as ' + clone.code, 'success');
+                },
+
+                focusFirstField() {
+                    this.activeTab = 'detail';
+                    this.$nextTick(() => {
+                        const firstInput = document.querySelector('.fa-pane.active input:not([readonly])');
+                        if (firstInput) firstInput.focus();
+                    });
+                },
+
+                createNew() {
+                    const newCode = (Number(this.records[this.records.length-1]?.code || 0) + 1).toString().padStart(6, '0');
+                    const newRec = {
+                        code: newCode,
+                        curr: 'IDR',
+                        rate: '1',
+                        brand: '',
+                        name: 'New Asset',
+                        type: '',
+                        qty: 0,
+                        cat: '',
+                        serial: '',
+                        location: '',
+                        since: new Date().toLocaleDateString('id-ID'),
+                        initial_date: new Date().toISOString().split('T')[0],
+                        cost_center: '',
+                        dept: '',
+                        category: '',
+                        initial_cost: '0',
+                        residual: '0',
+                        deprec_method: 'Straight Line',
+                        useful_life: 0,
+                        deprec_pct: '0',
+                        supplier: '',
+                        services_provider: '',
+                        asset_user: '',
+                        valid_guaranty: '',
+                        note: '',
+                        accumulated_account: '',
+                        depreciation_expense: '',
+                        depr_start: '',
+                        depr_end: '',
+                        life_to_date: '0',
+                        year_to_date: '0',
+                        monthly: '0',
+                        journal_posted: 0
+                    };
+                    this.records.push(newRec);
+                    this.currentIndex = this.records.length - 1;
+                    this.activeTab = 'detail';
+                    showToast('New asset record created', 'success');
+                },
+
+                deleteRecord() {
+                    if (confirm('Are you sure you want to delete this asset?')) {
+                        this.records.splice(this.currentIndex, 1);
+                        if (this.currentIndex >= this.records.length) {
+                            this.currentIndex = Math.max(0, this.records.length - 1);
+                        }
+                        showToast('Asset record deleted', 'success');
+                    }
+                },
+
+                refreshData() {
+                    showToast('Data refreshed', 'success');
+                    // In a real app, this would fetch from server
                 }
             }
         }

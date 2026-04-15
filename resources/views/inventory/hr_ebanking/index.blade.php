@@ -44,21 +44,21 @@
 @endpush
 
 @section('content')
-<div x-data="hrEbankingManager()" x-init="init()" style="background: white; border: 1px solid var(--hr-border); margin: 10px;">
+<div x-data="hrEbankingManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)" style="background: white; border: 1px solid var(--hr-border); margin: 10px;">
     <!-- Windows like Title bar -->
-    <div style="background: white; padding: 0; border-bottom: 1px solid #e2e8f0;">
-        <div style="background: transparent; padding: 6px 10px; color: #334155; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem;">
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7" fill="#dc2626"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7" fill="#2563eb"></rect></svg>
-                <span style="font-weight: 600;">HR. e-Banking</span>
-            </div>
-            <div style="display: flex; gap: 15px;">
-                <span style="cursor: pointer; font-size: 0.9rem;">◁</span>
-                <span style="cursor: pointer; font-size: 0.9rem;">▷</span>
-                <span style="cursor: pointer;">✕</span>
-            </div>
+    <div class="window-title-bar">
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7" fill="#dc2626"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7" fill="#2563eb"></rect></svg>
+            <span style="font-weight: 600;">HR. e-Banking</span>
+        </div>
+        <div style="display: flex; gap: 15px;">
+            <span style="cursor: pointer; font-size: 0.9rem;">◁</span>
+            <span style="cursor: pointer; font-size: 0.9rem;">▷</span>
+            <span style="cursor: pointer;">✕</span>
         </div>
     </div>
+
+    @include('partials.ribbon_toolbar')
 
     <!-- Main Navigation Tabs -->
     <div class="main-tabs" style="background: #f1f5f9; border-bottom: 1px solid var(--hr-border); padding-left: 10px; border-radius: 0;">
@@ -258,7 +258,96 @@
             firstRecord() { this.saveCurrentChanges(); if (this.records.length > 0) this.selectRecord(this.records[0].id, 0); },
             prevRecord() { this.saveCurrentChanges(); if (this.currentIdx > 0) this.selectRecord(this.records[this.currentIdx - 1].id, this.currentIdx - 1); },
             nextRecord() { this.saveCurrentChanges(); if (this.currentIdx < this.records.length - 1) this.selectRecord(this.records[this.currentIdx + 1].id, this.currentIdx + 1); },
-            lastRecord() { this.saveCurrentChanges(); if (this.records.length > 0) this.selectRecord(this.records[this.records.length - 1].id, this.records.length - 1); }
+            lastRecord() { this.saveCurrentChanges(); if (this.records.length > 0) this.selectRecord(this.records[this.records.length - 1].id, this.records.length - 1); },
+
+            handleRibbonAction(action) {
+                switch(action) {
+                    case 'new': this.createNew(); break;
+                    case 'save': 
+                        this.saveCurrentChanges(); 
+                        if(typeof exportToJSONFile === 'function') {
+                            exportToJSONFile(this.selectedRecord, 'HReBanking_' + (this.selectedRecord?.doc_no?.replace(/\//g, '-') || 'Draft') + '.json');
+                        }
+                        showToast('Record saved to file', 'success'); 
+                        break;
+                    case 'delete': this.deleteRecord(); break;
+                    case 'refresh': window.location.reload(); break;
+                    case 'preview': window.print(); break;
+                    case 'find': this.activeMainTab = 'list'; this.$nextTick(() => { if(typeof erpFindOpen === 'function') erpFindOpen(); }); break;
+                    case 'undo': this.undoChanges(); break;
+                    case 'save-as': 
+                        this.saveAsNew(); 
+                        if(typeof exportToJSONFile === 'function') {
+                            exportToJSONFile(this.selectedRecord, 'HReBanking_Copy.json');
+                        }
+                        break;
+                    case 'edit': this.focusFirstField(); break;
+                    case 'barcode': showToast('Generating barcode...', 'info'); break;
+                    case 'resend': showToast('Re-sending document...', 'info'); break;
+                }
+            },
+
+            undoChanges() {
+                if (this.selectedRecord && confirm('Revert all unsaved changes for this record?')) {
+                    this.selectRecord(this.selectedRecord.id, this.currentIdx);
+                    showToast('Changes reverted', 'info');
+                }
+            },
+
+            saveAsNew() {
+                if (!this.selectedRecord) return;
+                const clone = JSON.parse(JSON.stringify(this.selectedRecord));
+                clone.id = this.records.length + 1;
+                clone.doc_no += ' (COPY)';
+                this.records.push(clone);
+                this.selectRecord(clone.id, this.records.length - 1);
+                showToast('Record duplicated', 'success');
+            },
+
+            focusFirstField() {
+                this.activeMainTab = 'detail';
+                this.$nextTick(() => {
+                    const firstInput = document.querySelector('.tab-pane.active input:not([readonly])');
+                    if (firstInput) firstInput.focus();
+                });
+            },
+
+            createNew() {
+                const newId = this.records.length + 1;
+                const newRec = {
+                    id: newId,
+                    date: new Date().toLocaleDateString('id-ID'),
+                    doc_no: `EBK/${new Date().getFullYear()}/${String(newId).padStart(4, '0')}`,
+                    transfer_to: 'SYSTEM',
+                    bank: 'BCA',
+                    account_no: '00000000',
+                    total: '0',
+                    status: 'DRAFT',
+                    note: '',
+                    items: []
+                };
+                this.records.push(newRec);
+                this.selectRecord(newId, this.records.length - 1);
+                this.activeMainTab = 'detail';
+                showToast('New e-Banking record created', 'success');
+            },
+
+            deleteRecord() {
+                if (!this.selectedRecord) return;
+                if (confirm('Are you sure you want to delete this record?')) {
+                    const idx = this.records.findIndex(r => r.id === this.selectedRecord.id);
+                    if (idx !== -1) {
+                        this.records.splice(idx, 1);
+                        if (this.records.length > 0) {
+                            const newIdx = Math.min(idx, this.records.length - 1);
+                            this.selectRecord(this.records[newIdx].id, newIdx);
+                        } else {
+                            this.selectedRecord = null;
+                        }
+                    }
+                    showToast('Record deleted', 'success');
+                }
+            }
         }
     }
 </script>

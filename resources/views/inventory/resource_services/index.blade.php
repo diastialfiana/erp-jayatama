@@ -48,21 +48,21 @@
 @endpush
 
 @section('content')
-<div x-data="resourceServiceManager()" x-init="init()" style="background: white; border: 1px solid var(--hr-border); margin: 10px;">
+<div x-data="resourceServiceManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)" style="background: white; border: 1px solid var(--hr-border); margin: 10px;">
     <!-- Windows like Title bar -->
-    <div style="background: white; padding: 0; border-bottom: 1px solid #e2e8f0;">
-        <div style="background: transparent; padding: 6px 10px; color: #334155; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem;">
-            <div style="display: flex; gap: 8px; align-items: center;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7" fill="#dc2626"></rect><rect x="14" y="14" width="7" height="7" fill="#2563eb"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-                <span style="font-weight: 600;">Rembursment Contract</span>
-            </div>
-            <div style="display: flex; gap: 15px;">
-                <span style="cursor: pointer; font-size: 0.9rem;">◁</span>
-                <span style="cursor: pointer; font-size: 0.9rem;">▷</span>
-                <span style="cursor: pointer;">✕</span>
-            </div>
+    <div class="window-title-bar">
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7" fill="#dc2626"></rect><rect x="14" y="14" width="7" height="7" fill="#2563eb"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span style="font-weight: 600;">Rembursment Contract</span>
+        </div>
+        <div style="display: flex; gap: 15px;">
+            <span style="cursor: pointer; font-size: 0.9rem;">◁</span>
+            <span style="cursor: pointer; font-size: 0.9rem;">▷</span>
+            <span style="cursor: pointer;">✕</span>
         </div>
     </div>
+
+    @include('partials.ribbon_toolbar')
 
     <!-- Main Navigation Tabs -->
     <div class="main-tabs" style="background: #f1f5f9; border-bottom: 1px solid var(--hr-border); padding-left: 10px; border-radius: 0;">
@@ -407,6 +407,112 @@
             lookup(type) {
                 alert('Looking up ' + type + '...');
                 // In a real app, this would open a modal or fetch data
+            },
+
+            handleRibbonAction(action) {
+                switch(action) {
+                    case 'new': this.createNew(); break;
+                    case 'save': 
+                        this.saveCurrentChanges(); 
+                        if(typeof exportToJSONFile === 'function') {
+                            exportToJSONFile(this.selectedContract, 'Contract_' + (this.selectedContract?.contract_no || 'Draft') + '.json');
+                        }
+                        showToast('Contract saved to file', 'success'); 
+                        break;
+                    case 'delete': this.deleteRecord(); break;
+                    case 'refresh': this.refreshData(); break;
+                    case 'preview': window.print(); break;
+                    case 'find': this.activeMainTab = 'list'; this.$nextTick(() => { if(typeof erpFindOpen === 'function') erpFindOpen(); }); break;
+                    case 'undo': this.undoChanges(); break;
+                    case 'save-as': 
+                        this.saveAsNew(); 
+                        if(typeof exportToJSONFile === 'function') {
+                            exportToJSONFile(this.selectedContract, 'Contract_Copy.json');
+                        }
+                        break;
+                    case 'edit': this.focusFirstField(); break;
+                    case 'barcode': showToast('Generating barcode...', 'info'); break;
+                    case 'resend': showToast('Re-sending document...', 'info'); break;
+                }
+            },
+
+            undoChanges() {
+                if (this.selectedContract && confirm('Revert all unsaved changes for this contract?')) {
+                    this.selectContract(this.selectedContract.id);
+                    showToast('Changes reverted', 'info');
+                }
+            },
+
+            saveAsNew() {
+                if (!this.selectedContract) return;
+                const clone = JSON.parse(JSON.stringify(this.selectedContract));
+                clone.id = this.contracts.length + 1;
+                clone.contract_no += ' (COPY)';
+                this.contracts.push(clone);
+                this.selectContract(clone.id);
+                showToast('Contract duplicated', 'success');
+            },
+
+            focusFirstField() {
+                this.activeMainTab = 'detail';
+                this.$nextTick(() => {
+                    const firstInput = document.querySelector('.tab-pane.active input:not([readonly])');
+                    if (firstInput) firstInput.focus();
+                });
+            },
+
+            createNew() {
+                const newId = this.contracts.length + 1;
+                const newContract = {
+                    id: newId,
+                    type: 'GENERAL',
+                    client_name: 'NEW CLIENT',
+                    contract_no: `CTR/${new Date().getFullYear()}/${String(newId).padStart(4, '0')}`,
+                    start_date: new Date().toISOString().split('T')[0],
+                    end_date: '',
+                    value: '0',
+                    tax: '0',
+                    total: '0',
+                    status: 'DRAFT',
+                    note: '',
+                    items: []
+                };
+                this.contracts.push(newContract);
+                this.selectContract(newId);
+                this.activeMainTab = 'detail';
+                showToast('New contract created', 'success');
+            },
+
+            saveCurrentChanges() {
+                if (this.selectedContract) {
+                    const idx = this.contracts.findIndex(c => c.id === this.selectedContract.id);
+                    if (idx !== -1) {
+                        this.contracts[idx] = JSON.parse(JSON.stringify(this.selectedContract));
+                    }
+                    showToast('Contract saved locally', 'success');
+                }
+            },
+
+            deleteRecord() {
+                if (!this.selectedContract) return;
+                if (confirm('Are you sure you want to delete this contract?')) {
+                    const idx = this.contracts.findIndex(c => c.id === this.selectedContract.id);
+                    if (idx !== -1) {
+                        this.contracts.splice(idx, 1);
+                        if (this.contracts.length > 0) {
+                            const newIdx = Math.min(idx, this.contracts.length - 1);
+                            this.selectContract(this.contracts[newIdx].id);
+                        } else {
+                            this.selectedContract = null;
+                        }
+                    }
+                    showToast('Contract deleted', 'success');
+                }
+            },
+
+            refreshData() {
+                showToast('Data refreshed', 'success');
+                window.location.reload();
             }
         }
     }

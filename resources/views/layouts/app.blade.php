@@ -33,6 +33,7 @@
             --border: #e2e8f0;
             --radius: 14px;
             --ease: cubic-bezier(0.4, 0, 0.2, 1);
+            --ribbon-skin-color: #4671a8;
         }
 
         body {
@@ -697,7 +698,366 @@
                 width: auto;
             }
         }
+        /* ══════════════ WINDOW BAR ══════════════ */
+        .window-title-bar {
+            background: linear-gradient(
+                to bottom,
+                var(--ribbon-skin-color, #1e3a8a),
+                color-mix(in srgb, var(--ribbon-skin-color, #1e3a8a) 80%, black)
+            );
+            color: #ffffff;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            padding: 5px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            border-bottom: 1px solid rgba(0,0,0,0.15);
+            transition: background 0.3s ease;
+            user-select: none;
+        }
+
+        .window-title-bar span,
+        .window-title-bar svg {
+            color: inherit;
+            fill: currentColor;
+        }
+
+        .window-title-bar .nav-btn {
+            opacity: 0.85;
+            transition: opacity 0.15s;
+        }
+        .window-title-bar .nav-btn:hover {
+            opacity: 1;
+        }
+
+        /* ══════════════ RIBBON TOOLBAR ══════════════ */
+        .ribbon-toolbar {
+            display: flex;
+            background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
+            border-bottom: 1px solid #cbd5e1;
+            padding: 2px 4px;
+            gap: 2px;
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        .ribbon-group {
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #cbd5e1;
+            padding: 2px 6px;
+            align-items: center;
+        }
+
+        .ribbon-group:last-child {
+            border-right: none;
+        }
+
+        .ribbon-actions {
+            display: flex;
+            gap: 4px;
+            align-items: flex-start;
+            flex: 1;
+        }
+
+        .ribbon-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 8px;
+            border: 1px solid transparent;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.15s var(--ease);
+            min-width: 48px;
+        }
+
+        .ribbon-btn:hover {
+            background: rgba(37, 99, 235, 0.08);
+            border-color: rgba(37, 99, 235, 0.2);
+        }
+
+        .ribbon-btn:active {
+            background: rgba(37, 99, 235, 0.15);
+            transform: translateY(1px);
+        }
+
+        .ribbon-btn svg {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 2px;
+            color: #475569;
+            transition: color 0.15s;
+        }
+
+        .ribbon-btn:hover svg {
+            color: var(--blue);
+        }
+
+        .ribbon-btn span {
+            font-size: 0.68rem;
+            font-weight: 500;
+            color: #475569;
+            line-height: 1;
+        }
+
+        .ribbon-btn.small {
+            flex-direction: row;
+            gap: 6px;
+            padding: 3px 8px;
+            min-width: auto;
+            justify-content: flex-start;
+            width: 100%;
+        }
+
+        .ribbon-btn.small svg {
+            width: 14px;
+            height: 14px;
+            margin-bottom: 0;
+        }
+
+        .ribbon-group-label {
+            margin-top: 4px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .ribbon-grid {
+            display: grid;
+            grid-template-rows: repeat(3, 1fr);
+            gap: 1px;
+        }
+
+        .skin-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 4px;
+            padding: 4px;
+        }
+
+        .skin-item {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            border: 1px solid #cbd5e1;
+            cursor: pointer;
+            transition: transform 0.15s;
+        }
+
+        .skin-item:hover {
+            transform: scale(1.1);
+            border-color: var(--blue);
+        }
+
+        /* ══════════════ FIND / SEARCH DIALOG ══════════════ */
+        .erp-find-overlay {
+            position: fixed;
+            top: 0;
+            right: 0;
+            z-index: 9000;
+            pointer-events: none;
+        }
+
+        .erp-find-panel {
+            position: fixed;
+            top: 80px;
+            right: 30px;
+            width: 420px;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18), 0 4px 16px rgba(0, 0, 0, 0.08);
+            pointer-events: all;
+            animation: erpFindSlideIn 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        @keyframes erpFindSlideIn {
+            from { opacity: 0; transform: translateY(-12px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .erp-find-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 16px;
+            background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .erp-find-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .erp-find-title svg {
+            color: #2563eb;
+        }
+
+        .erp-find-close {
+            width: 26px;
+            height: 26px;
+            border: none;
+            background: transparent;
+            color: #94a3b8;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+
+        .erp-find-close:hover {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+
+        .erp-find-body {
+            padding: 14px 16px;
+        }
+
+        .erp-find-input-row {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .erp-find-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: #1e293b;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+        }
+
+        .erp-find-input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .erp-find-input.has-results {
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .erp-find-input.no-results {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+
+        .erp-find-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #cbd5e1;
+            background: #f8fafc;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #475569;
+            transition: all 0.15s;
+            flex-shrink: 0;
+        }
+
+        .erp-find-btn:hover {
+            background: #e2e8f0;
+            border-color: #94a3b8;
+            color: #1e293b;
+        }
+
+        .erp-find-btn:active {
+            transform: scale(0.95);
+        }
+
+        .erp-find-options {
+            display: flex;
+            gap: 16px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .erp-find-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.75rem;
+            color: #64748b;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .erp-find-checkbox input {
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+            accent-color: #2563eb;
+        }
+
+        .erp-find-status {
+            margin-top: 8px;
+            font-size: 0.75rem;
+            color: #64748b;
+            min-height: 18px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .erp-find-status .match-count {
+            font-weight: 600;
+            color: #2563eb;
+        }
+
+        .erp-find-status .no-match {
+            font-weight: 600;
+            color: #ef4444;
+        }
+
+        /* Search highlight styles applied to matching table rows/cells */
+        tr.erp-find-match td {
+            background: #fef9c3 !important;
+        }
+
+        tr.erp-find-match-active td {
+            background: #fbbf24 !important;
+            outline: 2px solid #f59e0b;
+            outline-offset: -1px;
+        }
+
+        .erp-find-highlight {
+            background: #fef08a;
+            color: #1e293b;
+            border-radius: 2px;
+            padding: 0 1px;
+            box-shadow: 0 0 0 1px #fbbf24;
+        }
+
+        .erp-find-highlight-active {
+            background: #f97316;
+            color: #ffffff;
+            box-shadow: 0 0 0 2px #ea580c;
+        }
     </style>
+
     @stack('styles')
 </head>
 
@@ -772,6 +1132,292 @@
     </script>
 
     @stack('scripts')
-</body>
+    <script>
+        // Global Skin Management
+        document.addEventListener('change-skin', (e) => {
+            const color = e.detail;
+            document.documentElement.style.setProperty('--ribbon-skin-color', color);
+            localStorage.setItem('erp_ribbon_skin', color);
+            showToast('Skin updated successfully', 'success');
+        });
 
+        // Global Toast System
+        window.showToast = function(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: white;
+                padding: 12px 24px;
+                border-radius: 8px;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+                border-left: 4px solid ${type === 'success' ? '#10b981' : (type === 'error' ? '#ef4444' : '#3b82f6')};
+                z-index: 9999;
+                font-size: 0.85rem;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                transform: translateY(100px);
+                transition: transform 0.3s ease;
+            `;
+            
+            toast.innerHTML = `
+                <span style="color: ${type === 'success' ? '#10b981' : (type === 'error' ? '#ef4444' : '#3b82f6')}">
+                    ${type === 'success' ? '✓' : (type === 'error' ? '✕' : 'ℹ')}
+                </span>
+                <span>${message}</span>
+            `;
+
+            document.body.appendChild(toast);
+            setTimeout(() => toast.style.transform = 'translateY(0)', 10);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateY(100px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        };
+
+        // Global JSON Exporter
+        window.exportToJSONFile = function(data, filename) {
+            const jsonStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename || 'export.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        };
+
+        // Initialize Skin on Load
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedSkin = localStorage.getItem('erp_ribbon_skin');
+            if (savedSkin) {
+                document.documentElement.style.setProperty('--ribbon-skin-color', savedSkin);
+            }
+        });
+
+        // ══════════════ GLOBAL FIND / SEARCH SYSTEM ══════════════
+        (function() {
+            let _findMatchRows = [];
+            let _findCurrentIdx = -1;
+            let _findDebounce = null;
+
+            // Open Find Dialog
+            window.erpFindOpen = function() {
+                var dialog = document.getElementById('erpFindDialog');
+                if (!dialog) return;
+                // Show the dialog
+                dialog.style.display = 'block';
+                // Replay animation
+                var panel = dialog.querySelector('.erp-find-panel');
+                if (panel) { panel.style.animation = 'none'; void panel.offsetHeight; panel.style.animation = ''; }
+                // Focus input after display:block takes effect
+                setTimeout(function() {
+                    var inp = document.getElementById('erpFindInput');
+                    if (inp) { inp.focus(); inp.select(); }
+                }, 80);
+            };
+
+            // Close Find Dialog
+            window.erpFindClose = function() {
+                var dialog = document.getElementById('erpFindDialog');
+                if (!dialog) return;
+                dialog.style.display = 'none';
+                erpFindClearHighlights();
+                _findMatchRows = [];
+                _findCurrentIdx = -1;
+                var inp = document.getElementById('erpFindInput');
+                if (inp) { inp.value = ''; inp.classList.remove('has-results', 'no-results'); }
+                var status = document.getElementById('erpFindStatus');
+                if (status) status.innerHTML = '';
+            };
+
+            // Toggle Find Dialog
+            window.erpFindToggle = function() {
+                const dialog = document.getElementById('erpFindDialog');
+                if (!dialog) return;
+                if (dialog.style.display === 'none' || dialog.style.display === '') {
+                    erpFindOpen();
+                } else {
+                    erpFindClose();
+                }
+            };
+
+            // Clear all highlights
+            function erpFindClearHighlights() {
+                // Remove row highlights
+                document.querySelectorAll('.erp-find-match, .erp-find-match-active').forEach(el => {
+                    el.classList.remove('erp-find-match', 'erp-find-match-active');
+                });
+            }
+            window.erpFindClearHighlights = erpFindClearHighlights;
+
+            // Check real visibility including Alpine x-show (checks computed style)
+            function _isVisible(el) {
+                if (!el) return false;
+                let node = el;
+                while (node && node !== document.body) {
+                    var st = window.getComputedStyle(node);
+                    if (st.display === 'none' || st.visibility === 'hidden') return false;
+                    node = node.parentElement;
+                }
+                return true;
+            }
+
+            // Execute search against all visible table rows
+            function _erpFindExecute() {
+                var inputEl   = document.getElementById('erpFindInput');
+                var statusEl  = document.getElementById('erpFindStatus');
+                var caseEl    = document.getElementById('erpFindCase');
+                var hlEl      = document.getElementById('erpFindHighlightAll');
+                var caseSensitive = caseEl ? caseEl.checked : false;
+                var highlightAll  = hlEl  ? hlEl.checked  : true;
+                var query = inputEl ? inputEl.value.trim() : '';
+
+                // Clear previous results using the correct function name
+                erpFindClearHighlights();
+                _findMatchRows = [];
+                _findCurrentIdx = -1;
+
+                if (!query) {
+                    if (statusEl) statusEl.innerHTML = '';
+                    if (inputEl) inputEl.classList.remove('has-results', 'no-results');
+                    return;
+                }
+
+                var qLow = caseSensitive ? query : query.toLowerCase();
+
+                document.querySelectorAll('table tbody tr').forEach(function(row) {
+                    if (!_isVisible(row)) return;
+                    var cells = row.querySelectorAll('td');
+                    if (!cells.length) return;
+                    var txt = '';
+                    cells.forEach(function(c){ txt += ' ' + (c.textContent||''); });
+                    var cmp = caseSensitive ? txt : txt.toLowerCase();
+                    if (cmp.indexOf(qLow) !== -1) _findMatchRows.push(row);
+                });
+
+                if (_findMatchRows.length > 0) {
+                    if (highlightAll) {
+                        _findMatchRows.forEach(function(r){ r.classList.add('erp-find-match'); });
+                    }
+                    _findCurrentIdx = 0;
+                    _activateMatch(0);
+                    if (statusEl) statusEl.innerHTML = '<span class="match-count">'+_findMatchRows.length+'</span> hasil ditemukan &mdash; gunakan ▲▼ untuk navigasi';
+                    if (inputEl) { inputEl.classList.add('has-results'); inputEl.classList.remove('no-results'); }
+                } else {
+                    if (statusEl) statusEl.innerHTML = '<span class="no-match">Tidak ditemukan</span> untuk "' + _escHtml(query) + '"';
+                    if (inputEl) { inputEl.classList.add('no-results'); inputEl.classList.remove('has-results'); }
+                }
+            }
+
+            function _escHtml(str) {
+                return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+            }
+
+            function _activateMatch(idx) {
+                document.querySelectorAll('.erp-find-match-active').forEach(function(el){
+                    el.classList.remove('erp-find-match-active');
+                });
+                if (idx < 0 || idx >= _findMatchRows.length) return;
+                var row = _findMatchRows[idx];
+                row.classList.add('erp-find-match-active');
+                row.classList.add('erp-find-match');
+                // Scroll into scrollable ancestor
+                try {
+                    row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                } catch(e) { row.scrollIntoView(false); }
+                var statusEl = document.getElementById('erpFindStatus');
+                if (statusEl) statusEl.innerHTML = 'Hasil <span class="match-count">'+(idx+1)+'</span> dari <span class="match-count">'+_findMatchRows.length+'</span>';
+            }
+
+            window.erpFindNav = function(direction) {
+                if (_findMatchRows.length === 0) { _erpFindExecute(); return; }
+                _findCurrentIdx += direction;
+                if (_findCurrentIdx >= _findMatchRows.length) _findCurrentIdx = 0;
+                if (_findCurrentIdx < 0) _findCurrentIdx = _findMatchRows.length - 1;
+                _activateMatch(_findCurrentIdx);
+            };
+
+            // Attach input listeners
+            document.addEventListener('DOMContentLoaded', function() {
+                var inp = document.getElementById('erpFindInput');
+                if (inp) {
+                    inp.addEventListener('input', function() {
+                        clearTimeout(_findDebounce);
+                        _findDebounce = setTimeout(_erpFindExecute, 250);
+                    });
+                    inp.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter') { e.preventDefault(); erpFindNav(e.shiftKey ? -1 : 1); }
+                        else if (e.key === 'Escape') { e.preventDefault(); erpFindClose(); }
+                    });
+                }
+                var ce = document.getElementById('erpFindCase');
+                var hl = document.getElementById('erpFindHighlightAll');
+                if (ce) ce.addEventListener('change', _erpFindExecute);
+                if (hl) hl.addEventListener('change', _erpFindExecute);
+            });
+
+            // Ctrl+F shortcut
+            document.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                    if (document.querySelector('.ribbon-toolbar')) {
+                        e.preventDefault();
+                        erpFindOpen();
+                    }
+                }
+                if (e.key === 'Escape') {
+                    var dlg = document.getElementById('erpFindDialog');
+                    if (dlg && dlg.style.display !== 'none') erpFindClose();
+                }
+            });
+
+            // Listen for Alpine $dispatch('ribbon-action', 'find').
+            // Alpine $dispatch creates a CustomEvent that bubbles UP to window.
+            // We MUST listen on window (not just document) to reliably catch it.
+            window.addEventListener('ribbon-action', function(e) {
+                if (e && e.detail === 'find') erpFindOpen();
+            });
+            document.addEventListener('ribbon-action', function(e) {
+                if (e && e.detail === 'find') erpFindOpen();
+            });
+
+        })();
+    </script>
+
+    <!-- ══ GLOBAL FIND / SEARCH DIALOG ══ -->
+    <div id="erpFindDialog" class="erp-find-overlay" style="display:none;">
+        <div class="erp-find-panel">
+            <div class="erp-find-header">
+                <div class="erp-find-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <span>Find &amp; Search</span>
+                </div>
+                <button class="erp-find-close" onclick="erpFindClose()" title="Close (Esc)">&times;</button>
+            </div>
+            <div class="erp-find-body">
+                <div class="erp-find-input-row">
+                    <input type="text" id="erpFindInput" class="erp-find-input" placeholder="Type to search across all visible data..." autocomplete="off" spellcheck="false">
+                    <button class="erp-find-btn erp-find-btn-prev" onclick="erpFindNav(-1)" title="Previous Match (Shift+Enter)">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+                    </button>
+                    <button class="erp-find-btn erp-find-btn-next" onclick="erpFindNav(1)" title="Next Match (Enter)">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                </div>
+                <div class="erp-find-options">
+                    <label class="erp-find-checkbox"><input type="checkbox" id="erpFindCase"> Case sensitive</label>
+                    <label class="erp-find-checkbox"><input type="checkbox" id="erpFindHighlightAll" checked> Highlight all</label>
+                </div>
+                <div class="erp-find-status" id="erpFindStatus"></div>
+            </div>
+        </div>
+    </div>
+</body>
 </html>

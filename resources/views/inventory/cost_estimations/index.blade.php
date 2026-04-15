@@ -53,21 +53,21 @@
 @endpush
 
 @section('content')
-<div x-data="costEstimationManager()" x-init="init()" style="background: white; border: 1px solid var(--hr-border); margin: 10px;">
+<div x-data="costEstimationManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)" style="background: white; border: 1px solid var(--hr-border); margin: 10px;">
     <!-- Windows like Title bar -->
-    <div style="background: white; padding: 0; border-bottom: 1px solid #e2e8f0;">
-        <div style="background: transparent; padding: 6px 10px; color: #334155; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem;">
-            <div style="display: flex; gap: 8px; align-items: center;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7" fill="#dc2626"></rect><rect x="14" y="14" width="7" height="7" fill="#2563eb"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-                <span style="font-weight: 600;">Cost Estimations</span>
-            </div>
-            <div style="display: flex; gap: 15px;">
-                <span style="cursor: pointer; font-size: 0.9rem;">◁</span>
-                <span style="cursor: pointer; font-size: 0.9rem;">▷</span>
-                <span style="cursor: pointer;">✕</span>
-            </div>
+    <div class="window-title-bar">
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7" fill="#dc2626"></rect><rect x="14" y="14" width="7" height="7" fill="#2563eb"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span style="font-weight: 600;">Cost Estimations</span>
+        </div>
+        <div style="display: flex; gap: 15px;">
+            <span style="cursor: pointer; font-size: 0.9rem;">◁</span>
+            <span style="cursor: pointer; font-size: 0.9rem;">▷</span>
+            <span style="cursor: pointer;">✕</span>
         </div>
     </div>
+
+    @include('partials.ribbon_toolbar')
 
     <!-- Main Navigation Tabs -->
     <div class="main-tabs" style="background: #f1f5f9; border-bottom: 1px solid var(--hr-border); padding-left: 10px; border-radius: 0;">
@@ -541,6 +541,83 @@
                 }
 
                 html2pdf().set(opt).from(element).save();
+            },
+
+            handleRibbonAction(action) {
+                switch(action) {
+                    case 'new': this.createNew(); break;
+                    case 'save': 
+                        this.saveCurrentChanges(); 
+                        if(typeof exportToJSONFile === 'function') {
+                            exportToJSONFile(this.formData, 'CostEstimation_' + (this.formData.docNo?.replace(/\//g, '-') || 'Draft') + '.json');
+                        }
+                        break;
+                    case 'delete': showToast('Delete not available in this view', 'warning'); break;
+                    case 'refresh': this.refreshData(); break;
+                    case 'preview': this.exportToPdf(); break;
+                    case 'find': this.activeMainTab = 'list'; this.$nextTick(() => { if(typeof erpFindOpen === 'function') erpFindOpen(); }); break;
+                    case 'undo': this.undoChanges(); break;
+                    case 'save-as': 
+                        this.saveAsNew(); 
+                        if(typeof exportToJSONFile === 'function') {
+                            exportToJSONFile(this.formData, 'CostEstimation_Copy.json');
+                        }
+                        break;
+                    case 'edit': this.focusFirstField(); break;
+                    case 'barcode': showToast('Generating barcode...', 'info'); break;
+                    case 'resend': showToast('Re-sending document...', 'info'); break;
+                }
+            },
+
+            undoChanges() {
+                if (confirm('Revert all unsaved changes for this estimation?')) {
+                    this.refreshData(); // simulated
+                    showToast('Changes reverted', 'info');
+                }
+            },
+
+            saveAsNew() {
+                const clone = JSON.parse(JSON.stringify(this.formData));
+                clone.docNo += ' (COPY)';
+                this.formData = clone;
+                showToast('Estimation duplicated as new', 'success');
+            },
+
+            focusFirstField() {
+                this.activeMainTab = 'detail';
+                this.$nextTick(() => {
+                    const firstInput = document.querySelector('.tab-pane.active input:not([readonly])');
+                    if (firstInput) firstInput.focus();
+                });
+            },
+
+            createNew() {
+                this.formData = {
+                    date: new Date().toISOString().split('T')[0],
+                    docNo: `EST/${new Date().getFullYear()}/${String(Math.floor(Math.random()*1000)).padStart(4, '0')}`,
+                    estimationName: '',
+                    project: '',
+                    customerId: '',
+                    productService: ''
+                };
+                this.serviceCosts = [];
+                this.directCosts = [];
+                this.indirectCosts = [];
+                this.addRow('service');
+                this.addRow('direct');
+                this.addRow('indirect');
+                this.activeMainTab = 'detail';
+                showToast('New cost estimation created', 'success');
+            },
+
+            saveCurrentChanges() {
+                // Mock save
+                showToast('Estimation saved locally', 'success');
+            },
+
+            refreshData() {
+                showToast('Data refreshed', 'success');
+                window.location.reload();
             }
         }
     }

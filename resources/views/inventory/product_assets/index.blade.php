@@ -642,10 +642,20 @@
 @endpush
 
 @section('content')
-    <div class="page-header">
-        <h1 class="page-title">Product Assets</h1>
-        <p class="page-desc">Manage product inventory and accounting details.</p>
+    <!-- Windows like Title bar -->
+    <div class="window-title-bar">
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#2563eb"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            <span style="font-weight: 600;">Product Assets</span>
+        </div>
+        <div style="display: flex; gap: 15px;">
+            <span style="cursor: pointer; font-size: 0.9rem;">◁</span>
+            <span style="cursor: pointer; font-size: 0.9rem;">▷</span>
+            <span style="cursor: pointer;">✕</span>
+        </div>
     </div>
+
+    @include('partials.ribbon_toolbar')
     <div class="main-tabs">
         <button class="main-tab active" data-target="tab-record">RECORD DETAIL</button>
         <button class="main-tab" id="btn-tab-list" data-target="tab-list">PRODUCT LIST & TOOLS</button>
@@ -657,7 +667,8 @@
         <!-- TAB 1: RECORD DETAIL -->
         <div id="tab-record" class="tab-pane active"
              x-data="productDetailManager()"
-             x-init="init()">
+             x-init="init()"
+             x-on:ribbon-action.window="handleRibbonAction($event.detail)">
         <div class="inner-tabs">
             <button class="inner-tab active">PRODUCT ID</button>
         </div>
@@ -1744,6 +1755,98 @@
             goLast() {
                 this.currentIndex = this.records.length - 1;
                 this.dispatchSync();
+            },
+
+            handleRibbonAction(action) {
+                // Only respond if this tab is active
+                const tab = document.querySelector('.main-tab[data-target="tab-record"]');
+                if(!tab || !tab.classList.contains('active')) return;
+
+                switch(action) {
+                    case 'new': this.createNew(); break;
+                    case 'save': 
+                        this.saveCurrentChanges(); 
+                        if(typeof exportToJSONFile === 'function') {
+                            exportToJSONFile(this.cur, 'ProductAsset_' + (this.cur?.code || 'Draft') + '.json');
+                        }
+                        showToast('Product saved to file', 'success'); 
+                        break;
+                    case 'delete': this.deleteRecord(); break;
+                    case 'refresh': window.location.reload(); break;
+                    case 'preview': window.print(); break;
+                    case 'find': document.querySelector('#btn-tab-list')?.click(); this.$nextTick(() => { if(typeof erpFindOpen === 'function') erpFindOpen(); }); break;
+                    case 'undo': this.undoChanges(); break;
+                    case 'save-as': 
+                        this.saveAsNew(); 
+                        if(typeof exportToJSONFile === 'function') {
+                            const lastRec = this.records[this.records.length - 1];
+                            exportToJSONFile(lastRec, 'ProductAsset_' + (lastRec?.code || 'Copy') + '.json');
+                        }
+                        break;
+                    case 'edit': this.focusFirstField(); break;
+                    case 'barcode': showToast('Generating product barcode...', 'info'); break;
+                    case 'resend': showToast('Re-sending product details...', 'info'); break;
+                }
+            },
+
+            undoChanges() {
+                if (confirm('Revert all unsaved changes for this product?')) {
+                    this.dispatchSync(); // re-fetch / mock reload
+                    showToast('Changes reverted', 'info');
+                }
+            },
+
+            saveAsNew() {
+                const clone = JSON.parse(JSON.stringify(this.cur));
+                clone.code = (this.records.length + 1).toString().padStart(6, '0');
+                clone.name += ' (COPY)';
+                this.records.push(clone);
+                this.currentIndex = this.records.length - 1;
+                this.dispatchSync();
+                showToast('Product duplicated', 'success');
+            },
+
+            focusFirstField() {
+                this.$nextTick(() => {
+                    const firstInput = document.querySelector('#tab-record.active input:not([readonly])');
+                    if (firstInput) firstInput.focus();
+                });
+            },
+
+
+            createNew() {
+                const newCode = (this.records.length + 1).toString().padStart(6, '0');
+                const newRec = {
+                    code: newCode,
+                    name: 'NEW PRODUCT',
+                    sku: '',
+                    barcode: '',
+                    category: '',
+                    unit: 'PCS',
+                    min_stock: 0,
+                    price: 0,
+                    note: '',
+                    status: 'ACTIVE'
+                };
+                this.records.push(newRec);
+                this.currentIndex = this.records.length - 1;
+                this.dispatchSync();
+                showToast('New product record created', 'success');
+            },
+
+            saveCurrentChanges() {
+                showToast('Product details saved locally', 'success');
+            },
+
+            deleteRecord() {
+                if (confirm('Are you sure you want to delete this product?')) {
+                    this.records.splice(this.currentIndex, 1);
+                    if (this.currentIndex >= this.records.length) {
+                        this.currentIndex = Math.max(0, this.records.length - 1);
+                    }
+                    this.dispatchSync();
+                    showToast('Product record deleted', 'success');
+                }
             }
         }));
     });

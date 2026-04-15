@@ -45,21 +45,22 @@
 @endpush
 
 @section('content')
-<div x-data="quotationManager()" x-init="init()" style="background: white; border: 1px solid var(--hr-border); margin: 10px;">
+<div x-data="quotationManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)" style="background: white; border: 1px solid var(--hr-border); margin: 10px;">
     <!-- Windows like Title bar -->
-    <div style="background: white; padding: 0; border-bottom: 1px solid #e2e8f0;">
-        <div style="background: transparent; padding: 6px 10px; color: #334155; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem;">
-            <div style="display: flex; gap: 8px; align-items: center;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7" fill="#dc2626"></rect><rect x="14" y="14" width="7" height="7" fill="#2563eb"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-                <span style="font-weight: 600;">Quotations</span>
-            </div>
-            <div style="display: flex; gap: 15px;">
-                <span style="cursor: pointer; font-size: 0.9rem;">◁</span>
-                <span style="cursor: pointer; font-size: 0.9rem;">▷</span>
-                <span style="cursor: pointer;">✕</span>
-            </div>
+    <!-- Windows like Title bar -->
+    <div class="window-title-bar">
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7" fill="#dc2626"></rect><rect x="14" y="14" width="7" height="7" fill="#2563eb"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span style="font-weight: 600;">Quotations</span>
+        </div>
+        <div style="display: flex; gap: 15px;">
+            <span style="cursor: pointer; font-size: 0.9rem;">◁</span>
+            <span style="cursor: pointer; font-size: 0.9rem;">▷</span>
+            <span style="cursor: pointer;">✕</span>
         </div>
     </div>
+
+    @include('partials.ribbon_toolbar')
 
     <!-- Main Navigation Tabs -->
     <div class="main-tabs" style="background: #f1f5f9; border-bottom: 1px solid var(--hr-border); padding-left: 10px; border-radius: 0;">
@@ -459,6 +460,97 @@
 
             get totalOffers() {
                 return this.selectedEstimationItems.reduce((acc, row) => acc + Number(row.tlOffers || 0), 0);
+            },
+
+            handleRibbonAction(action) {
+                switch(action) {
+                    case 'new': this.createNew(); break;
+                    case 'save': 
+                        this.saveCurrentChanges(); 
+                        if(typeof exportToJSONFile === 'function') {
+                            exportToJSONFile(this.formData, 'Quotation_' + (this.formData.estimationCode || 'Draft') + '.json');
+                        }
+                        showToast('Quotation saved to file', 'success'); 
+                        break;
+                    case 'delete': this.deleteRecord(); break;
+                    case 'refresh': this.refreshData(); break;
+                    case 'preview': window.print(); break;
+                    case 'find': this.activeMainTab = 'list'; this.$nextTick(() => { if(typeof erpFindOpen === 'function') erpFindOpen(); }); break;
+                    case 'undo': this.undoChanges(); break;
+                    case 'save-as': 
+                        this.saveAsNew(); 
+                        if(typeof exportToJSONFile === 'function') {
+                            exportToJSONFile(this.formData, 'Quotation_Copy.json');
+                        }
+                        break;
+                    case 'edit': this.focusFirstField(); break;
+                    case 'barcode': showToast('Generating barcode...', 'info'); break;
+                    case 'resend': showToast('Re-sending document...', 'info'); break;
+                }
+            },
+
+            undoChanges() {
+                if (confirm('Revert all unsaved changes for this quotation?')) {
+                    this.loadCurrentRecord();
+                    showToast('Changes reverted', 'info');
+                }
+            },
+
+            saveAsNew() {
+                const clone = JSON.parse(JSON.stringify(this.formData));
+                this.quotationsHistory.push({
+                    ...clone,
+                    id: this.quotationsHistory.length + 1,
+                    customer: 'CLONED RECORD'
+                });
+                this.currentIndex = this.quotationsHistory.length - 1;
+                this.loadCurrentRecord();
+                showToast('Quotation duplicated', 'success');
+            },
+
+            focusFirstField() {
+                this.activeMainTab = 'detail';
+                this.$nextTick(() => {
+                    const firstInput = document.querySelector('.panel-content input:not([readonly])');
+                    if (firstInput) firstInput.focus();
+                });
+            },
+
+            createNew() {
+                this.formData = {
+                    date: new Date().toISOString().split('T')[0],
+                    customerId: '',
+                    attn1: '',
+                    attn2: '',
+                    estimationCode: '',
+                    salesName: 'SYSTEM',
+                    poNo: '',
+                    notes: ''
+                };
+                this.selectedEstimationItems = [];
+                this.addRow();
+                this.activeMainTab = 'detail';
+                showToast('New quotation created', 'success');
+            },
+
+            saveCurrentChanges() {
+                showToast('Quotation saved locally', 'success');
+            },
+
+            deleteRecord() {
+                if (confirm('Are you sure you want to delete this quotation?')) {
+                    this.quotationsHistory.splice(this.currentIndex, 1);
+                    if (this.currentIndex >= this.quotationsHistory.length) {
+                        this.currentIndex = Math.max(0, this.quotationsHistory.length - 1);
+                    }
+                    this.loadCurrentRecord();
+                    showToast('Quotation deleted', 'success');
+                }
+            },
+
+            refreshData() {
+                showToast('Data refreshed', 'success');
+                window.location.reload();
             }
         }
     }

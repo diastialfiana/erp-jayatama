@@ -44,23 +44,23 @@
 @endpush
 
 @section('content')
-<div x-data="goodsRequestManager()" x-init="init()" style="background: white; border: 1px solid var(--hr-border); margin: 10px;">
+<div x-data="goodsRequestManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)" style="background: white; border: 1px solid var(--hr-border); margin: 10px;">
     <!-- Windows like Title bar -->
-    <div style="background: white; padding: 0; border-bottom: 1px solid #e2e8f0;">
-        <div style="background: transparent; padding: 6px 10px; color: #334155; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem;">
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="#dc2626"><path d="M4 4h16v16H4z"/></svg>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b" style="margin-left:-8px;"><path d="M4 4h16v16H4z"/></svg>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="#2563eb" style="margin-left:-8px;"><path d="M4 4h16v16H4z"/></svg>
-                <span style="font-weight: 600; margin-left:5px;">Goods Request</span>
-            </div>
-            <div style="display: flex; gap: 15px;">
-                <span style="cursor: pointer; font-size: 0.9rem;">◁</span>
-                <span style="cursor: pointer; font-size: 0.9rem;">▷</span>
-                <span style="cursor: pointer;">✕</span>
-            </div>
+    <div class="window-title-bar">
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#dc2626"><path d="M4 4h16v16H4z"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b" style="margin-left:-8px;"><path d="M4 4h16v16H4z"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#2563eb" style="margin-left:-8px;"><path d="M4 4h16v16H4z"/></svg>
+            <span style="font-weight: 600; margin-left:5px;">Goods Request</span>
+        </div>
+        <div style="display: flex; gap: 15px;">
+            <span style="cursor: pointer; font-size: 0.9rem;">◁</span>
+            <span style="cursor: pointer; font-size: 0.9rem;">▷</span>
+            <span style="cursor: pointer;">✕</span>
         </div>
     </div>
+
+    @include('partials.ribbon_toolbar')
 
     <div class="main-tabs">
         <button class="main-tab" :class="activeMainTab === 'detail' ? 'active' : ''" @click="activeMainTab = 'detail'">DETAIL REQUEST</button>
@@ -473,6 +473,95 @@
                 const parts = dateStr.split('-');
                 if (parts.length !== 3) return dateStr;
                 return `${parts[2]}/${parts[1]}/${parts[0]}`;
+            },
+
+            handleRibbonAction(action) {
+                switch(action) {
+                    case 'new': this.createNew(); break;
+                    case 'save': 
+                        this.saveCurrentChanges(); 
+                        if(typeof exportToJSONFile === 'function') {
+                            exportToJSONFile(this.selectedRequest, 'GoodsRequest_' + (this.selectedRequest?.doc_no?.replace(/\//g, '-') || 'Draft') + '.json');
+                        }
+                        showToast('Request saved to file', 'success'); 
+                        break;
+                    case 'delete': this.deleteRecord(); break;
+                    case 'refresh': window.location.reload(); break;
+                    case 'preview': window.print(); break;
+                    case 'find': this.activeMainTab = 'list'; this.$nextTick(() => { if(typeof erpFindOpen === 'function') erpFindOpen(); }); break;
+                    case 'undo': this.undoChanges(); break;
+                    case 'save-as': 
+                        this.saveAsNew(); 
+                        if(typeof exportToJSONFile === 'function') {
+                            exportToJSONFile(this.selectedRequest, 'GoodsRequest_Copy.json');
+                        }
+                        break;
+                    case 'edit': this.focusFirstField(); break;
+                    case 'barcode': showToast('Generating barcode...', 'info'); break;
+                    case 'resend': showToast('Re-sending document...', 'info'); break;
+                }
+            },
+
+            undoChanges() {
+                if (confirm('Revert all unsaved changes for this request?')) {
+                    this.selectRequest(this.selectedRequest.id, this.currentIdx);
+                    showToast('Changes reverted', 'info');
+                }
+            },
+
+            saveAsNew() {
+                if (!this.selectedRequest) return;
+                const clone = JSON.parse(JSON.stringify(this.selectedRequest));
+                clone.id = this.requests.length + 1;
+                clone.doc_no += ' (COPY)';
+                this.requests.push(clone);
+                this.selectRequest(clone.id, this.requests.length - 1);
+                showToast('Request duplicated', 'success');
+            },
+
+            focusFirstField() {
+                this.activeMainTab = 'detail';
+                this.$nextTick(() => {
+                    const firstInput = document.querySelector('.tab-pane.active input:not([readonly])');
+                    if (firstInput) firstInput.focus();
+                });
+            },
+
+            createNew() {
+                const newId = this.requests.length + 1;
+                const newReq = {
+                    id: newId,
+                    date: new Date().toISOString().split('T')[0],
+                    doc_no: `REQ/${new Date().getFullYear()}/${String(newId).padStart(4, '0')}`,
+                    division: 'GENERAL',
+                    status: 'DRAFT',
+                    requester: 'SYSTEM',
+                    items_count: 0,
+                    total_amount: 0,
+                    note: '',
+                    items: []
+                };
+                this.requests.push(newReq);
+                this.selectRequest(newId, this.requests.length - 1);
+                this.activeMainTab = 'detail';
+                showToast('New request created', 'success');
+            },
+
+            deleteRecord() {
+                if (!this.selectedRequest) return;
+                if (confirm('Are you sure you want to delete this goods request?')) {
+                    const idx = this.requests.findIndex(r => r.id === this.selectedRequest.id);
+                    if (idx !== -1) {
+                        this.requests.splice(idx, 1);
+                        if (this.requests.length > 0) {
+                            const newIdx = Math.min(idx, this.requests.length - 1);
+                            this.selectRequest(this.requests[newIdx].id, newIdx);
+                        } else {
+                            this.selectedRequest = null;
+                        }
+                    }
+                    showToast('Request deleted', 'success');
+                }
             }
         }
     }

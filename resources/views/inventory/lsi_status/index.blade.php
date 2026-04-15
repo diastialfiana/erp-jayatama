@@ -31,24 +31,50 @@
 @endpush
 
 @section('content')
-<div x-data="{ selectedStatus: 'AP' }" class="lsi-container">
+<div x-data="{ 
+    selectedStatus: 'AP', 
+    handleRibbonAction(action) {
+        switch(action) {
+            case 'refresh': window.location.reload(); break;
+            case 'preview': window.print(); break;
+            case 'save': 
+                if(typeof exportToJSONFile === 'function') {
+                    exportToJSONFile({status: this.selectedStatus}, 'LSIStatus_' + this.selectedStatus + '.json');
+                }
+                showToast('Status view state saved to file', 'success'); 
+                break;
+            case 'new': showToast('Filter reset to default', 'info'); this.selectedStatus = 'AP'; break;
+            case 'find': if(typeof erpFindOpen === 'function') erpFindOpen(); break;
+            case 'undo': showToast('Changes reverted', 'info'); break;
+            case 'edit': showToast('Editing state active', 'info'); break;
+            case 'save-as':
+                if(typeof exportToJSONFile === 'function') {
+                    exportToJSONFile({status: this.selectedStatus}, 'LSIStatus_Copy.json');
+                }
+                showToast('Status view state copied to file', 'success'); 
+                break;
+            case 'barcode': showToast('No barcode for status view', 'warning'); break;
+            case 'resend': showToast('Emailing current status...', 'info'); break;
+        }
+    }
+}" x-on:ribbon-action.window="handleRibbonAction($event.detail)" class="lsi-container">
     <!-- Title Bar -->
-    <div style="background: white; padding: 0; border-bottom: 1px solid var(--hr-border);">
-        <div style="background: transparent; padding: 6px 10px; color: #334155; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem;">
-            <div style="display: flex; gap: 8px; align-items: center;">
-                <div style="display:flex;">
-                    <div style="width:7px; height:7px; background:#f59e0b; margin:1px;"></div>
-                    <div style="width:7px; height:7px; background:#dc2626; margin:1px;"></div>
-                </div>
-                <span style="font-weight: 600;">View Status</span>
+    <div class="window-title-bar">
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <div style="display:flex;">
+                <div style="width:7px; height:7px; background:#f59e0b; margin:1px;"></div>
+                <div style="width:7px; height:7px; background:#dc2626; margin:1px;"></div>
             </div>
-            <div style="display: flex; gap: 15px;">
-                <span style="cursor: pointer; font-size: 0.9rem;">◁</span>
-                <span style="cursor: pointer; font-size: 0.9rem;">▷</span>
-                <span style="cursor: pointer;">✕</span>
-            </div>
+            <span style="font-weight: 600;">View Status</span>
+        </div>
+        <div style="display: flex; gap: 15px;">
+            <span style="cursor: pointer; font-size: 0.9rem;">◁</span>
+            <span style="cursor: pointer; font-size: 0.9rem;">▷</span>
+            <span style="cursor: pointer;">✕</span>
         </div>
     </div>
+
+    @include('partials.ribbon_toolbar')
 
     <!-- Actions Bar -->
     <div class="lsi-top-bar">

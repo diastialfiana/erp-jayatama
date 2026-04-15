@@ -342,11 +342,21 @@
 @endpush
 
 @section('content')
-<div x-data="hrManager()" x-init="init()">
-    <div class="page-header">
-        <h1 class="page-title">Human Resources</h1>
-        <p class="page-desc">Manage employee records and personal documentation.</p>
+<div x-data="hrManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)">
+    <!-- Windows like Title bar -->
+    <div class="window-title-bar">
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#2563eb"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            <span style="font-weight: 600;">Human Resources</span>
+        </div>
+        <div style="display: flex; gap: 15px;">
+            <span style="cursor: pointer; font-size: 0.9rem;">◁</span>
+            <span style="cursor: pointer; font-size: 0.9rem;">▷</span>
+            <span style="cursor: pointer;">✕</span>
+        </div>
     </div>
+
+    @include('partials.ribbon_toolbar')
 
     <!-- Main Navigation Tabs -->
     <div class="main-tabs">
@@ -725,6 +735,57 @@
                     email: '', is_active: true, id_card_print: false,
                     files: [], attributes: []
                 };
+            },
+
+            handleRibbonAction(action) {
+                switch(action) {
+                    case 'new': this.addRecord(); showToast('New record form cleared', 'info'); break;
+                    case 'save': 
+                        if(typeof exportToJSONFile === 'function') {
+                            exportToJSONFile(this.form, 'HumanResource_' + (this.form.code || 'Draft') + '.json');
+                        }
+                        showToast('Employee record saved to file', 'success'); 
+                        break;
+                    case 'delete': this.removeRecord(); break;
+                    case 'edit': this.focusFirstField(); break;
+                    case 'refresh': window.location.reload(); break;
+                    case 'preview': window.print(); break;
+                    case 'find': this.activeMainTab = 'list'; this.$nextTick(() => { if(typeof erpFindOpen === 'function') erpFindOpen(); }); break;
+                    case 'undo': this.undoChanges(); break;
+                    case 'save-as': 
+                        this.saveAsNew(); 
+                        if(typeof exportToJSONFile === 'function') {
+                            exportToJSONFile(this.form, 'HumanResource_Copy.json');
+                        }
+                        break;
+                    case 'barcode': showToast('Generating employee ID barcode...', 'info'); break;
+                    case 'resend': showToast('Re-sending employee data...', 'info'); break;
+                }
+            },
+
+            undoChanges() {
+                if (this.form.id && confirm('Revert all unsaved changes for this employee?')) {
+                    this.selectEmployee(this.form.id);
+                    showToast('Changes reverted', 'info');
+                }
+            },
+
+            saveAsNew() {
+                if (!this.form.id) return;
+                const clone = JSON.parse(JSON.stringify(this.form));
+                clone.id = null;
+                clone.code = 'NEW-COPY';
+                clone.full_name += ' (COPY)';
+                this.form = clone;
+                showToast('Record ready to save as new', 'info');
+            },
+
+            focusFirstField() {
+                this.activeMainTab = 'detail';
+                this.$nextTick(() => {
+                    const firstInput = document.querySelector('.tab-content input:not([readonly])');
+                    if (firstInput) firstInput.focus();
+                });
             }
         }
     }
