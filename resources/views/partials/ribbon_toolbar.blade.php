@@ -71,6 +71,59 @@
         <div class="ribbon-group-label">Tools</div>
     </div>
 
+    <!-- ACCOUNTING: RECEIVABLE AND PAYABLE GROUP -->
+    @if(request()->routeIs('accounting.*'))
+    <div class="ribbon-group">
+        <div class="ribbon-actions">
+            <!-- A/R Invoice -->
+            <button class="ribbon-btn" title="A/R Invoice" @click="$dispatch('ribbon-action', 'ar-invoice')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="4" y="2" width="16" height="20" rx="2" ry="2"/>
+                    <line x1="12" y1="18" x2="12" y2="12"/>
+                    <path d="M9 15c0-3 6-3 6 0s-6 3-6 0z"/>
+                    <line x1="8" y1="6" x2="16" y2="6"/>
+                    <line x1="8" y1="10" x2="16" y2="10"/>
+                </svg>
+                <span>A/R<br>Invoice</span>
+            </button>
+            <!-- A/R Return -->
+            <button class="ribbon-btn" title="A/R Return" @click="$dispatch('ribbon-action', 'ar-return')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                    <path d="M12 8a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+                    <path d="M8 12a4 4 0 0 1 8 0v2H8v-2z"/>
+                    <!-- Return arrow addition -->
+                    <path d="M5 14h3M5 14v-3M5 14l4-4"/>
+                </svg>
+                <span>A/R<br>Return</span>
+            </button>
+            <!-- A/P Invoice -->
+            <button class="ribbon-btn" title="A/P Invoice" @click="$dispatch('ribbon-action', 'ap-invoice')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                    <rect x="18" y="10" width="4" height="4"/>
+                    <rect x="18" y="15" width="2" height="2"/>
+                    <rect x="21" y="15" width="2" height="2"/>
+                </svg>
+                <span>A/P<br>Invoice</span>
+            </button>
+            <!-- A/P Return -->
+            <button class="ribbon-btn" title="A/P Return" @click="$dispatch('ribbon-action', 'ap-return')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                    <line x1="2" y1="12" x2="8" y2="12"/>
+                    <polyline points="5 9 8 12 5 15"/>
+                </svg>
+                <span>A/P<br>Return</span>
+            </button>
+        </div>
+        <div class="ribbon-group-label">Receivable And Payable</div>
+    </div>
+    @endif
+
     <!-- SKINS GROUP -->
     <div class="ribbon-group">
         <div class="skin-grid">

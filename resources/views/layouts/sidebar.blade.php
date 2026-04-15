@@ -73,8 +73,8 @@
         </div>
     </div>
 
-    <div class="sb-item has-sub">
-        <div class="sb-link">
+    <div class="sb-item has-sub {{ request()->routeIs('accounting.*') ? 'open' : '' }}">
+        <div class="sb-link {{ request()->routeIs('accounting.*') ? 'active' : '' }}">
             <svg class="sb-icon" viewBox="0 0 24 24">
                 <line x1="18" y1="20" x2="18" y2="10" />
                 <line x1="12" y1="20" x2="12" y2="4" />
@@ -86,7 +86,11 @@
             </svg>
         </div>
         <div class="sub-nav">
-            <a href="{{ route('accounting.index') }}" class="sub-link">Overview Accounting</a>
+            <a href="{{ route('accounting.index') }}" class="sub-link {{ request()->routeIs('accounting.index') ? 'text-white' : '' }}">Overview Accounting</a>
+            <a href="{{ route('accounting.ar_invoice') }}" class="sub-link {{ request()->routeIs('accounting.ar_invoice') ? 'text-white' : '' }}">A/R Invoice</a>
+            <a href="{{ route('accounting.ar_return') }}" class="sub-link {{ request()->routeIs('accounting.ar_return') ? 'text-white' : '' }}">A/R Return</a>
+            <a href="{{ route('accounting.ap_invoice') }}" class="sub-link {{ request()->routeIs('accounting.ap_invoice') ? 'text-white' : '' }}">A/P Invoice</a>
+            <a href="{{ route('accounting.ap_return') }}" class="sub-link {{ request()->routeIs('accounting.ap_return') ? 'text-white' : '' }}">A/P Return</a>
         </div>
     </div>
 

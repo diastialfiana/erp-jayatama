@@ -71,9 +71,13 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/{customer}/summary', [\App\Http\Controllers\Finance\CustomerController::class, 'summary'])->name('summary');
             });
         });
-        Route::get('/accounting', function () {
-            return "Accounting Module (Coming Soon)";
-        })->name('accounting.index');
+        Route::prefix('accounting')->name('accounting.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\AccountingController::class, 'index'])->name('index');
+            Route::get('/ar-invoice', [\App\Http\Controllers\AccountingController::class, 'arInvoice'])->name('ar_invoice');
+            Route::get('/ar-return', [\App\Http\Controllers\AccountingController::class, 'arReturn'])->name('ar_return');
+            Route::get('/ap-invoice', [\App\Http\Controllers\AccountingController::class, 'apInvoice'])->name('ap_invoice');
+            Route::get('/ap-return', [\App\Http\Controllers\AccountingController::class, 'apReturn'])->name('ap_return');
+        });
         Route::get('/administrator', function () {
             return "Administrator Module (Coming Soon)";
         })->name('administrator.index');
