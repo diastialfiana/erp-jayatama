@@ -29,19 +29,17 @@
             gap: 15px;
         }
         .logo-container {
-            width: 60px;
-            height: 60px;
-            background: #b20000;
-            border-radius: 8px;
+            width: 70px;
+            height: 70px;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            padding: 5px;
         }
         .logo-container img {
             max-width: 100%;
-            height: auto;
+            max-height: 100%;
+            object-fit: contain;
         }
         .company-info {
             font-size: 0.75rem;
@@ -123,7 +121,7 @@
 <body>
     <header>
         <div class="logo-container">
-            <img src="https://jayaswadaya.com/assets/img/logo-jayatama.png" alt="Jayatama Logo" onerror="this.src='https://placehold.co/60x60?text=LOGO'">
+            <img src="{{ asset('images/JSU.jpg') }}" alt="Jayatama Logo">
         </div>
         <div class="company-info">
             <div class="company-name">PT. JASA SWADAYA UTAMA</div>
@@ -143,58 +141,58 @@
 
         <div class="detail-item">
             <div class="label">Brand Description</div>
-            <div class="value-box"></div>
+            <div class="value-box">{{ $asset['brand'] ?: '-' }}</div>
         </div>
 
         <div class="detail-item">
             <div class="label">Assets Name</div>
-            <div class="value-box">LEMARI</div>
+            <div class="value-box">{{ strtoupper($asset['name']) }}</div>
         </div>
 
         <div class="detail-item">
             <div class="label">Type Description</div>
-            <div class="value-box"></div>
+            <div class="value-box">{{ $asset['type'] ?: '-' }}</div>
         </div>
 
         <div class="detail-item">
             <div class="label">Serial Number</div>
-            <div class="value-box"></div>
+            <div class="value-box">{{ $asset['serial'] ?: '-' }}</div>
         </div>
 
         <div class="detail-item">
             <div class="label">Assets Category</div>
-            <div class="value-box">Perabot Kantor Unsur Logam</div>
+            <div class="value-box">{{ $asset['category'] ?: '-' }}</div>
         </div>
 
         <div class="detail-item">
             <div class="label">Location Assets</div>
-            <div class="value-box">PT JASA SWADAYA UTAMA</div>
+            <div class="value-box">{{ $asset['location'] ?: '-' }}</div>
         </div>
 
         <div class="detail-item">
             <div class="label">Register Date</div>
-            <div class="value-box">March 22, 2024</div>
+            <div class="value-box">{{ $asset['initial_date'] ? \Carbon\Carbon::parse($asset['initial_date'])->format('F d, Y') : '-' }}</div>
         </div>
 
         <div class="detail-item">
             <div class="label">P.I.C Name</div>
-            <div class="value-box">ARIF</div>
+            <div class="value-box">{{ strtoupper($asset['asset_user']) ?: '-' }}</div>
         </div>
 
         <div class="detail-item">
             <div class="label">Valid Guaranty</div>
-            <div class="value-box">3/22/2024 12:55:00 PM</div>
+            <div class="value-box">{{ $asset['valid_guaranty'] ? \Carbon\Carbon::parse($asset['valid_guaranty'])->format('n/j/Y g:i:s A') : '-' }}</div>
         </div>
 
         <div class="detail-item">
             <div class="label">Useful Live (In Year)</div>
-            <div class="value-box">8</div>
+            <div class="value-box">{{ is_numeric($asset['useful_life']) ? round($asset['useful_life'] / 12, 1) : '-' }}</div>
         </div>
 
         <div class="section-title">NOTES</div>
 
         <div class="detail-item">
-            <div class="value-box" style="align-items: flex-start; min-height: 120px;">PROJECT 2024</div>
+            <div class="value-box" style="align-items: flex-start; min-height: 120px;">{{ $asset['note'] ?: '-' }}</div>
         </div>
     </div>
 

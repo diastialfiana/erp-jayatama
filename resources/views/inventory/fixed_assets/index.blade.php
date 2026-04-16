@@ -635,8 +635,11 @@
                 <div class="qr-section">
                     <a id="qr-link" :href="'/a/' + records[currentIndex].code" target="_blank" style="text-decoration: none; color: inherit;">
                         <div class="qr-placeholder" style="cursor: pointer;" title="Klik untuk membuka detail publik">
-                            <img id="qr-image" :src="'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent(window.location.origin + '/a/' + records[currentIndex].code)" alt="QR Code Asset">
-                            <div id="qr-label-display" class="qr-label" x-text="records[currentIndex].code + ' - 011013'"></div>
+                            <div style="position: relative; display: inline-block;">
+                                <img id="qr-image" :src="'https://api.qrserver.com/v1/create-qr-code/?size=150x150&ecc=H&data=' + encodeURIComponent(window.location.origin + '/a/' + records[currentIndex].code)" alt="QR Code Asset">
+                                <img src="{{ asset('images/JSU.jpg') }}" alt="JSU Logo" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 36px; height: auto; border: 2px solid white; border-radius: 4px; box-shadow: 0 0 4px rgba(0,0,0,0.1);">
+                            </div>
+                            <div id="qr-label-display" class="qr-label" x-text="records[currentIndex].code + ' - ' + records[currentIndex].name"></div>
                         </div>
                     </a>
                 </div>
@@ -1168,28 +1171,7 @@
                 });
             }
 
-            // Dynamic QR Code Logic
-            const assetCodeInput = document.getElementById('main-asset-code');
-            const qrImage = document.getElementById('qr-image');
-            const qrLink = document.getElementById('qr-link');
-            const qrLabel = document.getElementById('qr-label-display');
 
-            if (assetCodeInput && qrImage && qrLink) {
-                assetCodeInput.addEventListener('input', function() {
-                    const code = this.value.trim() || 'EMPTY';
-                    const baseUrl = window.location.origin;
-                    const scanUrl = `${baseUrl}/a/${code}`;
-                    
-                    // Update QR Image source (using QRServer API)
-                    qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(scanUrl)}`;
-                    
-                    // Update Link href
-                    qrLink.href = scanUrl;
-                    
-                    // Update Label display
-                    if(qrLabel) qrLabel.textContent = `${code} - 011013`;
-                });
-            }
         });
     </script>
 @endsection
