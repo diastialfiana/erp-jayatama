@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Finance\Advance;
 use App\Models\Finance\AdvanceDetail;
 use App\Models\Finance\BankAccount;
+use App\Models\Finance\ChartOfAccount;
 use App\Models\User;
 
 class AdvanceReportController extends Controller
@@ -28,13 +29,10 @@ class AdvanceReportController extends Controller
 
     public function apiAccounts()
     {
-        // Mocking chart of accounts logic as requested by instructions
-        return response()->json([
-            ['id' => 1, 'code' => '1100.01', 'name' => 'Petty Cash', 'category' => 'asset'],
-            ['id' => 2, 'code' => '6100.01', 'name' => 'Meals & Entertainment', 'category' => 'expense'],
-            ['id' => 3, 'code' => '6100.02', 'name' => 'Travel & Transportation', 'category' => 'expense'],
-            ['id' => 4, 'code' => '6100.03', 'name' => 'Office Supplies', 'category' => 'expense'],
-        ]);
+        // ✅ FIX: Query dari ChartOfAccount DB, bukan dummy
+        return response()->json(
+            ChartOfAccount::select('id', 'code', 'name')->orderBy('code')->get()
+        );
     }
 
     public function store(Request $request)
@@ -103,9 +101,23 @@ class AdvanceReportController extends Controller
             // If cash less (kurang dan kita bayar lagi), it decreases balance.
             // Total yang keluar dari bank = total_advance - total_cashback + total_cash_less (asumsi reimburse final)
             
-            $bank = BankAccount::findOrFail($validated['bank_account_id']);
             $netKasKeluar = $totalAdvance - $totalCashback + $totalCashLess;
-            $bank->decrement('balance', $netKasKeluar);
+            
+            \App\Models\Finance\BankTransaction::record([
+                'bank_account_id' => $validated['bank_account_id'],
+                'type'            => 'advance',
+                'reference_id'    => $advance->id,
+                'reference_type'  => \App\Models\Finance\Advance::class,
+                'date'            => $advance->date,
+                'reference'       => $advance->reference,
+                'description'     => $advance->note ?? 'Advance Settlement',
+                'amount'          => abs($netKasKeluar),
+                'debit'           => $netKasKeluar < 0 ? abs($netKasKeluar) : 0,
+                'credit'          => $netKasKeluar > 0 ? abs($netKasKeluar) : 0,
+                'currency'        => $advance->currency,
+                'rate'            => $advance->rate,
+                'created_by'      => $advance->created_by,
+            ]);
 
             DB::commit();
             return redirect()->route('finance.advance-report.index')->with('success', 'Advance Report berhasil disimpan.');
@@ -121,12 +133,10 @@ class AdvanceReportController extends Controller
         
         try {
             DB::beginTransaction();
-            
-            $bank = BankAccount::findOrFail($adv->bank_account_id);
-            $netKasKeluar = $adv->total_advance - $adv->total_cashback + $adv->total_cash_less;
-            
-            // Revert bank balance
-            $bank->increment('balance', $netKasKeluar);
+
+            \App\Models\Finance\BankTransaction::where('reference_id', $adv->id)
+                ->where('reference_type', \App\Models\Finance\Advance::class)
+                ->delete();
 
             $adv->details()->delete();
             $adv->delete();

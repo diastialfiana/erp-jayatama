@@ -60,275 +60,8 @@
             width: var(--sb-cw);
         }
 
-        /* Brand */
-        .sb-brand {
-            height: var(--nb-h);
-            display: flex;
-            align-items: center;
-            gap: 11px;
-            padding: 0 18px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            text-decoration: none;
-            flex-shrink: 0;
-            overflow: hidden;
-        }
-
-        .sb-logo {
-            width: 36px;
-            height: 36px;
-            flex-shrink: 0;
-            background: linear-gradient(135deg, #1d4ed8, #4F46E5);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.45);
-        }
-
-        .sb-logo svg {
-            width: 18px;
-            height: 18px;
-            fill: none;
-            stroke: white;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        .sb-brand-text {
-            overflow: hidden;
-            min-width: 0;
-        }
-
-        .sb-brand-name {
-            font-size: 0.98rem;
-            font-weight: 800;
-            color: #fff;
-            letter-spacing: -0.03em;
-            white-space: nowrap;
-        }
-
-        .sb-brand-sub {
-            font-size: 0.58rem;
-            color: rgba(255, 255, 255, 0.3);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            white-space: nowrap;
-        }
-
-        #sidebar.collapsed .sb-brand-text {
-            opacity: 0;
-            width: 0;
-        }
-
-        /* Nav */
-        .sb-nav {
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
-            padding: 10px 0;
-        }
-
-        .sb-nav::-webkit-scrollbar {
-            width: 3px;
-        }
-
-        .sb-nav::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 3px;
-        }
-
-        .sb-section-title {
-            font-size: 0.6rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.14em;
-            color: rgba(255, 255, 255, 0.2);
-            padding: 10px 18px 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            transition: opacity 0.2s;
-        }
-
-        #sidebar.collapsed .sb-section-title {
-            opacity: 0;
-        }
-
-        .sb-item {
-            position: relative;
-        }
-
-        .sb-link {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-            padding: 10px 18px;
-            color: rgba(255, 255, 255, 0.5);
-            text-decoration: none;
-            font-size: 0.83rem;
-            font-weight: 500;
-            cursor: pointer;
-            border: none;
-            background: none;
-            width: 100%;
-            transition: all 0.2s var(--ease);
-            white-space: nowrap;
-            overflow: hidden;
-            border-radius: 0;
-        }
-
-        .sb-link:hover {
-            color: rgba(255, 255, 255, 0.9);
-            background: var(--sb-hover);
-        }
-
-        .sb-link.active {
-            color: #fff;
-            background: var(--sb-active);
-        }
-
-        .sb-link.active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 3px;
-            background: linear-gradient(180deg, #60a5fa, #818cf8);
-            border-radius: 0 2px 2px 0;
-        }
-
-        .sb-icon {
-            width: 17px;
-            height: 17px;
-            flex-shrink: 0;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        .sb-label {
-            flex: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            transition: opacity 0.2s;
-        }
-
-        #sidebar.collapsed .sb-label,
-        #sidebar.collapsed .sb-arrow,
-        #sidebar.collapsed .sub-nav {
-            opacity: 0;
-            overflow: hidden;
-            max-height: 0 !important;
-        }
-
-        .sb-arrow {
-            width: 13px;
-            height: 13px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-            stroke-linecap: round;
-            transition: transform 0.25s;
-            flex-shrink: 0;
-        }
-
-        .sb-item.open .sb-arrow {
-            transform: rotate(180deg);
-        }
-
-        /* Sub Menu */
-        .sub-nav {
-            overflow: hidden;
-            max-height: 0;
-            transition: max-height 0.35s var(--ease);
-        }
-
-        .sb-item.open .sub-nav {
-            max-height: 280px;
-        }
-
-        .sub-link {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            padding: 8px 18px 8px 46px;
-            color: rgba(255, 255, 255, 0.38);
-            font-size: 0.79rem;
-            text-decoration: none;
-            font-weight: 400;
-            transition: all 0.2s;
-        }
-
-        .sub-link::before {
-            content: '';
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.25);
-            flex-shrink: 0;
-        }
-
-        .sub-link:hover {
-            color: rgba(255, 255, 255, 0.85);
-            background: rgba(255, 255, 255, 0.04);
-        }
-
-        /* Tooltip on collapsed */
-        #sidebar.collapsed .sb-link {
-            justify-content: center;
-            padding: 12px;
-        }
-
-        #sidebar.collapsed .sb-icon {
-            margin: 0;
-        }
-
-        /* Collapse btn */
-        .sb-collapse-btn {
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-            padding: 12px 18px;
-        }
-
-        .sb-collapse-btn button {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            color: rgba(255, 255, 255, 0.28);
-            font-size: 0.75rem;
-            font-weight: 500;
-            background: none;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            padding: 8px 0;
-            transition: color 0.2s;
-        }
-
-        .sb-collapse-btn button:hover {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .sb-collapse-btn button svg {
-            width: 16px;
-            height: 16px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-            flex-shrink: 0;
-            transition: transform 0.3s;
-        }
-
-        #sidebar.collapsed .sb-collapse-btn button svg {
-            transform: rotate(180deg);
-        }
-
-        #sidebar.collapsed .sb-collapse-btn button span {
-            opacity: 0;
-            width: 0;
-            overflow: hidden;
+        #sidebar.collapsed {
+            width: var(--sb-cw);
         }
 
         /* ══════════════ MAIN ══════════════ */
@@ -672,26 +405,17 @@
                 transform: translateX(0);
             }
 
-            #sidebar.collapsed .sb-brand-text {
-                opacity: 1;
-                width: auto;
-            }
-
-            #sidebar.collapsed .sb-section-title {
+            #sidebar.collapsed .menu-title,
+            #sidebar.collapsed .menu-arrow {
                 opacity: 1;
             }
 
-            #sidebar.collapsed .sb-label,
-            #sidebar.collapsed .sb-arrow {
-                opacity: 1;
-            }
-
-            #sidebar.collapsed .sb-link {
+            #sidebar.collapsed .menu-toggle {
                 justify-content: flex-start;
                 padding: 10px 18px;
             }
 
-            #sidebar.collapsed .sb-collapse-btn button span {
+            #sidebar.collapsed .sb-collapse-btn span {
                 opacity: 1;
                 width: auto;
             }
@@ -706,7 +430,7 @@
 
     <!-- SIDEBAR -->
     <aside id="sidebar">
-        @include('layouts.sidebar')
+        <x-sidebar />
     </aside>
 
     <!-- MAIN -->
@@ -746,11 +470,25 @@
             overlay.classList.remove('show');
         }
 
-        // Submenu toggles
-        document.querySelectorAll('.sb-item.has-sub > .sb-link').forEach(link => {
-            link.addEventListener('click', e => {
-                e.preventDefault();
-                link.closest('.sb-item').classList.toggle('open');
+        // Submenu toggles (New Structure)
+        document.querySelectorAll('.menu-toggle').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // If it's a link (e.g. Dashboard) don't prevent default unless it's just a toggle button
+                if (btn.tagName.toLowerCase() !== 'a' && btn.getAttribute('href') === '#') {
+                    e.preventDefault();
+                } else if (btn.tagName.toLowerCase() === 'button' || !btn.getAttribute('href')) {
+                    e.preventDefault();
+                }
+
+                // Close other menus (Accordion logic)
+                document.querySelectorAll('.menu').forEach(m => {
+                    if (m !== btn.parentElement) {
+                        m.classList.remove('active');
+                    }
+                });
+
+                // Toggle this menu
+                btn.parentElement.classList.toggle('active');
             });
         });
 

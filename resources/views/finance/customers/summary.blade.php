@@ -61,9 +61,9 @@
 @endpush
 
 @php
-    $totBeg     = array_sum(array_column($rows,'beg'));
-    $totInvoice = array_sum(array_column($rows,'invoice'));
-    $totReturn  = array_sum(array_column($rows,'return'));
+    $totBeg     = $rows->sum('beg');
+    $totInvoice = $rows->sum('invoice');
+    $totReturn  = $rows->sum('return');
     $netBalance = $totBeg + $totInvoice - $totReturn;
 @endphp
 
@@ -107,18 +107,7 @@
     <div style="background:#fff;border-radius:16px;border:1px solid #e2e8f0;padding:16px 22px;margin-bottom:20px;box-shadow:0 2px 12px rgba(30,58,138,.06);display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;">
         {{-- Customer Info --}}
         <div style="display:flex;flex-wrap:wrap;align-items:center;gap:0;">
-            <div style="display:flex;flex-direction:column;gap:2px;padding-right:22px;border-right:1px solid #e2e8f0;margin-right:22px;">
-                <span style="font-size:10px;font-weight:700;color:#94a3b8;letter-spacing:.07em;text-transform:uppercase;">Code</span>
-                <span style="font-size:15px;font-weight:700;color:#1e293b;">001</span>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:2px;padding-right:22px;border-right:1px solid #e2e8f0;margin-right:22px;">
-                <span style="font-size:10px;font-weight:700;color:#94a3b8;letter-spacing:.07em;text-transform:uppercase;">Currency</span>
-                <span style="font-size:15px;font-weight:700;color:#1e293b;">IDR</span>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:2px;">
-                <span style="font-size:10px;font-weight:700;color:#94a3b8;letter-spacing:.07em;text-transform:uppercase;">Customer Name</span>
-                <span style="font-size:15px;font-weight:700;color:#1E3A8A;">PT. JASA SWADAYA UTAMA</span>
-            </div>
+            <span style="font-size:13px;color:#94a3b8;font-style:italic;">Summary for all customers in selected period</span>
         </div>
 
         {{-- Date Filter --}}
@@ -127,14 +116,14 @@
                 <label style="font-size:10.5px;font-weight:700;color:#64748b;letter-spacing:.07em;text-transform:uppercase;">From Date</label>
                 <div class="filter-input">
                     <span class="fi-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
-                    <input type="date" name="from_date" value="{{ request('from_date','2026-03-17') }}">
+                    <input type="date" name="from_date" value="{{ $from }}">
                 </div>
             </div>
             <div style="display:flex;flex-direction:column;gap:6px;">
                 <label style="font-size:10.5px;font-weight:700;color:#64748b;letter-spacing:.07em;text-transform:uppercase;">Thru Date</label>
                 <div class="filter-input">
                     <span class="fi-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
-                    <input type="date" name="thru_date" value="{{ request('thru_date','2026-03-17') }}">
+                    <input type="date" name="thru_date" value="{{ $thru }}">
                 </div>
             </div>
             <button type="submit" class="btn-search">
@@ -211,10 +200,10 @@
         <div style="padding:16px 22px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;">
             <div>
                 <p style="font-size:13.5px;font-weight:700;color:#1e293b;margin:0;">Customer Summary Data</p>
-                <p style="font-size:11px;color:#94a3b8;margin:2px 0 0;">Period: {{ request('from_date') ? \Carbon\Carbon::parse(request('from_date'))->format('d/m/Y') : '17/03/2026' }} – {{ request('thru_date') ? \Carbon\Carbon::parse(request('thru_date'))->format('d/m/Y') : '17/03/2026' }}</p>
+                <p style="font-size:11px;color:#94a3b8;margin:2px 0 0;">Period: {{ \Carbon\Carbon::parse($from)->format('d/m/Y') }} – {{ \Carbon\Carbon::parse($thru)->format('d/m/Y') }}</p>
             </div>
             <div style="display:flex;align-items:center;gap:10px;">
-                <span style="font-size:11px;font-weight:600;background:#eff6ff;color:#2563EB;padding:4px 12px;border-radius:20px;">{{ count($rows) }} records</span>
+                <span style="font-size:11px;font-weight:600;background:#eff6ff;color:#2563EB;padding:4px 12px;border-radius:20px;">{{ $rows->count() }} records</span>
             </div>
         </div>
 
@@ -288,7 +277,7 @@
 
         {{-- Card footer --}}
         <div style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:10px 22px;display:flex;align-items:center;justify-content:space-between;">
-            <span style="font-size:11px;color:#94a3b8;">Showing {{ count($rows) }} of {{ count($rows) }} entries</span>
+            <span style="font-size:11px;color:#94a3b8;">Showing {{ $rows->count() }} of {{ $rows->count() }} entries</span>
             <div style="display:flex;align-items:center;gap:8px;">
                 <span style="font-size:11px;color:#64748b;">Net Balance:</span>
                 <span class="mono" style="font-size:13px;font-weight:800;color:#1E3A8A;">{{ number_format($netBalance,2) }}</span>

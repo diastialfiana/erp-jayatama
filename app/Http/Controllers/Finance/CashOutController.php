@@ -81,6 +81,25 @@ class CashOutController extends Controller
                     'amount' => $d['amount'] ?? 0,
                     'description' => $d['description'] ?? null,
                 ]);
+
+                \App\Models\Finance\BankTransaction::record([
+                    'bank_account_id' => $cashOut->bank_account_id,
+                    'type'            => 'cash_out',
+                    'reference_id'    => $cashOut->id,
+                    'reference_type'  => \App\Models\Finance\CashOut::class,
+                    'account_id'      => $d['account_id'],
+                    'department_id'   => $d['dept_id'] ?? null,
+                    'cost_center_id'  => $d['cost_id'] ?? null,
+                    'date'            => $cashOut->date,
+                    'reference'       => $cashOut->reference,
+                    'description'     => $d['description'] ?? $cashOut->note,
+                    'amount'          => $d['amount'] ?? 0,
+                    'debit'           => 0,
+                    'credit'          => $d['amount'] ?? 0, // Bank turun = Credit
+                    'currency'        => $cashOut->currency,
+                    'rate'            => $cashOut->rate,
+                    'created_by'      => $cashOut->created_by,
+                ]);
             }
             DB::commit();
             return redirect()->route('finance.cash-out.index')->with('success', 'Cash Out saved successfully!');

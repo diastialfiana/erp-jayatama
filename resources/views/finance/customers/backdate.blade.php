@@ -103,18 +103,22 @@
     <div style="background:#fff;border-radius:16px;border:1px solid #e2e8f0;padding:16px 22px;margin-bottom:18px;box-shadow:0 2px 12px rgba(30,58,138,.06);display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;">
         {{-- Customer Info --}}
         <div style="display:flex;flex-wrap:wrap;align-items:center;gap:0;">
+            @if($activeCustomer)
             <div style="display:flex;flex-direction:column;gap:2px;padding-right:22px;border-right:1px solid #e2e8f0;margin-right:22px;">
                 <span style="font-size:10px;font-weight:700;color:#94a3b8;letter-spacing:.07em;text-transform:uppercase;">Code</span>
-                <span style="font-size:15px;font-weight:700;color:#1e293b;">001</span>
+                <span style="font-size:15px;font-weight:700;color:#1e293b;">{{ $activeCustomer->code }}</span>
             </div>
             <div style="display:flex;flex-direction:column;gap:2px;padding-right:22px;border-right:1px solid #e2e8f0;margin-right:22px;">
                 <span style="font-size:10px;font-weight:700;color:#94a3b8;letter-spacing:.07em;text-transform:uppercase;">Currency</span>
-                <span style="font-size:15px;font-weight:700;color:#1e293b;">IDR</span>
+                <span style="font-size:15px;font-weight:700;color:#1e293b;">{{ $activeCustomer->currency }}</span>
             </div>
             <div style="display:flex;flex-direction:column;gap:2px;">
                 <span style="font-size:10px;font-weight:700;color:#94a3b8;letter-spacing:.07em;text-transform:uppercase;">Customer Name</span>
-                <span style="font-size:15px;font-weight:700;color:#1E3A8A;">PT. JASA SWADAYA UTAMA</span>
+                <span style="font-size:15px;font-weight:700;color:#1E3A8A;">{{ $activeCustomer->counter_name }}</span>
             </div>
+            @else
+            <span style="font-size:13px;color:#94a3b8;font-style:italic;">No customer selected — showing all customers</span>
+            @endif
         </div>
 
         {{-- Date Filter --}}
@@ -125,7 +129,7 @@
                     <span class="fi-icon">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                     </span>
-                    <input type="date" name="backdate" value="{{ request('backdate','2026-03-17') }}">
+                    <input type="date" name="backdate" value="{{ $backdateStr }}">
                 </div>
             </div>
             <button type="submit" class="btn-search">
@@ -135,20 +139,6 @@
         </form>
     </div>
 
-    @php
-        $customers = [
-            ['code'=>'001','curr'=>'IDR','name'=>'PT. JASA SWADAYA UTAMA','balance'=>'12,500,000.00','dp'=>'5,000,000.00','active'=>true],
-            ['code'=>'002','curr'=>'USD','name'=>'PT. GLOBAL MANDIRI','balance'=>'4,250.00','dp'=>'0.00','active'=>false],
-            ['code'=>'003','curr'=>'IDR','name'=>'CV. CIPTA KARYA','balance'=>'0.00','dp'=>'1,500,000.00','active'=>false],
-            ['code'=>'004','curr'=>'IDR','name'=>'PT. SINAR JAYA ABADI','balance'=>'25,750,000.00','dp'=>'10,000,000.00','active'=>false],
-            ['code'=>'005','curr'=>'EUR','name'=>'EUROTECH INDONESIA','balance'=>'1,200.00','dp'=>'0.00','active'=>false],
-            ['code'=>'006','curr'=>'IDR','name'=>'UD. MAJU BERSAMA','balance'=>'6,300,000.00','dp'=>'0.00','active'=>false],
-            ['code'=>'007','curr'=>'IDR','name'=>'PT. NUSA BANGSA','balance'=>'0.00','dp'=>'0.00','active'=>false],
-            ['code'=>'008','curr'=>'SGD','name'=>'LION CITY TRADING','balance'=>'5,400.00','dp'=>'2,000.00','active'=>false],
-            ['code'=>'009','curr'=>'IDR','name'=>'BINTANG GEMILANG','balance'=>'8,900,000.00','dp'=>'0.00','active'=>false],
-            ['code'=>'010','curr'=>'IDR','name'=>'KOPERASI SEJAHTERA','balance'=>'1,150,000.00','dp'=>'500,000.00','active'=>false],
-        ];
-    @endphp
 
     {{-- DATA GRID CARD --}}
     <div style="background:#fff;border-radius:18px;border:1px solid #e2e8f0;overflow:hidden;box-shadow:0 4px 18px rgba(30,58,138,.06);">
@@ -157,7 +147,7 @@
         <div style="padding:16px 22px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;">
             <div>
                 <p style="font-size:13.5px;font-weight:700;color:#1e293b;margin:0;">Balance Report</p>
-                <p style="font-size:11px;color:#94a3b8;margin:2px 0 0;">As of: {{ request('backdate') ? \Carbon\Carbon::parse(request('backdate'))->format('d/m/Y') : '17/03/2026' }}</p>
+                <p style="font-size:11px;color:#94a3b8;margin:2px 0 0;">As of: {{ \Carbon\Carbon::parse($backdateStr)->format('d/m/Y') }}</p>
             </div>
             <span style="font-size:11px;font-weight:600;background:#eff6ff;color:#2563EB;padding:4px 12px;border-radius:20px;">
                 {{ count($customers) }} records
@@ -212,7 +202,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($customers as $customer)
+                        @forelse($customers as $customer)
                         <tr class="{{ $customer['active'] ? 'row-active' : '' }}" onclick="selectRow(this)">
                             <td style="font-weight:600;color:#1e293b;">{{ $customer['code'] }}</td>
                             <td><span class="badge-curr">{{ $customer['curr'] }}</span></td>
@@ -220,7 +210,14 @@
                             <td class="mono" style="text-align:right;font-weight:600;color:#1E3A8A;">{{ $customer['balance'] }}</td>
                             <td class="mono" style="text-align:right;color:#475569;">{{ $customer['dp'] }}</td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="5" style="text-align:center;padding:60px 20px;color:#94a3b8;font-size:13px;">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5" style="display:block;margin:0 auto 12px;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                                No customer data found for this date.
+                            </td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -228,7 +225,7 @@
 
         {{-- Footer --}}
         <div style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:10px 22px;display:flex;align-items:center;justify-content:space-between;">
-            <span style="font-size:11px;color:#94a3b8;">Showing {{ count($customers) }} of {{ count($customers) }} entries</span>
+            <span style="font-size:11px;color:#94a3b8;">Showing {{ count($customers) }} customer(s)</span>
         </div>
     </div>
 

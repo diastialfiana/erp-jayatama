@@ -89,6 +89,25 @@ class CashInController extends Controller
                     'amount' => $d['amount'] ?? 0,
                     'description' => $d['description'] ?? null,
                 ]);
+
+                \App\Models\Finance\BankTransaction::record([
+                    'bank_account_id' => $cashIn->bank_account_id,
+                    'type'            => 'cash_in',
+                    'reference_id'    => $cashIn->id,
+                    'reference_type'  => \App\Models\Finance\CashIn::class,
+                    'account_id'      => $d['account_id'],
+                    'department_id'   => $d['dept_id'] ?? null,
+                    'cost_center_id'  => $d['cost_id'] ?? null,
+                    'date'            => $cashIn->date,
+                    'reference'       => $cashIn->reference,
+                    'description'     => $d['description'] ?? $cashIn->note,
+                    'amount'          => $d['amount'] ?? 0,
+                    'debit'           => $d['amount'] ?? 0,
+                    'credit'          => 0,
+                    'currency'        => $cashIn->currency,
+                    'rate'            => $cashIn->rate,
+                    'created_by'      => $cashIn->created_by,
+                ]);
             }
 
             DB::commit();

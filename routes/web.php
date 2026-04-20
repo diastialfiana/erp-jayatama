@@ -26,9 +26,7 @@ Route::middleware(['auth'])->group(function () {
         })->name('inventory.index');
         // Finance Module
         Route::prefix('finance')->name('finance.')->group(function () {
-            Route::get('/', function () {
-                return "Finance Module (Coming Soon)";
-            })->name('index');
+            Route::get('/', [\App\Http\Controllers\Finance\OverviewController::class, 'index'])->name('index');
 
             // Customers
             Route::controller(\App\Http\Controllers\Finance\CustomerController::class)->group(function() {
@@ -74,6 +72,7 @@ Route::middleware(['auth'])->group(function () {
 
             Route::get('ebanking-request/api/invoices', [\App\Http\Controllers\Finance\EBankingController::class, 'apiInvoices'])->name('ebanking-request.api.invoices');
             Route::post('ebanking-request/store', [\App\Http\Controllers\Finance\EBankingController::class, 'store'])->name('ebanking-request.store');
+            Route::post('ebanking-request/{id}/approve', [\App\Http\Controllers\Finance\EBankingController::class, 'approve'])->name('ebanking-request.approve');
             Route::get('ebanking-request/records-list', [\App\Http\Controllers\Finance\EBankingController::class, 'recordList'])->name('ebanking-request.recordList');
             Route::get('ebanking-request', [\App\Http\Controllers\Finance\EBankingController::class, 'index'])->name('ebanking-request.index');
 
@@ -133,9 +132,48 @@ Route::middleware(['auth'])->group(function () {
             Route::resource('sales-invoice', \App\Http\Controllers\Finance\SalesInvoiceController::class);
             Route::resource('cash-receipt', \App\Http\Controllers\Finance\CashReceiptController::class);
         });
-        Route::get('/accounting', function () {
-            return "Accounting Module (Coming Soon)";
-        })->name('accounting.index');
+        Route::prefix('accounting')->name('accounting.')->group(function () {
+            Route::get('/', function () { return "Accounting Module (Coming Soon)"; })->name('index');
+            Route::get('/journal-posting', function() { return "Journal Posting (Coming Soon)"; })->name('journal-posting');
+            Route::get('/fx-ass-posting', function() { return "Fx. Ass. Posting (Coming Soon)"; })->name('fx-ass-posting');
+            Route::get('/closing-month', function() { return "Closing Month (Coming Soon)"; })->name('closing-month');
+            Route::get('/closing-year', function() { return "Closing Year (Coming Soon)"; })->name('closing-year');
+            Route::get('/change-period', function() { return "Change Period (Coming Soon)"; })->name('change-period');
+            Route::get('/coa', function() { return redirect()->route('accounting.account-list.detail', 1); })->name('coa');
+            Route::get('/account-list', [\App\Http\Controllers\Accounting\AccountListController::class, 'index'])->name('account-list.index');
+            Route::get('/account-list/{id}', [\App\Http\Controllers\Accounting\AccountListController::class, 'show'])->name('account-list.detail');
+            Route::get('/account-list/{id}/statistics', [\App\Http\Controllers\Accounting\AccountListController::class, 'statistics'])->name('account-list.statistics');
+            Route::get('/account-list/{id}/activity', [\App\Http\Controllers\Accounting\AccountListController::class, 'activity'])->name('account-list.activity');
+            Route::get('/account-list/{id}/backdate', [\App\Http\Controllers\Accounting\AccountListController::class, 'backdate'])->name('account-list.backdate');
+            Route::get('/account-list/{id}/summary', [\App\Http\Controllers\Accounting\AccountListController::class, 'summary'])->name('account-list.summary');
+            Route::get('/account-budget/{id?}', [\App\Http\Controllers\Accounting\AccountBudgetController::class, 'detailView'])->name('account-budget');
+            Route::get('/account-budget/{id}/statistics', [\App\Http\Controllers\Accounting\AccountBudgetController::class, 'statistics'])->name('account-budget.statistics');
+            Route::post('/account-budget/{id}', [\App\Http\Controllers\Accounting\AccountBudgetController::class, 'store'])->name('account-budget.store');
+            Route::prefix('dept-account')->name('dept-account.')->group(function () {
+                Route::get('/list', [\App\Http\Controllers\Accounting\DepartmentAccountController::class, 'list'])->name('list');
+                Route::post('/store', [\App\Http\Controllers\Accounting\DepartmentAccountController::class, 'store'])->name('store');
+                Route::put('/{id}/update', [\App\Http\Controllers\Accounting\DepartmentAccountController::class, 'update'])->name('update');
+                Route::get('/detail/{id?}', [\App\Http\Controllers\Accounting\DepartmentAccountController::class, 'detail'])->name('detail');
+            });
+            Route::prefix('cost-center')->name('cost-center.')->group(function () {
+                Route::get('/list', [\App\Http\Controllers\Accounting\CostCenterController::class, 'list'])->name('list');
+                Route::get('/statistic', [\App\Http\Controllers\Accounting\CostCenterController::class, 'statistic'])->name('statistic');
+                Route::post('/store', [\App\Http\Controllers\Accounting\CostCenterController::class, 'store'])->name('store');
+                Route::put('/{id}/update', [\App\Http\Controllers\Accounting\CostCenterController::class, 'update'])->name('update');
+                Route::get('/detail-cost/{id?}', [\App\Http\Controllers\Accounting\CostCenterController::class, 'detail'])->name('detail');
+            });
+            Route::get('/ar-invoice', function() { return "A/R Invoice (Coming Soon)"; })->name('ar-invoice');
+            Route::get('/ar-return', function() { return "A/R Return (Coming Soon)"; })->name('ar-return');
+            Route::get('/ap-invoice', function() { return "A/P Invoice (Coming Soon)"; })->name('ap-invoice');
+            Route::get('/ap-return', function() { return "A/P Return (Coming Soon)"; })->name('ap-return');
+            Route::get('/journal', function() { return "Journal Entry (Coming Soon)"; })->name('journal');
+            Route::get('/post-journal', function() { return "Post Journal (Coming Soon)"; })->name('post-journal');
+            Route::get('/unpost-journal', function() { return "Unpost Journal (Coming Soon)"; })->name('unpost-journal');
+            Route::get('/journal-check', function() { return "Journal Check (Coming Soon)"; })->name('journal-check');
+            Route::get('/financial-report', function() { return "Financial Report (Coming Soon)"; })->name('financial-report');
+            Route::get('/ledger', function() { return "General Ledger (Coming Soon)"; })->name('ledger');
+            Route::get('/trial-balance', function() { return "Trial Balance (Coming Soon)"; })->name('trial-balance');
+        });
         Route::get('/administrator', function () {
             return "Administrator Module (Coming Soon)";
         })->name('administrator.index');

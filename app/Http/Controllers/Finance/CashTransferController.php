@@ -69,10 +69,6 @@ class CashTransferController extends Controller
                 'created_by' => auth()->id() ?? 1,
             ]);
 
-            // Update Saldo Asal (Berkurang)
-            $fromBank = BankAccount::findOrFail($validated['from_bank_id']);
-            $fromBank->decrement('balance', $totalAmount);
-
             foreach ($details as $d) {
                 CashTransferDetail::create([
                     'cash_transfer_id' => $cashTransfer->id,
@@ -85,13 +81,47 @@ class CashTransferController extends Controller
                     'description' => $d['description'] ?? null,
                 ]);
 
-                // Update Saldo Tujuan (Bertambah)
-                $toBank = BankAccount::findOrFail($d['to_bank_id']);
-                $toBank->increment('balance', floatval($d['amount']));
+                // Target bank goes up (Debit)
+                \App\Models\Finance\BankTransaction::record([
+                    'bank_account_id' => $d['to_bank_id'],
+                    'type'            => 'transfer',
+                    'reference_id'    => $cashTransfer->id,
+                    'reference_type'  => \App\Models\Finance\CashTransfer::class,
+                    'department_id'   => $d['dept_id'] ?? null,
+                    'cost_center_id'  => $d['cost_id'] ?? null,
+                    'date'            => $cashTransfer->date,
+                    'reference'       => $cashTransfer->reference,
+                    'description'     => $d['description'] ?? 'Transfer from bank '.$cashTransfer->from_bank_id,
+                    'amount'          => $d['amount'] ?? 0,
+                    'debit'           => $d['amount'] ?? 0,
+                    'credit'          => 0,
+                    'currency'        => $d['currency'] ?? 'IDR',
+                    'rate'            => $d['rate'] ?? 1,
+                    'created_by'      => $cashTransfer->created_by,
+                ]);
+                
+                // Source bank goes down (Credit)
+                \App\Models\Finance\BankTransaction::record([
+                    'bank_account_id' => $cashTransfer->from_bank_id,
+                    'type'            => 'transfer',
+                    'reference_id'    => $cashTransfer->id,
+                    'reference_type'  => \App\Models\Finance\CashTransfer::class,
+                    'department_id'   => $d['dept_id'] ?? null,
+                    'cost_center_id'  => $d['cost_id'] ?? null,
+                    'date'            => $cashTransfer->date,
+                    'reference'       => $cashTransfer->reference,
+                    'description'     => $d['description'] ?? 'Transfer to bank '.$d['to_bank_id'],
+                    'amount'          => $d['amount'] ?? 0,
+                    'debit'           => 0,
+                    'credit'          => $d['amount'] ?? 0,
+                    'currency'        => $d['currency'] ?? 'IDR',
+                    'rate'            => $d['rate'] ?? 1,
+                    'created_by'      => $cashTransfer->created_by,
+                ]);
             }
 
             DB::commit();
-            return redirect()->route('finance.cash-transfer.index')->with('success', 'Cash Transfer berhasil disimpan dan antrian saldo telah disesuaikan.');
+            return redirect()->route('finance.cash-transfer.index')->with('success', 'Cash Transfer berhasil disimpan.');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Gagal menyimpan: ' . $e->getMessage());
@@ -105,14 +135,9 @@ class CashTransferController extends Controller
         try {
             DB::beginTransaction();
             
-            // Revert balances
-            $fromBank = BankAccount::findOrFail($ct->from_bank_id);
-            $fromBank->increment('balance', $ct->total_amount);
-
-            foreach ($ct->details as $d) {
-                $toBank = BankAccount::findOrFail($d->to_bank_id);
-                $toBank->decrement('balance', $d->amount);
-            }
+            \App\Models\Finance\BankTransaction::where('reference_id', $ct->id)
+                ->where('reference_type', \App\Models\Finance\CashTransfer::class)
+                ->delete();
 
             $ct->details()->delete();
             $ct->delete();

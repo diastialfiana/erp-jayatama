@@ -134,11 +134,19 @@ class CashReceiptController extends Controller
 
                     $invoice = SalesInvoice::find($d['invoice_id']);
                     if ($invoice) {
-                        $currentBalance = $invoice->balance !== null ? $invoice->balance : $invoice->total;
-                        $amountApplied = (float)$d['amount'] + (float)($d['discount'] ?? 0) - (float)($d['prepaid'] ?? 0);
-                        
-                        $invoice->balance = $currentBalance - $amountApplied;
-                        $invoice->paid = (float)($invoice->paid ?? 0) + $amountApplied;
+                        $currentBalance = $invoice->balance !== null ? (float)$invoice->balance : (float)$invoice->total;
+                        $amountApplied  = (float)$d['amount'] + (float)($d['discount'] ?? 0) - (float)($d['prepaid'] ?? 0);
+
+                        // ✅ FIX: Proteksi overpayment
+                        if ($amountApplied > $currentBalance + 0.01) {
+                            DB::rollBack();
+                            return back()->with('error',
+                                'Overpayment detected on invoice ' . $invoice->invoice_number .
+                                '. Max payable: ' . number_format($currentBalance, 2));
+                        }
+
+                        $invoice->balance = max(0, $currentBalance - $amountApplied);
+                        $invoice->paid    = (float)($invoice->paid ?? 0) + $amountApplied;
                         $invoice->save();
                     }
                 }
@@ -172,6 +180,23 @@ class CashReceiptController extends Controller
                 DB::rollBack();
                 return back()->with('error', 'Accounting entry is not balanced. Total Debit: ' . $totalDebit . ', Total Credit: ' . $totalCredit);
             }
+
+            // Record to Bank Transactions (Bank balance increases)
+            \App\Models\Finance\BankTransaction::record([
+                'bank_account_id' => $receipt->bank_id,
+                'type'            => 'receipt',
+                'reference_id'    => $receipt->id,
+                'reference_type'  => \App\Models\Finance\CashReceipt::class,
+                'date'            => $receipt->date,
+                'reference'       => $receipt->reference,
+                'description'     => $receipt->note ?? 'Receipt from customer',
+                'amount'          => $totalPaid,
+                'debit'           => $totalPaid,
+                'credit'          => 0,
+                'currency'        => $receipt->currency,
+                'rate'            => $receipt->rate,
+                'created_by'      => $receipt->created_by,
+            ]);
 
             DB::commit();
 

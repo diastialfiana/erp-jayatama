@@ -40,9 +40,51 @@ class Customer extends Model
 
     protected $casts = [
         'is_corporate_group' => 'boolean',
-        'balance' => 'decimal:2',
-        'down_payment' => 'decimal:2',
+        'balance'            => 'decimal:2',
+        'down_payment'       => 'decimal:2',
     ];
 
-    // Additional relationships with Chart Of Account could be defined here
+    // ✅ FIX: Tambahkan relasi ke transaksi
+
+    /**
+     * Sales invoices for this customer.
+     */
+    public function salesInvoices()
+    {
+        return $this->hasMany(SalesInvoice::class);
+    }
+
+    /**
+     * Cash receipts (payments) for this customer.
+     */
+    public function cashReceipts()
+    {
+        return $this->hasMany(CashReceipt::class);
+    }
+
+    /**
+     * Computed: total outstanding balance (invoice - paid).
+     */
+    public function getRealBalanceAttribute(): float
+    {
+        $totalInvoice = (float) $this->salesInvoices()->sum('total');
+        $totalPaid    = (float) $this->salesInvoices()->sum('paid');
+        return $totalInvoice - $totalPaid;
+    }
+
+    /**
+     * Computed: total invoice amount.
+     */
+    public function getTotalInvoiceAttribute(): float
+    {
+        return (float) $this->salesInvoices()->sum('total');
+    }
+
+    /**
+     * Computed: total received.
+     */
+    public function getTotalReceivedAttribute(): float
+    {
+        return (float) $this->cashReceipts()->sum('total');
+    }
 }

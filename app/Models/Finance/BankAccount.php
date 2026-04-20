@@ -24,13 +24,23 @@ class BankAccount extends Model
         'cost_center',
         'department',
         'credit_limit',
-        'balance',
         'is_default',
     ];
 
     protected $casts = [
         'is_default'   => 'boolean',
         'credit_limit' => 'decimal:2',
-        'balance'      => 'decimal:2',
     ];
+
+    public function getBalanceAttribute()
+    {
+        return $this->transactions()
+            ->selectRaw('COALESCE(SUM(debit - credit), 0) as balance')
+            ->value('balance');
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(BankTransaction::class, 'bank_account_id');
+    }
 }

@@ -98,18 +98,22 @@
 
     {{-- CUSTOMER INFO BAR --}}
     <div style="display:flex;flex-wrap:wrap;align-items:center;gap:0;background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(30,58,138,.07);border:1px solid #e2e8f0;padding:16px 22px;margin-bottom:18px;">
+        @if($customer)
         <div style="display:flex;flex-direction:column;gap:2px;padding-right:24px;border-right:1px solid #e2e8f0;margin-right:24px;">
             <span style="font-size:10px;font-weight:700;color:#94a3b8;letter-spacing:.07em;text-transform:uppercase;">Code</span>
-            <span style="font-size:15px;font-weight:700;color:#1e293b;">001</span>
+            <span style="font-size:15px;font-weight:700;color:#1e293b;">{{ $customer->code }}</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:2px;padding-right:24px;border-right:1px solid #e2e8f0;margin-right:24px;">
             <span style="font-size:10px;font-weight:700;color:#94a3b8;letter-spacing:.07em;text-transform:uppercase;">Currency</span>
-            <span style="font-size:15px;font-weight:700;color:#1e293b;">IDR</span>
+            <span style="font-size:15px;font-weight:700;color:#1e293b;">{{ $customer->currency }}</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:2px;">
             <span style="font-size:10px;font-weight:700;color:#94a3b8;letter-spacing:.07em;text-transform:uppercase;">Customer Name</span>
-            <span style="font-size:15px;font-weight:700;color:#1E3A8A;">PT. JASA SWADAYA UTAMA</span>
+            <span style="font-size:15px;font-weight:700;color:#1E3A8A;">{{ $customer->counter_name }}</span>
         </div>
+        @else
+        <span style="font-size:13px;color:#94a3b8;font-style:italic;">No customers found in database.</span>
+        @endif
     </div>
 
     {{-- FILTER CARD --}}
@@ -121,7 +125,7 @@
                     <span class="fi-icon">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                     </span>
-                    <input type="date" name="from_date" value="{{ request('from_date','2026-03-02') }}">
+                    <input type="date" name="from_date" value="{{ $fromDate }}">
                 </div>
             </div>
             <div style="display:flex;flex-direction:column;gap:6px;">
@@ -130,7 +134,7 @@
                     <span class="fi-icon">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                     </span>
-                    <input type="date" name="thru_date" value="{{ request('thru_date','2026-03-16') }}">
+                    <input type="date" name="thru_date" value="{{ $thruDate }}">
                 </div>
             </div>
             <button type="submit" class="btn-search">
@@ -141,19 +145,8 @@
     </div>
 
     @php
-        $activities = [
-            ['date'=>'02/03/2026','userno'=>'INV-2026-0301','note'=>'Invoice penjualan barang','debit'=>5000000,'credit'=>0,'balance'=>5000000,'ref'=>'SO-001','curr'=>'IDR'],
-            ['date'=>'04/03/2026','userno'=>'RCV-2026-0302','note'=>'Penerimaan pembayaran','debit'=>0,'credit'=>5000000,'balance'=>0,'ref'=>'BNK-001','curr'=>'IDR'],
-            ['date'=>'06/03/2026','userno'=>'INV-2026-0303','note'=>'Invoice jasa konsultasi','debit'=>2500000,'credit'=>0,'balance'=>2500000,'ref'=>'SO-002','curr'=>'IDR'],
-            ['date'=>'08/03/2026','userno'=>'CN-2026-0304','note'=>'Credit note – retur barang','debit'=>0,'credit'=>250000,'balance'=>2250000,'ref'=>'RET-001','curr'=>'IDR'],
-            ['date'=>'10/03/2026','userno'=>'INV-2026-0305','note'=>'Invoice pengiriman','debit'=>750000,'credit'=>0,'balance'=>3000000,'ref'=>'SO-003','curr'=>'IDR'],
-            ['date'=>'12/03/2026','userno'=>'RCV-2026-0306','note'=>'Penerimaan sebagian','debit'=>0,'credit'=>1500000,'balance'=>1500000,'ref'=>'BNK-002','curr'=>'IDR'],
-            ['date'=>'14/03/2026','userno'=>'INV-2026-0307','note'=>'Invoice bulanan Maret','debit'=>8200000,'credit'=>0,'balance'=>9700000,'ref'=>'SO-004','curr'=>'IDR'],
-            ['date'=>'15/03/2026','userno'=>'ADV-2026-0308','note'=>'Advance payment DP','debit'=>0,'credit'=>4000000,'balance'=>5700000,'ref'=>'ADV-001','curr'=>'IDR'],
-            ['date'=>'16/03/2026','userno'=>'INV-2026-0309','note'=>'Invoice tambahan','debit'=>3300000,'credit'=>0,'balance'=>9000000,'ref'=>'SO-005','curr'=>'IDR'],
-        ];
-        $totalDebit  = array_sum(array_column($activities,'debit'));
-        $totalCredit = array_sum(array_column($activities,'credit'));
+        $totalDebit  = $activities->sum('debit');
+        $totalCredit = $activities->sum('credit');
     @endphp
 
     {{-- LEDGER TABLE CARD --}}
@@ -163,7 +156,7 @@
         <div style="padding:16px 22px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;">
             <div>
                 <p style="font-size:13.5px;font-weight:700;color:#1e293b;margin:0;">Transaction Ledger</p>
-                <p style="font-size:11px;color:#94a3b8;margin:2px 0 0;">Showing records for 02/03/2026 – 16/03/2026</p>
+                <p style="font-size:11px;color:#94a3b8;margin:2px 0 0;">Showing records for {{ \Carbon\Carbon::parse($fromDate)->format('d/m/Y') }} – {{ \Carbon\Carbon::parse($thruDate)->format('d/m/Y') }}</p>
             </div>
             <span style="font-size:11px;font-weight:600;background:#eff6ff;color:#2563EB;padding:4px 12px;border-radius:20px;">
                 {{ count($activities) }} records

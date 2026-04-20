@@ -69,27 +69,24 @@
 
     {{-- CUSTOMER INFO BAR --}}
     <div style="display:flex;flex-wrap:wrap;align-items:center;gap:0;background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(30,58,138,.07);border:1px solid #e2e8f0;padding:16px 22px;margin-bottom:24px;">
+        @if($customer)
         <div style="display:flex;flex-direction:column;gap:2px;padding-right:24px;border-right:1px solid #e2e8f0;margin-right:24px;">
             <span style="font-size:10px;font-weight:700;color:#94a3b8;letter-spacing:.07em;text-transform:uppercase;">Code</span>
-            <span style="font-size:15px;font-weight:700;color:#1e293b;">001</span>
+            <span style="font-size:15px;font-weight:700;color:#1e293b;">{{ $customer->code }}</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:2px;padding-right:24px;border-right:1px solid #e2e8f0;margin-right:24px;">
             <span style="font-size:10px;font-weight:700;color:#94a3b8;letter-spacing:.07em;text-transform:uppercase;">Currency</span>
-            <span style="font-size:15px;font-weight:700;color:#1e293b;">IDR</span>
+            <span style="font-size:15px;font-weight:700;color:#1e293b;">{{ $customer->currency }}</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:2px;">
             <span style="font-size:10px;font-weight:700;color:#94a3b8;letter-spacing:.07em;text-transform:uppercase;">Customer Name</span>
-            <span style="font-size:15px;font-weight:700;color:#1E3A8A;">PT. JASA SWADAYA UTAMA</span>
+            <span style="font-size:15px;font-weight:700;color:#1E3A8A;">{{ $customer->counter_name }}</span>
         </div>
+        @else
+        <span style="font-size:13px;color:#94a3b8;font-style:italic;">No customers found in database.</span>
+        @endif
     </div>
 
-    @php
-        $months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-        $balances = [0,0,12500000,8750000,15200000,9800000,22100000,17500000,11300000,19700000,14200000,25600000];
-        $dps      = [0,0,5000000,2500000,6000000,3500000,8000000,6500000,4000000,7500000,5500000,10000000];
-        $totalBal = array_sum($balances);
-        $totalDp  = array_sum($dps);
-    @endphp
 
     {{-- SUMMARY CARDS --}}
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin-bottom:24px;">
@@ -134,7 +131,7 @@
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1E3A8A" stroke-width="2.2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                 </div>
             </div>
-            <p style="font-size:20px;font-weight:800;color:#1e293b;margin:0;">{{ count(array_filter($balances)) }}</p>
+            <p style="font-size:20px;font-weight:800;color:#1e293b;margin:0;">{{ $txCount }}</p>
             <div style="height:3px;background:linear-gradient(90deg,#1E3A8A,#2563EB);border-radius:2px;margin-top:14px;"></div>
         </div>
     </div>
@@ -149,7 +146,7 @@
                     <p style="font-size:13px;font-weight:700;color:#1e293b;margin:0;">Balance Trend</p>
                     <p style="font-size:11px;color:#94a3b8;margin:2px 0 0;">Monthly balance movement</p>
                 </div>
-                <span style="font-size:10px;font-weight:600;color:#2563EB;background:#eff6ff;padding:4px 10px;border-radius:20px;">2026</span>
+                <span style="font-size:10px;font-weight:600;color:#2563EB;background:#eff6ff;padding:4px 10px;border-radius:20px;">{{ $year }}</span>
             </div>
             <canvas id="balanceTrendChart" height="200"></canvas>
         </div>
