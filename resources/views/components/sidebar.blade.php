@@ -1,4 +1,7 @@
 <style>
+/* ═══════════════════════════════════════════
+   SIDEBAR COMPONENT STYLES
+═══════════════════════════════════════════ */
 .sidebar {
     background: #0f172a;
     width: var(--sb-w, 258px);
@@ -8,215 +11,138 @@
     margin: 0;
     overflow-y: auto;
     overflow-x: hidden;
-}
-
-#sidebar.collapsed .sidebar {
-    width: var(--sb-cw, 70px);
-}
-
-.sidebar::-webkit-scrollbar {
-    width: 6px;
-}
-.sidebar::-webkit-scrollbar-thumb {
-    background: #334155;
-    border-radius: 3px;
-}
-
-/* Brand Section inside sidebar to keep it self-contained */
-.sb-brand {
-    height: var(--nb-h, 62px);
     display: flex;
-    align-items: center;
-    gap: 11px;
-    padding: 0 18px;
-    border-bottom: 1px solid #1e293b;
-    text-decoration: none;
-    flex-shrink: 0;
-    overflow: hidden;
+    flex-direction: column;
+}
+#sidebar.collapsed .sidebar { width: var(--sb-cw, 70px); }
+
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 2px; }
+
+/* ── Brand ── */
+.sb-brand {
+    height: var(--nb-h, 60px);
+    display: flex; align-items: center; gap: 10px;
+    padding: 0 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    text-decoration: none; flex-shrink: 0; overflow: hidden;
 }
 .sb-logo {
-    width: 36px; height: 36px; flex-shrink: 0;
-    background: linear-gradient(135deg, #1d4ed8, #4F46E5);
-    border-radius: 10px; display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.45);
+    width: 34px; height: 34px; flex-shrink: 0;
+    background: linear-gradient(135deg, #2563eb, #4f46e5);
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(79,70,229,0.4);
 }
-.sb-logo svg {
-    width: 18px; height: 18px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
-}
-.sb-brand-text {
-    overflow: hidden; min-width: 0; display: flex; flex-direction: column; justify-content: center;
-}
-.sb-brand-name { font-size: 0.98rem; font-weight: 800; color: #fff; letter-spacing: -0.03em; white-space: nowrap; }
-.sb-brand-sub { font-size: 0.58rem; color: rgba(255, 255, 255, 0.3); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
-
+.sb-logo svg { width: 17px; height: 17px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.sb-brand-text { overflow: hidden; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+.sb-brand-name { font-size: 0.95rem; font-weight: 800; color: #fff; letter-spacing: -0.03em; white-space: nowrap; }
+.sb-brand-sub  { font-size: 0.58rem; color: rgba(255,255,255,0.28); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
 #sidebar.collapsed .sb-brand-text { opacity: 0; width: 0; }
 
-/* Global Component Navigation Structure */
-.menu {
-    list-style: none;
-}
+/* ── Menu Items ── */
+.menu { list-style: none; }
 
 .menu-toggle {
-    background: #1e293b;
-    color: #fff;
+    background: transparent;
+    color: rgba(255,255,255,0.7);
     width: 100%;
-    padding: 10px 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    padding: 9px 14px;
+    display: flex; align-items: center; gap: 9px;
     border: none;
-    border-bottom: 1px solid rgba(0,0,0,0.1);
     cursor: pointer;
     text-decoration: none;
-    font-size: 0.85rem;
+    font-size: 12.5px;
     font-weight: 500;
-    transition: background 0.2s ease;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.15s ease;
+    position: relative;
+    border-left: 3px solid transparent;
 }
-
-/* Base icon sizing */
-.menu-icon {
-    flex-shrink: 0;
-}
-
-.menu-title {
-    flex: 1;
-    text-align: left;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    transition: opacity 0.2s;
-}
-
-.menu-arrow {
-    margin-left: auto;
-    transition: transform 0.2s ease;
-}
-
 .menu-toggle:hover {
-    background: #334155;
+    background: rgba(255,255,255,0.06);
+    color: #fff;
+    border-left-color: rgba(59,130,246,0.4);
 }
-
 .menu.active > .menu-toggle {
-    background: #334155;
+    background: rgba(59,130,246,0.12);
+    color: #fff;
+    border-left-color: #3b82f6;
 }
 
-.menu.active .menu-arrow {
-    transform: rotate(180deg);
-}
+.menu-icon { flex-shrink: 0; }
+.menu-icon svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+.menu-title { flex: 1; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity 0.2s; }
+.menu-arrow { margin-left: auto; transition: transform 0.2s ease; flex-shrink: 0; }
+.menu-arrow svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+.menu.active .menu-arrow { transform: rotate(180deg); }
 
+/* ── Submenu ── */
 .submenu {
-    background: #020617;
-    display: none;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    transition: all 0.2s ease;
+    background: rgba(0,0,0,0.2);
+    display: none; list-style: none; padding: 4px 0; margin: 0;
 }
-
-.menu.active .submenu {
-    display: block;
-}
+.menu.active .submenu { display: block; }
 
 .submenu-title {
-    background: #334155;
-    color: #94a3b8;
-    padding: 6px 12px;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    padding: 8px 14px 4px 14px;
+    font-size: 9.5px; font-weight: 700;
+    color: rgba(255,255,255,0.22);
+    text-transform: uppercase; letter-spacing: 0.12em;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    margin-top: 4px;
 }
 
 .submenu-item {
-    padding: 8px 16px;
-    font-size: 13px;
-    color: #d1d5db;
-    display: block;
+    display: flex; align-items: center;
+    padding: 7px 14px 7px 38px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
     text-decoration: none;
     transition: all 0.15s ease;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    border-left: 3px solid transparent;
+    position: relative;
 }
-
 .submenu-item:hover {
-    background: #1e3a5f;
-    color: #fff;
+    background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.9);
+    border-left-color: rgba(59,130,246,0.3);
 }
-
 .submenu-item.active {
-    background: #2563eb;
-    color: white;
+    background: rgba(59,130,246,0.15);
+    color: #93c5fd;
+    border-left-color: #3b82f6;
     font-weight: 600;
 }
 
-/* Collapsed Sidebar Logic */
+/* ── Collapsed State ── */
 #sidebar.collapsed .menu-title,
-#sidebar.collapsed .menu-arrow {
-    opacity: 0;
-    width: 0;
-    overflow: hidden;
-}
+#sidebar.collapsed .menu-arrow { opacity: 0; width: 0; overflow: hidden; }
+#sidebar.collapsed .menu-toggle { justify-content: center; padding: 12px 14px; }
+#sidebar.collapsed .submenu-title { font-size: 0; padding: 3px; height: 3px; margin: 0; }
+#sidebar.collapsed .submenu-item { padding: 8px; justify-content: center; font-size: 0; }
+#sidebar.collapsed .submenu-item::before { content: ''; width: 5px; height: 5px; background: rgba(255,255,255,0.25); border-radius: 50%; }
+#sidebar.collapsed .submenu-item.active::before { background: #3b82f6; }
+#sidebar.collapsed .menu.active .submenu { display: none; }
 
-#sidebar.collapsed .menu-toggle {
-    justify-content: center;
-    padding: 14px 12px;
-}
-
-#sidebar.collapsed .submenu-title {
-    font-size: 0;
-    padding: 4px;
-    text-align: center;
-    height: 4px;
-    background: transparent;
-}
-
-#sidebar.collapsed .submenu-item {
-    padding: 10px;
-    font-size: 0;
-    display: flex;
-    justify-content: center;
-}
-#sidebar.collapsed .submenu-item::before {
-    content: '';
-    width: 6px; height: 6px;
-    background: #94a3b8;
-    border-radius: 50%;
-}
-#sidebar.collapsed .submenu-item.active::before {
-    background: #fff;
-}
-#sidebar.collapsed .menu.active .submenu {
-    /* If we want to show dots in collapsed mode, display block. Otherwise, hide standard submenu in collapsed mode to avoid clutter */
-    display: none; 
-}
-#sidebar.collapsed .menu:hover .submenu {
-    /* Optional: Show floating menu on hover - skipped to keep simple, just hiding submenu in collapsed for now */
-    display: none;
-}
-
-.sb-collapse-btn {
-    margin-top: auto;
-    border-top: 1px solid #1e293b;
-    padding: 12px;
-}
+/* ── Collapse Btn ── */
+.sb-collapse-btn { margin-top: auto; border-top: 1px solid rgba(255,255,255,0.06); padding: 10px 14px; }
 .sb-collapse-btn button {
-    display: flex; align-items: center; gap: 9px;
-    color: #94a3b8; background: none; border: none; cursor: pointer;
-    font-size: 0.75rem; font-weight: 500; width: 100%; transition: color 0.2s;
+    display: flex; align-items: center; gap: 8px;
+    color: rgba(255,255,255,0.35); background: none; border: none; cursor: pointer;
+    font-size: 11px; font-weight: 500; font-family: 'Inter', sans-serif;
+    width: 100%; transition: color 0.2s;
 }
-.sb-collapse-btn button:hover { color: #fff; }
-.sb-collapse-btn button svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; transition: transform 0.3s; }
+.sb-collapse-btn button:hover { color: rgba(255,255,255,0.7); }
+.sb-collapse-btn button svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
 </style>
 
 <ul class="sidebar">
     <!-- BRAND -->
     <a href="{{ route('dashboard') }}" class="sb-brand">
         <div class="sb-logo">
-            <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2" /><polyline points="2 17 12 22 22 17" /><polyline points="2 12 12 17 22 12" /></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
         </div>
         <div class="sb-brand-text">
             <div class="sb-brand-name">JES</div>
@@ -226,8 +152,8 @@
 
     <!-- DASHBOARD -->
     <li class="menu {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-        <a href="{{ route('dashboard') }}" class="menu-toggle" style="background: transparent;">
-            <svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+        <a href="{{ route('dashboard') }}" class="menu-toggle">
+            <span class="menu-icon"><svg viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg></span>
             <span class="menu-title">Dashboard</span>
         </a>
     </li>
@@ -235,9 +161,9 @@
     <!-- INVENTORY & GA -->
     <li class="menu {{ request()->routeIs('inventory.*') ? 'active' : '' }}">
         <button class="menu-toggle">
-            <svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            <span class="menu-icon"><svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></span>
             <span class="menu-title">Inventory & GA</span>
-            <svg class="menu-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            <span class="menu-arrow"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span>
         </button>
         <ul class="submenu">
             <a href="{{ route('inventory.index') }}" class="submenu-item {{ request()->routeIs('inventory.index') ? 'active' : '' }}">Overview Inventory</a>
@@ -247,13 +173,13 @@
     <!-- FINANCE -->
     <li class="menu {{ request()->routeIs('finance.*') ? 'active' : '' }}">
         <button class="menu-toggle">
-            <svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <span class="menu-icon"><svg viewBox="0 0 24 24"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
             <span class="menu-title">Finance</span>
-            <svg class="menu-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            <span class="menu-arrow"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span>
         </button>
         <ul class="submenu">
             <a href="{{ route('finance.index') }}" class="submenu-item {{ request()->routeIs('finance.index') ? 'active' : '' }}">Overview Finance</a>
-            
+
             <li class="submenu-title">MAINTENANCE</li>
             <a href="{{ route('finance.customers.index') }}" class="submenu-item {{ request()->routeIs('finance.customers.*') ? 'active' : '' }}">Customer List</a>
             <a href="{{ route('finance.bank-accounts.index') }}" class="submenu-item {{ request()->routeIs('finance.bank-accounts.*') ? 'active' : '' }}">Bank Account</a>
@@ -276,9 +202,9 @@
     <!-- ACCOUNTING -->
     <li class="menu {{ request()->routeIs('accounting.*') ? 'active' : '' }}">
         <button class="menu-toggle">
-            <svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <span class="menu-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
             <span class="menu-title">Accounting</span>
-            <svg class="menu-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            <span class="menu-arrow"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span>
         </button>
         <ul class="submenu">
             <a href="{{ route('accounting.index') }}" class="submenu-item {{ request()->routeIs('accounting.index') ? 'active' : '' }}">Overview Accounting</a>
@@ -319,13 +245,13 @@
     @role('Superadmin|Admin 1|Admin 2')
     <li class="menu {{ request()->routeIs('administrator.*') ? 'active' : '' }}">
         <button class="menu-toggle">
-            <svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span class="menu-icon"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
             <span class="menu-title">Administrator</span>
-            <svg class="menu-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            <span class="menu-arrow"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span>
         </button>
         <ul class="submenu">
             <a href="{{ route('administrator.index') }}" class="submenu-item {{ request()->routeIs('administrator.index') ? 'active' : '' }}">Manajemen User</a>
-            <a href="{{ route('administrator.index') }}" class="submenu-item">Role &amp; Permission</a>
+            <a href="{{ route('administrator.index') }}" class="submenu-item">Role & Permission</a>
             <a href="{{ route('administrator.index') }}" class="submenu-item">Master Pegawai</a>
             <a href="{{ route('administrator.index') }}" class="submenu-item">Master Divisi</a>
             <a href="{{ route('administrator.index') }}" class="submenu-item">Master Jabatan</a>
@@ -335,16 +261,16 @@
 
     <!-- HELP -->
     <li class="menu {{ request()->routeIs('help.index') ? 'active' : '' }}">
-        <a href="{{ route('help.index') }}" class="menu-toggle" style="background: transparent;">
-            <svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+        <a href="{{ route('help.index') }}" class="menu-toggle">
+            <span class="menu-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg></span>
             <span class="menu-title">Panduan Penggunaan</span>
         </a>
     </li>
 
-    <!-- TOGGLE BTN -->
+    <!-- COLLAPSE BTN -->
     <div class="sb-collapse-btn">
         <button id="collapseSbBtn">
-            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
             <span class="menu-title">Tutup Panel</span>
         </button>
     </div>

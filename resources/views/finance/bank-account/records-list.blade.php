@@ -82,7 +82,7 @@
 
 @section('content')
 @php
-    /* Use DB data if available, otherwise fall back to mock */
+    /* Use DB data if available, otherwise fall back to empty array */
     $displayBanks = $banks->count() > 0
         ? $banks->map(fn($b) => [
             'code'         => $b->code,
@@ -98,7 +98,7 @@
             'audit'        => $b->audit,
             'is_default'   => $b->is_default,
           ])->toArray()
-        : $mockBanks;
+        : [];
 
     $totalRecords = count($displayBanks);
 @endphp
