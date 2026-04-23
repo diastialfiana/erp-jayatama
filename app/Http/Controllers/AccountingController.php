@@ -54,7 +54,29 @@ class AccountingController extends Controller
 
     public function arReturn()
     {
-        return view('accounting.index');
+        $arReturns = [
+            [
+                'id' => 1,
+                'type' => 'RTN',
+                'ref' => 'RTN-AR-2601-001',
+                'branch' => 'HQ',
+                'user_no' => 'USR002',
+                'date' => '2026-01-15',
+                'customer_name' => 'PT JAYA ABADI',
+                'currency' => 'IDR',
+                'rate' => 1.00,
+                'link' => 'LNK-AR-001',
+                'amount_total' => 500000.00,
+                'prepaid' => 0.00,
+                'total' => 500000.00,
+                'note' => 'Return of overshipped items',
+                'items' => [
+                    ['account' => '110-20', 'account_desc' => 'Accounts Receivable', 'dept' => 'Sales', 'cost' => '000', 'amount' => 500000, 'description' => 'Returned Product A']
+                ]
+            ]
+        ];
+
+        return view('accounting.ar_return.index', compact('arReturns'));
     }
 
     public function apInvoice()
@@ -120,6 +142,28 @@ class AccountingController extends Controller
 
     public function apReturn()
     {
-        return view('accounting.index');
+        $apReturns = [
+            [
+                'id' => 1,
+                'type' => 'RTN',
+                'ref' => 'RTN-2601-001',
+                'branch' => 'HQ',
+                'user_no' => 'USR001',
+                'date' => '2026-01-10',
+                'supplier_name' => 'PT BINTANG KARYA',
+                'currency' => 'IDR',
+                'rate' => 1.00,
+                'link' => 'LNK001',
+                'amount_total' => 1500000.00,
+                'prepaid' => 0.00,
+                'total' => 1500000.00,
+                'note' => 'Return of defective goods',
+                'items' => [
+                    ['account' => '200-10', 'account_desc' => 'Accounts Payable', 'dept' => 'PUR', 'cost' => '000', 'amount' => 1500000, 'description' => 'Return Items']
+                ]
+            ]
+        ];
+
+        return view('accounting.ap_return.index', compact('apReturns'));
     }
 }

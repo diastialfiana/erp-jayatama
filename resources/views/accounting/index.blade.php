@@ -23,13 +23,13 @@
 <div x-data="{
     handleRibbonAction(action) {
         if (action === 'ar-invoice') {
-            showToast('Opening A/R Invoice...', 'info');
+            window.location.href = '{{ route('accounting.ar_invoice') }}';
         } else if (action === 'ar-return') {
-            showToast('Opening A/R Return...', 'info');
+            window.location.href = '{{ route('accounting.ar_return') }}';
         } else if (action === 'ap-invoice') {
-            showToast('Opening A/P Invoice...', 'info');
+            window.location.href = '{{ route('accounting.ap_invoice') }}';
         } else if (action === 'ap-return') {
-            showToast('Opening A/P Return...', 'info');
+            window.location.href = '{{ route('accounting.ap_return') }}';
         } else {
             showToast('Action: ' + action, 'default');
         }

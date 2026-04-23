@@ -114,18 +114,18 @@
 @section('content')
 <div x-data="arInvoiceManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)" style="background: white; border: 1px solid var(--hr-border); margin: 10px; display: flex; flex-direction: column; height: calc(100vh - 80px);">
     <!-- Windows like Title bar -->
-    <div class="window-title-bar" style="background: #e2e8f0; border-bottom: 1px solid #cbd5e1; padding: 4px 10px; display: flex; align-items: center; justify-content: space-between;">
-        <div style="display: flex; gap: 8px; align-items: center; color: #334155;">
+    <div class="window-title-bar">
+        <div style="display: flex; gap: 8px; align-items: center;">
             <div style="display: flex; gap: 2px;">
                 <div style="width: 6px; height: 6px; background: #ef4444;"></div>
                 <div style="width: 6px; height: 6px; background: #eab308;"></div>
             </div>
             <span style="font-weight: 500; font-size: 0.8rem;">Customer Invoice</span>
         </div>
-        <div style="display: flex; gap: 15px; color: #334155;">
-            <span style="cursor: pointer; font-size: 1rem;">-</span>
-            <span style="cursor: pointer; font-size: 1rem;">□</span>
-            <span style="cursor: pointer; font-size: 1rem;">✕</span>
+        <div style="display: flex; gap: 15px;">
+            <span style="cursor: pointer; font-size: 1rem;" class="nav-btn">-</span>
+            <span style="cursor: pointer; font-size: 1rem;" class="nav-btn">□</span>
+            <span style="cursor: pointer; font-size: 1rem;" class="nav-btn">✕</span>
         </div>
     </div>
 
@@ -438,6 +438,10 @@
                         this.activeMainTab = 'detail';
                         this.$nextTick(() => { document.querySelector('.form-input')?.focus(); });
                         break;
+                    case 'ar-invoice': window.location.href = '{{ route('accounting.ar_invoice') }}'; break;
+                    case 'ar-return': window.location.href = '{{ route('accounting.ar_return') }}'; break;
+                    case 'ap-invoice': window.location.href = '{{ route('accounting.ap_invoice') }}'; break;
+                    case 'ap-return': window.location.href = '{{ route('accounting.ap_return') }}'; break;
                     default: showToast('Action: ' + action, 'info');
                 }
             },
