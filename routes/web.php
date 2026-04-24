@@ -27,7 +27,25 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', function () {
                 return "Inventory Module (Coming Soon)";
             })->name('index');
+
+            Route::get('/fixed-assets', [\App\Http\Controllers\FixedAssetController::class, 'index'])->name('fixed_assets');
+            Route::get('/product-assets', [\App\Http\Controllers\ProductAssetController::class, 'index'])->name('product_assets');
+            Route::get('/product-assets/{id}/details', [\App\Http\Controllers\ProductAssetController::class, 'getDetails'])->name('product_assets.details');
+            Route::get('/human-resources', [\App\Http\Controllers\HumanResourceController::class, 'index'])->name('human_resources');
+            Route::get('/human-resources/{id}/details', [\App\Http\Controllers\HumanResourceController::class, 'getDetails'])->name('human_resources.details');
+            Route::get('/order-requests', [\App\Http\Controllers\OrderRequestController::class, 'index'])->name('order_requests');
+            Route::get('/advance-requests', [\App\Http\Controllers\AdvanceRequestController::class, 'index'])->name('advance_requests');
+            Route::get('/goods-requests', [\App\Http\Controllers\GoodsRequestController::class, 'index'])->name('goods_requests');
+            Route::get('/hr-ebanking', [\App\Http\Controllers\HrEbankingController::class, 'index'])->name('hr_ebanking');
+            Route::get('/cost-estimations', [\App\Http\Controllers\CostEstimationController::class, 'index'])->name('cost_estimations');
+            Route::get('/quotations', [\App\Http\Controllers\QuotationController::class, 'index'])->name('quotations');
+            Route::get('/resource-services', [\App\Http\Controllers\ResourceServiceController::class, 'index'])->name('resource_services');
+            Route::get('/lsi-status', [\App\Http\Controllers\LsiStatusController::class, 'index'])->name('lsi_status');
         });
+
+        // Public Asset Scan Route (tidak butuh Inventory access)
+        Route::get('/a/{code}', [\App\Http\Controllers\FixedAssetController::class, 'showPublic'])->name('asset.scan');
+
         // Finance Module
         Route::prefix('finance')->name('finance.')->middleware('check.menu:Finance')->group(function () {
             Route::get('/', [\App\Http\Controllers\Finance\OverviewController::class, 'index'])->name('index');
@@ -166,10 +184,10 @@ Route::middleware(['auth'])->group(function () {
                 Route::put('/{id}/update', [\App\Http\Controllers\Accounting\CostCenterController::class, 'update'])->name('update');
                 Route::get('/detail-cost/{id?}', [\App\Http\Controllers\Accounting\CostCenterController::class, 'detail'])->name('detail');
             });
-            Route::get('/ar-invoice', function() { return "A/R Invoice (Coming Soon)"; })->name('ar-invoice');
-            Route::get('/ar-return', function() { return "A/R Return (Coming Soon)"; })->name('ar-return');
-            Route::get('/ap-invoice', function() { return "A/P Invoice (Coming Soon)"; })->name('ap-invoice');
-            Route::get('/ap-return', function() { return "A/P Return (Coming Soon)"; })->name('ap-return');
+            Route::get('/ar-invoice', [\App\Http\Controllers\AccountingController::class, 'arInvoice'])->name('ar-invoice');
+            Route::get('/ar-return', [\App\Http\Controllers\AccountingController::class, 'arReturn'])->name('ar-return');
+            Route::get('/ap-invoice', [\App\Http\Controllers\AccountingController::class, 'apInvoice'])->name('ap-invoice');
+            Route::get('/ap-return', [\App\Http\Controllers\AccountingController::class, 'apReturn'])->name('ap-return');
             Route::get('/journal', function() { return "Journal Entry (Coming Soon)"; })->name('journal');
             Route::get('/post-journal', function() { return "Post Journal (Coming Soon)"; })->name('post-journal');
             Route::get('/unpost-journal', function() { return "Unpost Journal (Coming Soon)"; })->name('unpost-journal');
