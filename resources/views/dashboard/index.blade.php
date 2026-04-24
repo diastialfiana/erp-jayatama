@@ -356,7 +356,7 @@
     {{-- Welcome --}}
     <div class="welcome-card">
         <div class="welcome-text">
-            <h2>Selamat datang, {{ auth()->user()->nama_lengkap }}! 👋</h2>
+            <h2>Selamat datang, {{ auth()->user()->name }}! 👋</h2>
             <p>{{ now()->locale('id')->isoFormat('dddd, D MMMM YYYY') }} &bull; JES – Jayatama Enterprise System</p>
         </div>
         <span class="welcome-role">{{ auth()->user()->roles->pluck('name')->implode(', ') }}</span>

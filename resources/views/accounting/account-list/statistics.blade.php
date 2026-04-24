@@ -254,16 +254,26 @@
         <!-- MINI SUMMARY -->
         <div class="mini-summary">
             <div>
-                <span class="label">Total Current Balance</span>
+                <span class="label">Net Activity ({{ $year }})</span>
+                <div class="{{ $totalNet < 0 ? 'negative' : '' }}">
+                    IDR {{ number_format($totalNet, 2) }}
+                </div>
+            </div>
+            <div>
+                <span class="label">Current Balance</span>
                 <div class="{{ $account->balance < 0 ? 'negative' : '' }}">
                     IDR {{ number_format($account->balance, 2) }}
                 </div>
             </div>
-            <div>
-                <span class="label">Total Budget Year</span>
-                <div>
-                    IDR 120,000,000.00
-                </div>
+            <div style="margin-left:auto;">
+                <form method="GET" action="" style="display:flex;align-items:center;gap:6px;">
+                    <label style="font-size:11px;font-weight:700;color:#555;">YEAR</label>
+                    <select name="year" onchange="this.form.submit()" style="border:1px solid #ccc;padding:4px 8px;font-size:12px;background:#f8f9fa;">
+                        @for($y = now()->year; $y >= now()->year - 5; $y--)
+                            <option value="{{ $y }}" {{ $year == $y ? 'selected' : '' }}>{{ $y }}</option>
+                        @endfor
+                    </select>
+                </form>
             </div>
         </div>
 
@@ -295,34 +305,33 @@
 
                 <tbody>
                     <tr class="current-row">
-                        <td>CURRENT</td>
-                        <td class="{{ $account->balance < 0 ? 'negative' : '' }}">{{ number_format($account->balance, 2) }}</td>
-                        <td class="{{ $account->balance < 0 ? 'negative' : '' }}">{{ number_format($account->balance, 2) }}</td>
-                        <td>13,183,125,282.30</td>
+                        <td>CURRENT BALANCE</td>
+                        <td colspan="3" class="{{ $account->balance < 0 ? 'negative' : '' }}" style="text-align:right;">
+                            {{ number_format($account->balance, 2) }}
+                        </td>
                         <td>0.00</td>
                     </tr>
 
-                    <tr>
-                        <td>BEG. BALANCE</td>
-                        <td class="{{ $account->balance < 0 ? 'negative' : '' }}">{{ number_format($account->balance, 2) }}</td>
-                        <td class="{{ $account->balance < 0 ? 'negative' : '' }}">{{ number_format($account->balance, 2) }}</td>
-                        <td>13,183,125,282.30</td>
-                        <td>0.00</td>
-                    </tr>
-
-                    @foreach($months as $month)
+                    @foreach($months as $idx => $month)
                     @php
-                        $ly = rand(1000000000,9000000000);
-                        $bg = 0.00;
+                        $val = $monthlyData[$idx] ?? 0;
                     @endphp
                     <tr>
                         <td>{{ strtoupper($month) }}</td>
+                        <td class="{{ $val < 0 ? 'negative' : '' }}">{{ number_format($val, 2) }}</td>
+                        <td class="{{ $val < 0 ? 'negative' : '' }}">{{ number_format($val, 2) }}</td>
+                        <td>–</td>
                         <td>0.00</td>
-                        <td>0.00</td>
-                        <td>{{ number_format($ly, 2) }}</td>
-                        <td>{{ number_format($bg, 2) }}</td>
                     </tr>
                     @endforeach
+
+                    <tr style="background:#f1f5f9;font-weight:700;border-top:2px solid #ccc;">
+                        <td>TOTAL {{ $year }}</td>
+                        <td class="{{ $totalNet < 0 ? 'negative' : '' }}">{{ number_format($totalNet, 2) }}</td>
+                        <td class="{{ $totalNet < 0 ? 'negative' : '' }}">{{ number_format($totalNet, 2) }}</td>
+                        <td>–</td>
+                        <td>0.00</td>
+                    </tr>
                 </tbody>
             </table>
 

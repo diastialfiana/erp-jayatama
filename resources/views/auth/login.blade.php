@@ -423,7 +423,7 @@
             <form action="{{ route('login') }}" method="POST" id="loginForm">
                 @csrf
                 <div class="field">
-                    <label class="field-label" for="nip">Nomor Induk Pegawai</label>
+                    <label class="field-label" for="name">Nama Pegawai</label>
                     <div class="input-wrap">
                         <span class="field-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -432,8 +432,15 @@
                                 <circle cx="12" cy="7" r="4" />
                             </svg>
                         </span>
-                        <input type="text" name="nip" id="nip" class="field-input" placeholder="Masukkan NIP Anda"
-                            value="{{ old('nip') }}" autocomplete="username" required>
+                        <input type="text" name="name" id="name" class="field-input" placeholder="Masukkan nama lengkap"
+                            value="{{ old('name') }}" autocomplete="off" list="user-list" autofocus required>
+                        <datalist id="user-list">
+                            @if(isset($users))
+                                @foreach($users as $user)
+                                    <option value="{{ $user->name }} ({{ $user->username }})"></option>
+                                @endforeach
+                            @endif
+                        </datalist>
                     </div>
                 </div>
 

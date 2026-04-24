@@ -16,21 +16,33 @@ class PasswordController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'password' => 'required|min:4|confirmed',
+            'password' => 'required|min:6|confirmed',
+        ], [
+            'password.min' => 'Password minimal 6 karakter.',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.'
         ]);
 
         $user = Auth::user();
 
-        // Check if the new password is the same as the old NIP
-        if ($request->password === $user->nip) {
-            return back()->withErrors(['password' => 'Password baru tidak boleh sama dengan NIP.']);
+        // Prevent setting password to the default "jayatama"
+        if ($request->password === 'jayatama') {
+            return back()->withErrors(['password' => 'Anda tidak boleh menggunakan password default "jayatama".']);
+        }
+
+        // Check if the new password is the same as the old username
+        if ($request->password === $user->username) {
+            return back()->withErrors(['password' => 'Password baru tidak boleh sama dengan Username.']);
         }
 
         $user->update([
-            'password' => Hash::make($request->password),
+            'password'            => Hash::make($request->password),
             'must_change_password' => false
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Password berhasil diubah.');
+        // Gunakan getRedirectRoute() agar user diarahkan ke modul yang sesuai aksesnya
+        $redirectRoute = app(AuthController::class)->getFirstAccessibleRoute($user);
+
+        return redirect()->route($redirectRoute)->with('success', 'Password berhasil diubah.');
     }
 }
+

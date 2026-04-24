@@ -15,7 +15,7 @@ class DashboardController extends Controller
             'totalPegawai' => User::count(),
             'totalDivisi' => Divisi::count(),
             'totalJabatan' => Jabatan::count(),
-            'totalUserAktif' => User::where('is_active', true)->count(),
+            'totalUserAktif' => User::where('status', 'active')->count(),
         ];
         return view('dashboard.index', $data);
     }

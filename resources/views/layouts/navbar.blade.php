@@ -26,10 +26,10 @@
         <div class="user-menu" id="userMenuEl">
             <button class="user-trigger" id="userTrigger">
                 <div class="user-avatar">
-                    {{ strtoupper(substr(auth()->user()->nama_lengkap ?? 'U', 0, 1)) }}
+                    {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
                 </div>
                 <div>
-                    <div class="user-name">{{ auth()->user()->nama_lengkap }}</div>
+                    <div class="user-name">{{ auth()->user()->name }}</div>
                     <div class="user-role">{{ auth()->user()->roles->pluck('name')->implode(', ') }}</div>
                 </div>
                 <svg class="user-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -37,8 +37,8 @@
 
             <div class="dropdown">
                 <div class="dd-header">
-                    <strong>{{ auth()->user()->nama_lengkap }}</strong>
-                    <span>NIP: {{ auth()->user()->nip }}</span>
+                    <strong>{{ auth()->user()->name }}</strong>
+                    <span>Username: {{ auth()->user()->username }}</span>
                 </div>
                 <a href="#" class="dd-item">
                     <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>

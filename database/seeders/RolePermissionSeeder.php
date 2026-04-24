@@ -28,11 +28,12 @@ class RolePermissionSeeder extends Seeder
 
         // Create Default Superadmin
         $superadmin = User::firstOrCreate(
-            ['nip' => '0001'],
+            ['username' => '0001'],
             [
-                'nama_lengkap' => 'Super Administrator',
+                'name' => 'Super Administrator',
                 'password' => Hash::make('0001'), // Default password
-                'is_active' => true,
+                'status' => 'active',
+                'role' => 'super_admin',
                 'must_change_password' => true,
             ]
         );

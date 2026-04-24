@@ -28,18 +28,36 @@ class AccountListController extends Controller
         return view('accounting.account-list.detail', compact('account'));
     }
 
-    public function statistics($id)
+    public function statistics(Request $request, $id)
     {
         $account = Account::findOrFail($id);
+        $year    = (int) $request->input('year', now()->year);
 
         $months = [
             'january','february','march','april','may','june',
             'july','august','september','october','november','december'
         ];
 
-        $monthlyData = [0,0,0,0,0,0,0,0,0,0,0,$account->balance];
+        // Query real monthly net (debit - credit) per bulan
+        $rawData = AccountTransaction::where('account_id', $id)
+            ->whereYear('date', $year)
+            ->selectRaw('MONTH(date) as month_num, SUM(debit) as total_debit, SUM(credit) as total_credit')
+            ->groupBy('month_num')
+            ->get()
+            ->keyBy('month_num');
 
-        return view('accounting.account-list.statistics', compact('account','months','monthlyData'));
+        // Build array index 0-11 (Jan=0 … Dec=11)
+        $monthlyData = [];
+        for ($m = 1; $m <= 12; $m++) {
+            $row = $rawData->get($m);
+            $monthlyData[$m - 1] = $row
+                ? round((float) $row->total_debit - (float) $row->total_credit, 2)
+                : 0;
+        }
+
+        $totalNet = array_sum($monthlyData);
+
+        return view('accounting.account-list.statistics', compact('account', 'months', 'monthlyData', 'year', 'totalNet'));
     }
 
     public function backdate(Request $request, $id)

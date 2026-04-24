@@ -34,8 +34,9 @@ class BankAccount extends Model
 
     public function getBalanceAttribute()
     {
+        // credit = cash in, debit = cash out → balance = SUM(credit) - SUM(debit)
         return $this->transactions()
-            ->selectRaw('COALESCE(SUM(debit - credit), 0) as balance')
+            ->selectRaw('COALESCE(SUM(credit - debit), 0) as balance')
             ->value('balance');
     }
 

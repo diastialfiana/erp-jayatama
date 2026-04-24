@@ -19,14 +19,16 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'nip',
-        'nama_lengkap',
+        'username',
+        'name',
         'password',
         'divisi_id',
         'jabatan_id',
         'atasan_id',
-        'is_active',
+        'status',
+        'role',
         'must_change_password',
+        'last_login',
     ];
 
     /**
@@ -48,8 +50,60 @@ class User extends Authenticatable
     {
         return [
             'password' => 'hashed',
-            'is_active' => 'boolean',
             'must_change_password' => 'boolean',
+            'last_login' => 'datetime',
         ];
+    }
+
+    /**
+     * Check if user is super admin.
+     *
+     * @return bool
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === 'super_admin' || $this->hasRole('Superadmin');
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Check if user is a standard user.
+     *
+     * @return bool
+     */
+    public function isUser(): bool
+    {
+        return $this->role === 'user';
+    }
+
+    public function menuPermissions()
+    {
+        return $this->hasMany(MenuUserPermission::class);
+    }
+
+    public function canViewMenu($menuName)
+    {
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+
+        // Cache the permissions per user to avoid query duplication during sidebar render
+        $permissions = \Illuminate\Support\Facades\Cache::remember(
+            'user_menus_' . $this->id,
+            3600,
+            function () {
+                return $this->menuPermissions()->with('menu')->get();
+            }
+        );
+
+        $perm = $permissions->first(function ($p) use ($menuName) {
+            return $p->menu && $p->menu->name === $menuName;
+        });
+
+        return $perm && $perm->can_view;
     }
 }

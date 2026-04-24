@@ -6,7 +6,7 @@ use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
-    return redirect()->route('login');
+    return redirect('/login');
 });
 
 Route::get('/login', [AuthController::class, 'index'])->name('login')->middleware('guest');
@@ -14,18 +14,22 @@ Route::post('/login', [AuthController::class, 'login'])->middleware('guest');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/password/change', [PasswordController::class, 'showChangeForm'])->name('password.change');
-    Route::post('/password/change', [PasswordController::class, 'update'])->name('password.update');
+    Route::get('/change-password', [PasswordController::class, 'showChangeForm'])->name('password.change');
+    Route::post('/change-password', [PasswordController::class, 'update'])->name('password.update');
 
     Route::middleware(['forceChangePassword'])->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])
+            ->name('dashboard')
+            ->middleware('check.menu:Dashboard');
 
-        // Placeholder menus
-        Route::get('/inventory', function () {
-            return "Inventory Module (Coming Soon)";
-        })->name('inventory.index');
+        // Inventory Module
+        Route::prefix('inventory')->name('inventory.')->middleware('check.menu:Inventory & GA')->group(function () {
+            Route::get('/', function () {
+                return "Inventory Module (Coming Soon)";
+            })->name('index');
+        });
         // Finance Module
-        Route::prefix('finance')->name('finance.')->group(function () {
+        Route::prefix('finance')->name('finance.')->middleware('check.menu:Finance')->group(function () {
             Route::get('/', [\App\Http\Controllers\Finance\OverviewController::class, 'index'])->name('index');
 
             // Customers
@@ -132,7 +136,7 @@ Route::middleware(['auth'])->group(function () {
             Route::resource('sales-invoice', \App\Http\Controllers\Finance\SalesInvoiceController::class);
             Route::resource('cash-receipt', \App\Http\Controllers\Finance\CashReceiptController::class);
         });
-        Route::prefix('accounting')->name('accounting.')->group(function () {
+        Route::prefix('accounting')->name('accounting.')->middleware('check.menu:Accounting')->group(function () {
             Route::get('/', function () { return "Accounting Module (Coming Soon)"; })->name('index');
             Route::get('/journal-posting', function() { return "Journal Posting (Coming Soon)"; })->name('journal-posting');
             Route::get('/fx-ass-posting', function() { return "Fx. Ass. Posting (Coming Soon)"; })->name('fx-ass-posting');
@@ -174,11 +178,24 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/ledger', function() { return "General Ledger (Coming Soon)"; })->name('ledger');
             Route::get('/trial-balance', function() { return "Trial Balance (Coming Soon)"; })->name('trial-balance');
         });
-        Route::get('/administrator', function () {
-            return "Administrator Module (Coming Soon)";
-        })->name('administrator.index');
-        Route::get('/help', function () {
-            return "Help Module (Coming Soon)";
-        })->name('help.index');
+        // Administrator Module
+        Route::prefix('administrator')->name('administrator.')->middleware('check.menu:Administrator')->group(function () {
+            Route::get('/', [\App\Http\Controllers\AdministratorController::class, 'index'])->name('index');
+            Route::get('/menu-visibility', [\App\Http\Controllers\AdministratorController::class, 'menuVisibility'])->name('menu-visibility');
+            Route::post('/menu-visibility/update', [\App\Http\Controllers\AdministratorController::class, 'updateMenuVisibility'])->name('menu-visibility.update');
+
+            // User Management
+            Route::put('/users/{user}/reset-password', [\App\Http\Controllers\Administrator\UserController::class, 'resetPassword'])->name('users.reset-password');
+            Route::resource('users', \App\Http\Controllers\Administrator\UserController::class)->except(['create', 'show', 'edit']);
+        });
+        
+        // Help Module
+        Route::prefix('help')->name('help.')->middleware('check.menu:Panduan Penggunaan')->group(function () {
+            Route::get('/', function () { return "Help Module (Coming Soon)"; })->name('index');
+        });
     });
+});
+
+Route::fallback(function () {
+    return redirect('/login');
 });

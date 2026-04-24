@@ -151,14 +151,17 @@
     </a>
 
     <!-- DASHBOARD -->
+    @if(auth()->check() && auth()->user()->canViewMenu('Dashboard'))
     <li class="menu {{ request()->routeIs('dashboard') ? 'active' : '' }}">
         <a href="{{ route('dashboard') }}" class="menu-toggle">
             <span class="menu-icon"><svg viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg></span>
             <span class="menu-title">Dashboard</span>
         </a>
     </li>
+    @endif
 
     <!-- INVENTORY & GA -->
+    @if(auth()->check() && auth()->user()->canViewMenu('Inventory & GA'))
     <li class="menu {{ request()->routeIs('inventory.*') ? 'active' : '' }}">
         <button class="menu-toggle">
             <span class="menu-icon"><svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></span>
@@ -169,8 +172,10 @@
             <a href="{{ route('inventory.index') }}" class="submenu-item {{ request()->routeIs('inventory.index') ? 'active' : '' }}">Overview Inventory</a>
         </ul>
     </li>
+    @endif
 
     <!-- FINANCE -->
+    @if(auth()->check() && auth()->user()->canViewMenu('Finance'))
     <li class="menu {{ request()->routeIs('finance.*') ? 'active' : '' }}">
         <button class="menu-toggle">
             <span class="menu-icon"><svg viewBox="0 0 24 24"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
@@ -198,8 +203,10 @@
             <a href="{{ route('finance.cash-receipt.index') }}" class="submenu-item {{ request()->routeIs('finance.cash-receipt.*') ? 'active' : '' }}">Cash Receipt</a>
         </ul>
     </li>
+    @endif
 
     <!-- ACCOUNTING -->
+    @if(auth()->check() && auth()->user()->canViewMenu('Accounting'))
     <li class="menu {{ request()->routeIs('accounting.*') ? 'active' : '' }}">
         <button class="menu-toggle">
             <span class="menu-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
@@ -240,9 +247,10 @@
             <a href="{{ route('accounting.trial-balance') }}" class="submenu-item {{ request()->routeIs('accounting.trial-balance') ? 'active' : '' }}">Trial Balance</a>
         </ul>
     </li>
+    @endif
 
     <!-- ADMINISTRATOR -->
-    @role('Superadmin|Admin 1|Admin 2')
+    @if(auth()->check() && auth()->user()->canViewMenu('Administrator'))
     <li class="menu {{ request()->routeIs('administrator.*') ? 'active' : '' }}">
         <button class="menu-toggle">
             <span class="menu-icon"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
@@ -250,22 +258,25 @@
             <span class="menu-arrow"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span>
         </button>
         <ul class="submenu">
-            <a href="{{ route('administrator.index') }}" class="submenu-item {{ request()->routeIs('administrator.index') ? 'active' : '' }}">Manajemen User</a>
+            <a href="{{ route('administrator.menu-visibility') }}" class="submenu-item {{ request()->routeIs('administrator.menu-visibility') ? 'active' : '' }}">Menu Visibility</a>
+            <a href="{{ route('administrator.users.index') }}" class="submenu-item {{ request()->routeIs('administrator.users.*') ? 'active' : '' }}">Manajemen User</a>
             <a href="{{ route('administrator.index') }}" class="submenu-item">Role & Permission</a>
             <a href="{{ route('administrator.index') }}" class="submenu-item">Master Pegawai</a>
             <a href="{{ route('administrator.index') }}" class="submenu-item">Master Divisi</a>
             <a href="{{ route('administrator.index') }}" class="submenu-item">Master Jabatan</a>
         </ul>
     </li>
-    @endrole
+    @endif
 
     <!-- HELP -->
-    <li class="menu {{ request()->routeIs('help.index') ? 'active' : '' }}">
+    @if(auth()->check() && auth()->user()->canViewMenu('Panduan Penggunaan'))
+    <li class="menu {{ request()->routeIs('help.*') ? 'active' : '' }}">
         <a href="{{ route('help.index') }}" class="menu-toggle">
             <span class="menu-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg></span>
             <span class="menu-title">Panduan Penggunaan</span>
         </a>
     </li>
+    @endif
 
     <!-- COLLAPSE BTN -->
     <div class="sb-collapse-btn">

@@ -36,17 +36,11 @@ class BankAccountController extends Controller
             'next'       => $total > 0 ? BankAccount::orderBy('id','asc')->skip(1)->first()?->id : null,
         ];
 
-        $branches    = ['Jakarta', 'Bandung', 'Surabaya', 'Medan', 'Makassar'];
-        $currencies  = ['IDR', 'USD', 'SGD', 'EUR', 'JPY'];
-        $categories  = ['BANK LOCAL', 'BANK FOREIGN', 'CASH'];
-        $bankList    = ['BANK MEGA', 'BANK BCA', 'BANK MANDIRI', 'BANK BRI', 'BANK BNI', 'BANK CIMB'];
-        $costCenters = ['UMUM', 'OPERASIONAL', 'FINANCE', 'MARKETING', 'PRODUKSI'];
-        $departments = ['FINANCE', 'ACCOUNTING', 'HRD', 'OPERASIONAL', 'MARKETING'];
+        $lookups = $this->getLookupData();
 
-        return view('finance.bank-account.record-detail', compact(
-            'current', 'navigation', 'total',
-            'branches', 'currencies', 'categories', 'bankList', 'costCenters', 'departments'
-        ));
+        return view('finance.bank-account.record-detail', array_merge(compact(
+            'current', 'navigation', 'total'
+        ), $lookups));
     }
 
     /**
@@ -67,17 +61,27 @@ class BankAccountController extends Controller
             'next'       => BankAccount::where('id', '>', $id)->orderBy('id', 'asc')->first()?->id,
         ];
 
-        $branches    = ['Jakarta', 'Bandung', 'Surabaya', 'Medan', 'Makassar'];
-        $currencies  = ['IDR', 'USD', 'SGD', 'EUR', 'JPY'];
-        $categories  = ['BANK LOCAL', 'BANK FOREIGN', 'CASH'];
-        $bankList    = ['BANK MEGA', 'BANK BCA', 'BANK MANDIRI', 'BANK BRI', 'BANK BNI', 'BANK CIMB'];
-        $costCenters = ['UMUM', 'OPERASIONAL', 'FINANCE', 'MARKETING', 'PRODUKSI'];
-        $departments = ['FINANCE', 'ACCOUNTING', 'HRD', 'OPERASIONAL', 'MARKETING'];
+        $lookups = $this->getLookupData();
 
-        return view('finance.bank-account.record-detail', compact(
-            'current', 'navigation', 'total',
-            'branches', 'currencies', 'categories', 'bankList', 'costCenters', 'departments'
-        ));
+        return view('finance.bank-account.record-detail', array_merge(compact(
+            'current', 'navigation', 'total'
+        ), $lookups));
+    }
+
+    /**
+     * Lookup data shared between recordDetail() and show().
+     * Centralized here to avoid duplication.
+     */
+    private function getLookupData(): array
+    {
+        return [
+            'branches'    => ['Jakarta', 'Bandung', 'Surabaya', 'Medan', 'Makassar'],
+            'currencies'  => ['IDR', 'USD', 'SGD', 'EUR', 'JPY'],
+            'categories'  => ['BANK LOCAL', 'BANK FOREIGN', 'CASH'],
+            'bankList'    => ['BANK MEGA', 'BANK BCA', 'BANK MANDIRI', 'BANK BRI', 'BANK BNI', 'BANK CIMB'],
+            'costCenters' => ['UMUM', 'OPERASIONAL', 'FINANCE', 'MARKETING', 'PRODUKSI'],
+            'departments' => ['FINANCE', 'ACCOUNTING', 'HRD', 'OPERASIONAL', 'MARKETING'],
+        ];
     }
 
     /**
