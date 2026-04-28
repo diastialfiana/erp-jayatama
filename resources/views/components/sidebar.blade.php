@@ -189,7 +189,7 @@
             <a href="{{ route('finance.customers.index') }}" class="submenu-item {{ request()->routeIs('finance.customers.*') ? 'active' : '' }}">Customer List</a>
             <a href="{{ route('finance.bank-accounts.index') }}" class="submenu-item {{ request()->routeIs('finance.bank-accounts.*') ? 'active' : '' }}">Bank Account</a>
             <a href="{{ route('finance.suppliers.index') }}" class="submenu-item {{ request()->routeIs('finance.suppliers.*') ? 'active' : '' }}">Supplier List</a>
-            <a href="#" class="submenu-item">Branch Location</a>
+            <a href="{{ route('finance.branch-locations.records-list') }}" class="submenu-item {{ request()->routeIs('finance.branch-locations.*') ? 'active' : '' }}">Branch Location</a>
 
             <li class="submenu-title">CASH AND BANK</li>
             <a href="{{ route('finance.cash-in.index') }}" class="submenu-item {{ request()->routeIs('finance.cash-in.*') ? 'active' : '' }}">Cash In</a>

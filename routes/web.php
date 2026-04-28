@@ -50,6 +50,16 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('finance')->name('finance.')->middleware('check.menu:Finance')->group(function () {
             Route::get('/', [\App\Http\Controllers\Finance\OverviewController::class, 'index'])->name('index');
 
+            // Branch Locations
+            Route::prefix('branch-locations')->group(function () {
+                Route::get('/records-list', [\App\Http\Controllers\Finance\BranchLocationController::class, 'recordsList'])->name('branch-locations.records-list');
+                Route::get('/detail/{id?}', [\App\Http\Controllers\Finance\BranchLocationController::class, 'detail'])->name('branch-locations.detail');
+                Route::post('/store/{id?}', [\App\Http\Controllers\Finance\BranchLocationController::class, 'store'])->name('branch-locations.store');
+                Route::get('/api/accounts', [\App\Http\Controllers\Finance\BranchLocationController::class, 'apiAccounts'])->name('branch-locations.api.accounts');
+                Route::get('/api/cost-centers', [\App\Http\Controllers\Finance\BranchLocationController::class, 'apiCostCenters'])->name('branch-locations.api.costs');
+                Route::get('/api/departments', [\App\Http\Controllers\Finance\BranchLocationController::class, 'apiDepartments'])->name('branch-locations.api.deps');
+            });
+
             // Customers
             Route::controller(\App\Http\Controllers\Finance\CustomerController::class)->group(function() {
                 Route::get('customers', 'index')->name('customers.index');
