@@ -439,10 +439,10 @@
                         this.activeMainTab = 'detail';
                         this.$nextTick(() => { document.querySelector('.form-input')?.focus(); });
                         break;
-                    case 'ar-invoice': window.location.href = '{{ route('accounting.ar_invoice') }}'; break;
-                    case 'ar-return': window.location.href = '{{ route('accounting.ar_return') }}'; break;
-                    case 'ap-invoice': window.location.href = '{{ route('accounting.ap_invoice') }}'; break;
-                    case 'ap-return': window.location.href = '{{ route('accounting.ap_return') }}'; break;
+                    case 'ar-invoice': window.location.href = '{{ route('accounting.ar-invoice') }}'; break;
+                    case 'ar-return': window.location.href = '{{ route('accounting.ar-return') }}'; break;
+                    case 'ap-invoice': window.location.href = '{{ route('accounting.ap-invoice') }}'; break;
+                    case 'ap-return': window.location.href = '{{ route('accounting.ap-return') }}'; break;
                     default: showToast('Action: ' + action, 'info');
                 }
             },
