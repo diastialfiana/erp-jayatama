@@ -1,76 +1,63 @@
 @extends('layouts.app')
 
-@section('title', 'Goods Request')
+@section('title', 'Goods Requests')
 
 @push('styles')
 <style>
-    :root {
-        --hr-primary: #1e293b;
-        --hr-border: #cbd5e1;
-        --hr-accent: #2563eb;
-    }
+    :root { --hr-border: #999; --hr-primary: #1e293b; --hr-accent: #2563eb; }
 
-    .main-tabs { display: flex; gap: 2px; background: #f1f5f9; padding: 2px 5px 0 5px; border-radius: 0; width: 100%; border-bottom: 1px solid var(--hr-border); }
-    .main-tab { padding: 8px 20px; font-size: 0.75rem; font-weight: normal; color: #64748b; background: #e2e8f0; border: 1px solid var(--hr-border); border-bottom: none; cursor: pointer; border-radius: 0; text-transform: uppercase; margin-right: 2px; }
-    .main-tab.active { background: white; color: #1e293b; border: 1px solid var(--hr-border); border-bottom: 1px solid white; font-weight: 600; margin-bottom: -1px; }
-    
-    .tab-content { background: white; border-top: 1px solid var(--hr-border); min-height: 500px; padding: 0; display: flex; flex-direction: column; overflow: hidden; margin-top: -1px; }
-    .tab-pane { display: none; flex: 1; flex-direction: column; height: 100%; min-height: calc(100vh - 150px); }
+    .fa-window { background: #f0f0f0; border: 1px solid #999; border-radius: 4px; overflow: hidden; display: flex; flex-direction: column; height: calc(100vh - 120px); box-shadow: 2px 2px 5px rgba(0,0,0,0.2); color: #000; }
+    .window-title-bar { background: linear-gradient(to bottom, #4f78b1, #3a5a8f); color: white; padding: 4px 8px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: bold; }
+    .main-tabs { display: flex; background: #f0f0f0; padding: 4px 4px 0 4px; border-bottom: 1px solid #999; }
+    .main-tab { padding: 4px 12px; font-size: 12px; border: 1px solid #999; border-bottom: none; background: #e0e0e0; cursor: pointer; margin-right: 2px; border-radius: 3px 3px 0 0; text-transform: uppercase; }
+    .main-tab.active { background: #fff; font-weight: bold; margin-bottom: -1px; height: calc(100% + 1px); }
+    .tab-content { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+    .tab-pane { display: none; flex: 1; flex-direction: column; overflow: auto; background: #f0f0f0; }
     .tab-pane.active { display: flex; }
-
-    .bar-top { padding: 8px 10px; font-size: 0.75rem; color: #64748b; background: white; border-bottom: 1px solid var(--hr-border); flex-shrink: 0; }
-    .bar-search { padding: 4px 10px; display: flex; justify-content: flex-end; background: white; border-bottom: 1px solid var(--hr-border); flex-shrink: 0; }
-
-    /* Grid Styles */
-    .list-grid { width: 100%; border-collapse: collapse; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; font-size: 0.75rem; }
-    .list-grid th { background: #f8fafc; color: #475569; padding: 6px 8px; text-align: left; font-weight: 600; border: 1px solid var(--hr-border); white-space: nowrap; text-transform: uppercase; font-size: 0.65rem; }
-    .list-grid td { padding: 6px 8px; border: 1px solid var(--hr-border); white-space: nowrap; color: #334155; font-size: 0.75rem; }
-    .list-grid tr:hover td { background: #f8fafc; cursor: pointer; }
-    .list-grid tr.selected td { background: #e2e8f0; }
-    
-    .grid-footer { display: flex; align-items: center; padding: 4px; border-top: 1px solid var(--hr-border); background: #f8fafc; gap: 2px; flex-shrink: 0; }
-    .pager-btn { background: white; border: 1px solid #cbd5e1; padding: 2px 6px; font-size: 0.65rem; cursor: pointer; color: #64748b; }
-    .pager-btn:hover { background: #f1f5f9; }
-
-    .detail-form-area { padding: 15px; background: white; border-bottom: none; display: flex; justify-content: space-between; flex-shrink: 0; }
-    .form-group { display: flex; align-items: center; margin-bottom: 4px; font-size: 0.75rem; }
-    .form-label { width: 80px; text-align: right; margin-right: 10px; color: #475569; }
-    .form-input { border: 1px solid var(--hr-border); padding: 4px 8px; border-radius: 0; font-size: 0.75rem; background: white; }
-    .form-select { border: 1px solid var(--hr-border); padding: 3px 6px; border-radius: 0; font-size: 0.75rem; background: white; }
-    
-    .status-active-row td { background: #f1f5f9 !important; font-weight: 500; }
-
+    .list-grid { width: 100%; border-collapse: collapse; font-size: 11px; background: white; }
+    .list-grid th { background: #e0e0e0; color: #333; padding: 3px 5px; text-align: left; font-weight: bold; border: 1px solid #999; white-space: nowrap; font-size: 11px; position: sticky; top: 0; }
+    .list-grid td { padding: 3px 5px; border: 1px solid #ccc; white-space: nowrap; color: #000; font-size: 11px; }
+    .list-grid tr:hover td { background: #f0f0f0; cursor: pointer; }
+    .list-grid tr.selected td { background: #3a5a8f; color: white; }
+    .grid-footer { display: flex; align-items: center; padding: 3px; border-top: 1px solid #999; background: #f0f0f0; gap: 2px; flex-shrink: 0; }
+    .pager-btn { background: white; border: 1px solid #999; padding: 2px 6px; font-size: 11px; cursor: pointer; color: #333; min-width: 25px; }
+    .pager-btn:hover { background: #e0e0e0; }
+    .detail-form-area { padding: 8px 12px; background: #f0f0f0; border-bottom: 1px solid #999; display: flex; justify-content: space-between; flex-shrink: 0; }
+    .form-group { display: flex !important; flex-direction: row !important; align-items: center !important; margin-bottom: 3px !important; font-size: 11px; }
+    .form-label { width: 100px; text-align: right; margin-right: 8px; color: #333; font-size: 11px; flex-shrink: 0; }
+    .form-input { border: 1px solid #999; padding: 2px 4px; border-radius: 0; font-size: 12px; background: white; height: 22px; }
+    .form-select { border: 1px solid #999; padding: 2px 4px; border-radius: 0; font-size: 12px; background: white; height: 22px; }
+    .status-active-row td { background: #d0d8e8 !important; font-weight: 500; }
 </style>
 @endpush
 
 @section('content')
-<div x-data="goodsRequestManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)" style="background: white; border: 1px solid var(--hr-border); margin: 10px;">
+<div class="fa-window" x-data="goodsRequestManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)">
     <!-- Windows like Title bar -->
     <div class="window-title-bar">
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="#dc2626"><path d="M4 4h16v16H4z"/></svg>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b" style="margin-left:-8px;"><path d="M4 4h16v16H4z"/></svg>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="#2563eb" style="margin-left:-8px;"><path d="M4 4h16v16H4z"/></svg>
-            <span style="font-weight: 600; margin-left:5px;">Goods Request</span>
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v3m18 0v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8m18 0-9 6-9-6"/></svg>
+            <span>Goods Request</span>
         </div>
-        <div style="display: flex; gap: 15px;">
-            <span style="cursor: pointer; font-size: 0.9rem;">◁</span>
-            <span style="cursor: pointer; font-size: 0.9rem;">▷</span>
-            <span style="cursor: pointer;">✕</span>
+        <div style="display: flex; gap: 4px;">
+            <div style="width:14px;height:14px;background:#ddd;border:1px solid #999;cursor:pointer;"></div>
+            <div style="width:14px;height:14px;background:#ddd;border:1px solid #999;cursor:pointer;"></div>
+            <div style="width:14px;height:14px;background:#e81123;border:1px solid #999;cursor:pointer;"></div>
         </div>
     </div>
 
     @include('partials.ribbon_toolbar')
 
+    <!-- Main Navigation Tabs -->
     <div class="main-tabs">
-        <button class="main-tab" :class="activeMainTab === 'detail' ? 'active' : ''" @click="activeMainTab = 'detail'">DETAIL REQUEST</button>
-        <button class="main-tab" :class="activeMainTab === 'list' ? 'active' : ''" @click="activeMainTab = 'list'">LIST REQUEST</button>
-        <button class="main-tab" :class="activeMainTab === 'history' ? 'active' : ''" @click="activeMainTab = 'history'">HISTORIES</button>
+        <div class="main-tab" :class="activeMainTab === 'detail' ? 'active' : ''" @click="activeMainTab = 'detail'">RECORD DETAIL</div>
+        <div class="main-tab" :class="activeMainTab === 'list' ? 'active' : ''" @click="activeMainTab = 'list'">RECORDS LIST</div>
+        <div class="main-tab" :class="activeMainTab === 'histories' ? 'active' : ''" @click="activeMainTab = 'histories'">HISTORIES</div>
     </div>
 
-    <div class="tab-content" style="border-top: none;">
+    <div class="tab-content" style="flex: 1;">
         
-        <!-- DETAIL REQUEST TAB -->
+        <!-- RECORD DETAIL TAB -->
         <div class="tab-pane" :class="activeMainTab === 'detail' ? 'active' : ''">
             <template x-if="selectedRequest">
                 <div style="display: contents;">

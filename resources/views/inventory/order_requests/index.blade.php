@@ -1,74 +1,164 @@
 @extends('layouts.app')
 
-@section('title', 'Inventory Request')
+@section('title', 'Order Requests')
 
 @push('styles')
 <style>
-    :root {
-        --hr-primary: #1e293b;
-        --hr-border: #cbd5e1;
-        --hr-accent: #2563eb;
-    }
+    :root { --hr-border: #999; }
 
-    .main-tabs { display: flex; gap: 2px; background: #e2e8f0; padding: 2px; border-radius: 8px 8px 0 0; width: fit-content; }
-    .main-tab { padding: 6px 15px; font-size: 0.75rem; font-weight: normal; color: #334155; background: transparent; border: 1px solid transparent; cursor: pointer; border-radius: 0; text-transform: uppercase; }
-    .main-tab.active { background: white; color: black; border: 1px solid var(--hr-border); border-bottom: none; font-weight: normal; }
-    
-    .tab-content { background: white; border-top: 1px solid var(--hr-border); min-height: 500px; padding: 0; display: flex; flex-direction: column; overflow: hidden; margin-top: -1px; }
-    .tab-pane { display: none; flex: 1; flex-direction: column; height: 100%; min-height: calc(100vh - 150px); }
+    .fa-window { background: #f0f0f0; border: 1px solid #999; border-radius: 4px; overflow: hidden; display: flex; flex-direction: column; height: calc(100vh - 120px); box-shadow: 2px 2px 5px rgba(0,0,0,0.2); color: #000; }
+    .window-title-bar { background: linear-gradient(to bottom, #4f78b1, #3a5a8f); color: white; padding: 4px 8px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: bold; }
+    .main-tabs { display: flex; background: #f0f0f0; padding: 4px 4px 0 4px; border-bottom: 1px solid #999; }
+    .main-tab { padding: 4px 12px; font-size: 12px; border: 1px solid #999; border-bottom: none; background: #e0e0e0; cursor: pointer; margin-right: 2px; border-radius: 3px 3px 0 0; text-transform: uppercase; }
+    .main-tab.active { background: #fff; font-weight: bold; margin-bottom: -1px; height: calc(100% + 1px); }
+    .tab-content { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+    .tab-pane { display: none; flex: 1; flex-direction: column; overflow: auto; background: #f0f0f0; }
     .tab-pane.active { display: flex; }
-
-    .bar-top { padding: 8px 10px; font-size: 0.75rem; color: #64748b; background: white; border-bottom: 1px solid var(--hr-border); flex-shrink: 0; }
-    .bar-search { padding: 4px 10px; display: flex; justify-content: flex-end; background: white; border-bottom: 1px solid var(--hr-border); flex-shrink: 0; }
-
-    /* Grid Styles */
-    .list-grid { width: 100%; border-collapse: collapse; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; font-size: 0.75rem; }
-    .list-grid th { background: white; color: #64748b; padding: 4px 6px; text-align: left; font-weight: normal; border-bottom: 1px solid var(--hr-border); border-right: 1px solid var(--hr-border); white-space: nowrap; text-transform: uppercase; font-size: 0.7rem; }
-    .list-grid td { padding: 4px 6px; border-bottom: 1px solid var(--hr-border); border-right: 1px solid var(--hr-border); white-space: nowrap; color: #334155; }
-    .list-grid tr:hover td { background: #f8fafc; cursor: pointer; }
-    .list-grid tr.selected td { background: #e2e8f0; }
-    
-    .grid-footer { display: flex; align-items: center; padding: 4px; border-top: 1px solid var(--hr-border); background: #f8fafc; gap: 2px; flex-shrink: 0; }
-    .pager-btn { background: white; border: 1px solid #cbd5e1; padding: 2px 6px; font-size: 0.65rem; cursor: pointer; color: #64748b; }
-    .pager-btn:hover { background: #f1f5f9; }
-
-    .detail-form-area { padding: 15px; background: white; border-bottom: 1px solid var(--hr-border); display: flex; justify-content: space-between; flex-shrink: 0; }
-    .form-group { display: flex; align-items: center; margin-bottom: 4px; font-size: 0.75rem; }
-    .form-label { width: 80px; text-align: right; margin-right: 10px; color: #475569; }
-    .form-input { border: 1px solid var(--hr-border); padding: 4px 8px; border-radius: 0; font-size: 0.75rem; background: white; }
-    .form-select { border: 1px solid var(--hr-border); padding: 3px 6px; border-radius: 0; font-size: 0.75rem; background: white; }
-
+    .list-grid { width: 100%; border-collapse: collapse; font-size: 11px; background: white; }
+    .list-grid th { background: #e0e0e0; color: #333; padding: 3px 5px; text-align: left; font-weight: bold; border: 1px solid #999; white-space: nowrap; font-size: 11px; position: sticky; top: 0; }
+    .list-grid td { padding: 3px 5px; border: 1px solid #ccc; white-space: nowrap; color: #000; font-size: 11px; }
+    .list-grid tr:hover td { background: #f0f0f0; cursor: pointer; }
+    .list-grid tr.selected td { background: #3a5a8f; color: white; }
+    .grid-footer { display: flex; align-items: center; padding: 3px; border-top: 1px solid #999; background: #f0f0f0; gap: 2px; flex-shrink: 0; }
+    .pager-btn { background: white; border: 1px solid #999; padding: 2px 6px; font-size: 11px; cursor: pointer; color: #333; min-width: 25px; }
+    .pager-btn:hover { background: #e0e0e0; }
+    .detail-form-area { padding: 8px 12px; background: #f0f0f0; border-bottom: 1px solid #999; display: flex; justify-content: space-between; flex-shrink: 0; }
+    .form-group { display: flex !important; flex-direction: row !important; align-items: center !important; margin-bottom: 3px !important; font-size: 11px; }
+    .form-label { width: 100px; text-align: right; margin-right: 8px; color: #333; font-size: 11px; flex-shrink: 0; }
+    .form-input { border: 1px solid #999; padding: 2px 4px; border-radius: 0; font-size: 12px; background: white; height: 22px; }
+    .form-select { border: 1px solid #999; padding: 2px 4px; border-radius: 0; font-size: 12px; background: white; height: 22px; }
 </style>
 @endpush
 
 @section('content')
-<div x-data="orderRequestManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)" style="background: white; border: 1px solid var(--hr-border); margin: 10px;">
+<div class="fa-window" x-data="orderRequestManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)">
     <!-- Windows like Title bar -->
     <div class="window-title-bar">
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-            <span style="font-weight: 500;">Inventory Request</span>
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            <span>Order Request</span>
         </div>
-        <div style="display: flex; gap: 15px;">
-            <span style="cursor: pointer; font-size: 0.9rem;" @click="prevRecord()">◁</span>
-            <span style="cursor: pointer; font-size: 0.9rem;" @click="nextRecord()">▷</span>
-            <span style="cursor: pointer;">✕</span>
+        <div style="display: flex; gap: 4px;">
+            <div style="width:14px;height:14px;background:#ddd;border:1px solid #999;cursor:pointer;"></div>
+            <div style="width:14px;height:14px;background:#ddd;border:1px solid #999;cursor:pointer;"></div>
+            <div style="width:14px;height:14px;background:#e81123;border:1px solid #999;cursor:pointer;"></div>
         </div>
     </div>
 
     @include('partials.ribbon_toolbar')
 
     <!-- Main Navigation Tabs -->
-    <div class="main-tabs" style="background: #f1f5f9; border-bottom: 1px solid var(--hr-border); padding-left: 10px; border-radius: 0;">
-        <button class="main-tab" :class="activeMainTab === 'detail' ? 'active' : ''" @click="activeMainTab = 'detail'">RECORD DETAIL</button>
-        <button class="main-tab" :class="activeMainTab === 'list' ? 'active' : ''" @click="activeMainTab = 'list'">RECORDS LIST</button>
-        <button class="main-tab" :class="activeMainTab === 'history' ? 'active' : ''" @click="activeMainTab = 'history'">HISTORY</button>
+    <div class="main-tabs">
+        <div class="main-tab" :class="activeMainTab === 'detail' ? 'active' : ''" @click="activeMainTab = 'detail'">RECORD DETAIL</div>
+        <div class="main-tab" :class="activeMainTab === 'list' ? 'active' : ''" @click="activeMainTab = 'list'">RECORDS LIST</div>
+        <div class="main-tab" :class="activeMainTab === 'history' ? 'active' : ''" @click="activeMainTab = 'history'">HISTORY</div>
     </div>
 
-    <div class="tab-content" style="border-top: none;">
+    <div class="tab-content" style="flex: 1;">
         
+        <!-- RECORD DETAIL TAB -->
+        <div class="tab-pane" :class="activeMainTab === 'detail' ? 'active' : ''" style="background: #f0f0f0; flex-direction: column;">
+            <div class="detail-form-area" x-show="selectedRequest">
+                <div>
+                    <div class="form-group">
+                        <div class="form-label">Date</div>
+                        <div style="display: flex; align-items: center;">
+                            <input type="date" class="form-input" style="width: 110px;" x-model="selectedRequest.date" x-ref="dateInput" @change="onDateChange($event)">
+                            <span style="border: 1px solid var(--hr-border); background:#f1f5f9; padding: 4px 6px; border-left:none; cursor: pointer;" @click="$refs.dateInput.showPicker()">▼</span>
+                        </div>
+                        
+                        <div class="form-label" style="width: 50px;">Reff.</div>
+                        <input type="text" class="form-input" style="background:#f8fafc; width: 150px;" x-model="selectedRequest.ref" readonly>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label">Status</div>
+                        <select class="form-select" style="width: 120px;" x-model="selectedRequest.status">
+                            <option>Normal</option>
+                            <option>Urgent</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label">Warehouse</div>
+                        <select class="form-select" style="width: 220px;" x-model="selectedRequest.warehouse">
+                            <option>HEAD OFFICE - CHEMICAL</option>
+                            <option>HEAD OFFICE - ATK</option>
+                            <option>LOGISTIK</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- Right Side Info -->
+                <div style="display: flex; gap: 80px; padding-right: 30px; padding-top: 10px; font-size: 0.8rem; color: #475569;">
+                    <div x-text="selectedRequest.user_no"></div>
+                    <div>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div style="flex: 1; overflow: auto; background: white;" x-show="selectedRequest">
+                <table class="list-grid">
+                    <thead>
+                        <tr>
+                            <th style="width: 20px;"></th>
+                            <th style="width: 120px;">CODE</th>
+                            <th style="width: 250px;">INVENTORY NAME</th>
+                            <th style="width: 50px; text-align: right;">QTY</th>
+                            <th style="width: 55px;">UNIT</th>
+                            <th style="width: 220px;">DESCRIPTION</th>
+                            <th style="width: 70px; text-align: right;">RECEIVE</th>
+                            <th style="width: 55px; text-align: center;">CANCEL</th>
+                            <th style="width: 70px; text-align: center;">RE-LOAD</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template x-for="(item, idx) in (selectedRequest ? selectedRequest.items || [] : [])" :key="idx">
+                            <tr @click="selectedItemIdx = idx" :class="idx === selectedItemIdx ? 'selected' : ''">
+                                <td style="text-align: center; font-size: 9px;">
+                                    <span x-show="idx === selectedItemIdx">▶</span>
+                                </td>
+                                <td><input type="text" x-model="item.code" class="form-input" style="width:100%;border:none;background:transparent;" @change="saveCurrentChanges()"></td>
+                                <td>
+                                    <span x-text="item.name"></span>
+                                    <span style="color:#ccc; float:right;">...</span>
+                                </td>
+                                <td style="text-align:right;" x-text="item.qty"></td>
+                                <td x-text="item.unit"></td>
+                                <td><span x-text="item.description"></span><span style="color:#ccc; float:right;">...</span></td>
+                                <td style="text-align:right;" x-text="item.receive ?? 0"></td>
+                                <td style="text-align:center;"><input type="checkbox" :checked="item.cancel" disabled style="width:12px;height:12px;"></td>
+                                <td style="text-align:center;">
+                                    <div style="border:1px solid #999;width:14px;height:14px;margin:0 auto;background:white;display:flex;align-items:center;justify-content:center;">
+                                        <div style="width:6px;height:6px;background:#888;"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Detail Footer: total qty aligned under QTY column -->
+            <div style="background:#f0f0f0; border-top:1px solid #999; padding:4px 8px; display:flex; align-items:center; flex-shrink:0;">
+                <div style="width: 447px;"></div>
+                <input type="text" class="form-input" style="width:50px;text-align:right;" :value="selectedRequest ? (selectedRequest.tl_qty || '') : ''" readonly>
+            </div>
+            <!-- Pager Footer -->
+            <div class="grid-footer">
+                <button class="pager-btn" @click="firstRecord()" :disabled="currentIndex <= 0">|◀</button>
+                <button class="pager-btn" @click="firstRecord()" :disabled="currentIndex <= 0">◀◀</button>
+                <button class="pager-btn" @click="prevRecord()" :disabled="currentIndex <= 0">◀</button>
+                <span style="font-size:11px; padding: 0 8px;">Record <span x-text="currentIndex + 1"></span> of <span x-text="requests.length"></span></span>
+                <button class="pager-btn" @click="nextRecord()" :disabled="currentIndex >= requests.length - 1">▶</button>
+                <button class="pager-btn" @click="lastRecord()" :disabled="currentIndex >= requests.length - 1">▶▶</button>
+                <button class="pager-btn" @click="lastRecord()" :disabled="currentIndex >= requests.length - 1">▶|</button>
+                <span style="margin-left:8px;"><button style="background:none;border:1px solid #999;padding:2px 4px;cursor:pointer;font-size:11px;">—</button></span>
+                <span><button style="background:none;border:1px solid #999;padding:2px 4px;cursor:pointer;font-size:11px;">◀</button></span>
+            </div>
+        </div>
+
         <!-- RECORDS LIST TAB -->
-        <div class="tab-pane" :class="activeMainTab === 'list' ? 'active' : ''">
+        <div class="tab-pane" :class="activeMainTab === 'list' ? 'active' : ''" style="background:white;">
             <div class="bar-top">Drag a column header here to group by that column</div>
             <div class="bar-search">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #64748b;">
@@ -93,8 +183,8 @@
                         </tr>
                     </thead>
                     <template x-for="item in requests" :key="item.id">
-                        <tbody :class="selectedRequest && selectedRequest.id === item.id ? 'selected-group' : ''">
-                            <tr @click="selectRequest(item.id)" :class="selectedRequest && selectedRequest.id === item.id ? 'selected' : ''" class="main-row">
+                        <tbody>
+                            <tr @click="selectAndDetail(item.id)" :class="selectedRequest && selectedRequest.id === item.id ? 'selected' : ''" class="main-row">
                                 <td style="text-align: center; font-size: 0.5rem; color: #475569;">
                                     <span x-show="selectedRequest && selectedRequest.id === item.id">▶</span>
                                 </td>
@@ -184,139 +274,21 @@
                     </template>
                 </table>
             </div>
-            <div class="grid-footer" style="background: transparent; border-top: 1px solid var(--hr-border); min-height: 28px;"></div>
-        </div>
-
-        <!-- RECORD DETAIL TAB -->
-        <div class="tab-pane" :class="activeMainTab === 'detail' ? 'active' : ''">
-            <div class="detail-form-area" x-show="selectedRequest">
-                <div>
-                    <div class="form-group">
-                        <div class="form-label">Date</div>
-                        <div style="display: flex; align-items: center;">
-                            <input type="date" class="form-input" style="width: 110px;" x-model="selectedRequest.date" x-ref="dateInput" @change="onDateChange($event)">
-                            <span style="border: 1px solid var(--hr-border); background:#f1f5f9; padding: 4px 6px; border-left:none; cursor: pointer;" @click="$refs.dateInput.showPicker()">▼</span>
-                        </div>
-                        
-                        <div class="form-label" style="width: 50px;">Reff.</div>
-                        <input type="text" class="form-input" style="background:#f8fafc; width: 150px;" x-model="selectedRequest.ref" readonly>
-                    </div>
-                    <div class="form-group">
-                        <div class="form-label">Status</div>
-                        <select class="form-select" style="width: 120px;" x-model="selectedRequest.status">
-                            <option>Normal</option>
-                            <option>Urgent</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <div class="form-label">Warehouse</div>
-                        <select class="form-select" style="width: 220px;" x-model="selectedRequest.warehouse">
-                            <option>HEAD OFFICE - CHEMICAL</option>
-                            <option>HEAD OFFICE - ATK</option>
-                            <option>LOGISTIK</option>
-                        </select>
-                    </div>
-                </div>
-                <!-- Right Side Info -->
-                <div style="display: flex; gap: 80px; padding-right: 30px; padding-top: 10px; font-size: 0.8rem; color: #475569;">
-                    <div x-text="selectedRequest.user_no"></div>
-                    <div>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-            
-            <div style="flex: 1; overflow: auto;" x-show="selectedRequest">
-                <table class="list-grid">
-                    <thead>
-                        <tr>
-                            <th style="width: 25px;"></th>
-                            <th style="width: 120px;">CODE</th>
-                            <th style="width: 250px;">INVENTORY NAME</th>
-                            <th style="width: 60px; text-align: right;">QTY</th>
-                            <th style="width: 60px;">UNIT</th>
-                            <th style="width: 250px;">DESCRIPTION</th>
-                            <th style="width: 80px; text-align: right;">RECEIVE</th>
-                            <th style="width: 60px; text-align: center;">CANCEL</th>
-                            <th style="width: 80px; text-align: center;">RE-LOAD</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <template x-for="(item, idx) in selectedRequest.items" :key="idx">
-                            <tr>
-                                <td style="text-align: center; font-size: 0.5rem; color: #475569;">
-                                    <span x-show="idx === selectedItemIdx">▶</span>
-                                    <button @click="removeItem(idx)" x-show="idx === selectedItemIdx" style="background:#ef4444; color:white; border:none; border-radius:2px; font-size:8px; padding:2px 4px; cursor:pointer;" title="Remove Item">✕</button>
-                                </td>
-                                <td><input type="text" x-model="item.code" class="form-input" style="width: 100%; box-sizing: border-box; border:none; background:transparent;" @change="saveCurrentChanges()"></td>
-                                <td><input type="text" x-model="item.name" class="form-input" style="width: 100%; box-sizing: border-box; border:none; background:transparent;" @change="saveCurrentChanges()"></td>
-                                <td><input type="number" x-model="item.qty" class="form-input" style="width: 100%; box-sizing: border-box; text-align: center; border:none; background:transparent;" @change="saveCurrentChanges()"></td>
-                                <td><input type="text" x-model="item.unit" class="form-input" style="width: 100%; box-sizing: border-box; text-align: center; border:none; background:transparent;" @change="saveCurrentChanges()"></td>
-                                <td><input type="text" x-model="item.description" class="form-input" style="width: 100%; box-sizing: border-box; border:none; background:transparent;" @change="saveCurrentChanges()"></td>
-                                <td x-text="item.receive" style="text-align: right; color:#cbd5e1;"></td>
-                                <td style="text-align: center;">
-                                    <input type="checkbox" :checked="item.cancel" disabled style="width:12px; height:12px; margin:0;">
-                                </td>
-                                <td style="text-align: center; color: #64748b;">
-                                    <!-- Square reload inner item -->
-                                    <div style="border: 1px solid var(--hr-border); width: 14px; height: 14px; margin: 0 auto; display: flex; align-items: center; justify-content: center; background: white;">
-                                        <div style="width: 6px; height: 6px; background: #94a3b8;" x-show="!item.reload"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </template>
-                        <!-- New Item Row -->
-                        <tr style="background: #f8fafc; border-top: 2px solid #cbd5e1;">
-                            <td style="text-align: center; color: #10b981; font-weight: bold; cursor: pointer;" @click="addNewItem()" title="Add item">+</td>
-                            <td style="padding: 2px;">
-                                <input type="text" x-model="newItem.code" class="form-input" style="width: 100%; box-sizing: border-box;" placeholder="Code..." list="inv-product-codes" @change="onProductSelect">
-                                <datalist id="inv-product-codes">
-                                    <template x-for="prod in availableProducts"><option :value="prod.code"></option></template>
-                                </datalist>
-                            </td>
-                            <td style="padding: 2px;">
-                                <input type="text" x-model="newItem.name" class="form-input" style="width: 100%; box-sizing: border-box;" placeholder="Name or select..." list="inv-product-names" @change="onProductSelectName">
-                                <datalist id="inv-product-names">
-                                    <template x-for="prod in availableProducts"><option :value="prod.name"></option></template>
-                                </datalist>
-                            </td>
-                            <td style="padding: 2px;"><input type="number" x-model="newItem.qty" class="form-input" style="width: 100%; box-sizing: border-box; text-align: center;" @keydown.enter="addNewItem"></td>
-                            <td style="padding: 2px;"><input type="text" x-model="newItem.unit" class="form-input" style="width: 100%; box-sizing: border-box; text-align: center;" placeholder="Unit..." @keydown.enter="addNewItem"></td>
-                            <td style="padding: 2px;"><input type="text" x-model="newItem.description" class="form-input" style="width: 100%; box-sizing: border-box;" placeholder="Desc..." @keydown.enter="addNewItem"></td>
-                            <td style="padding: 2px;"><input type="number" x-model="newItem.receive" class="form-input" style="width: 100%; box-sizing: border-box; text-align: center;" @keydown.enter="addNewItem"></td>
-                            <td style="text-align: center; padding: 2px;"><input type="checkbox" x-model="newItem.cancel" style="width:12px; height:12px; margin:0;"></td>
-                            <td style="padding: 2px; text-align: center;">
-                                <button @click="addNewItem()" style="background:#2563eb; color:white; border:none; padding: 2px 8px; cursor:pointer;" title="Add Item">Add</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Detail Footer -->
-            <div class="grid-footer" style="padding: 10px; background: #f8fafc; justify-content: flex-start; gap: 20px; border-bottom: 1px solid var(--hr-border);">
-                <!-- Space corresponding to code name to align with QTY -->
-                <div style="width: 440px; text-align: right;">
-                    <input type="text" class="form-input" style="width: 60px; text-align: right; background: white;" :value="selectedRequest ? selectedRequest.tl_qty : ''" readonly>
-                </div>
-            </div>
-            <div class="grid-footer" style="padding: 4px; background: white;">
-                <button class="pager-btn" @click="firstRecord()" :disabled="currentIndex <= 0">|◀</button>
-                <button class="pager-btn" @click="firstRecord()" :disabled="currentIndex <= 0">◀◀</button>
-                <button class="pager-btn" @click="prevRecord()" :disabled="currentIndex <= 0">◀</button>
-                <span class="pager-btn" style="border:none; background:transparent;">Record <span x-text="currentIndex + 1"></span> of <span x-text="requests.length"></span></span>
-                <button class="pager-btn" @click="nextRecord()" :disabled="currentIndex >= requests.length - 1">▶</button>
-                <button class="pager-btn" @click="lastRecord()" :disabled="currentIndex >= requests.length - 1">▶▶</button>
-                <button class="pager-btn" @click="lastRecord()" :disabled="currentIndex >= requests.length - 1">▶|</button>
+            <div class="grid-footer">
+                <button class="pager-btn">|◀</button>
+                <button class="pager-btn">◀◀</button>
+                <button class="pager-btn">◀</button>
+                <span style="font-size:11px; padding:0 8px;">Record <span x-text="requests.length > 0 ? 1 : 0"></span> of <span x-text="requests.length"></span></span>
+                <button class="pager-btn">▶</button>
+                <button class="pager-btn">▶▶</button>
+                <button class="pager-btn">▶|</button>
             </div>
         </div>
 
         <!-- HISTORY TAB -->
-        <div class="tab-pane" :class="activeMainTab === 'history' ? 'active' : ''">
-            <div class="bar-top">Drag a column header here to group by that column</div>
-            <div class="bar-search">
+        <div class="tab-pane" :class="activeMainTab === 'history' ? 'active' : ''" style="background:white;">
+            <div style="padding:3px 8px; font-size:11px; color:#666; background:#f0f0f0; border-bottom:1px solid #ccc; flex-shrink:0;">Drag a column header here to group by that column</div>
+            <div style="padding:2px 6px; display:flex; justify-content:flex-end; background:#f0f0f0; border-bottom:1px solid #ccc; flex-shrink:0;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #64748b;">
                     <circle cx="11" cy="11" r="8"></circle> <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
@@ -343,9 +315,17 @@
                     </tbody>
                 </table>
             </div>
-            <div class="grid-footer" style="background: transparent; border-top: 1px solid var(--hr-border); min-height: 28px;"></div>
+            <div class="grid-footer">
+                <button class="pager-btn">|◀</button>
+                <button class="pager-btn">◀◀</button>
+                <button class="pager-btn">◀</button>
+                <span style="font-size:11px; padding:0 8px;">Record 0 of 0</span>
+                <button class="pager-btn">▶</button>
+                <button class="pager-btn">▶▶</button>
+                <button class="pager-btn">▶|</button>
+            </div>
         </div>
-        
+
     </div>
 </div>
 @endsection
@@ -384,10 +364,17 @@
             selectRequest(id) {
                 const req = this.requests.find(r => r.id === id);
                 if (req) {
-                    this.selectedRequest = { ...req };
+                    this.selectedRequest = JSON.parse(JSON.stringify(req));
+                    if (!this.selectedRequest.items) this.selectedRequest.items = [];
                     this.selectedItemIdx = 0;
                     this.newItem = { code: '', name: '', qty: 1, unit: '', description: '', receive: 0, cancel: false, reload: true };
                 }
+            },
+
+            // Click from Records List: select AND switch to detail tab
+            selectAndDetail(id) {
+                this.selectRequest(id);
+                this.activeMainTab = 'detail';
             },
 
             // Date formatting helper for display
@@ -578,21 +565,6 @@
                 }
             },
 
-            prevRecord() {
-                if (!this.requests.length) return;
-                const idx = this.requests.findIndex(r => r.id === this.selectedRequest?.id);
-                if (idx > 0) this.selectRequest(this.requests[idx - 1].id);
-            },
-
-            nextRecord() {
-                if (!this.requests.length) return;
-                const idx = this.requests.findIndex(r => r.id === this.selectedRequest?.id);
-                if (idx < this.requests.length - 1) this.selectRequest(this.requests[idx + 1].id);
-            },
-
-            saveCurrentChanges() {
-                showToast('Request saved', 'success');
-            }
         }
     }
 </script>

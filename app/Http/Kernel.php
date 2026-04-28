@@ -68,5 +68,6 @@ class Kernel extends HttpKernel
         'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         'forceChangePassword' => \App\Http\Middleware\ForceChangePassword::class,
+        'check.menu' => \App\Http\Middleware\CheckMenuAccess::class,
     ];
 }

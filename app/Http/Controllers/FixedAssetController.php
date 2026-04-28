@@ -13,6 +13,7 @@ class FixedAssetController extends Controller
 
     public function showPublic($code)
     {
+        // Mock data matching index.blade.php
         $jsonRecords = '[
             {"code":"001101", "name":"lemari", "brand":"", "type":"Perabot", "category":"Perabot Kantor Unsur Logam", "serial":"", "location":"HEAD OFFICE", "initial_date":"2017-07-18", "asset_user":"", "valid_guaranty":"", "useful_life":"96", "note":""},
             {"code":"001102", "name":"meja kerja", "brand":"", "type":"Perabot", "category":"Perabot Kantor Bukan Logam", "serial":"", "location":"HEAD OFFICE", "initial_date":"2017-07-18", "asset_user":"", "valid_guaranty":"", "useful_life":"60", "note":""},
@@ -33,28 +34,15 @@ class FixedAssetController extends Controller
             {"code":"001117", "name":"dispenser", "brand":"", "type":"Mesin", "category":"Mesin Kantor", "serial":"", "location":"HEAD OFFICE", "initial_date":"2017-07-28", "asset_user":"", "valid_guaranty":"", "useful_life":"48", "note":"Dispenser ruang kantor"},
             {"code":"001118", "name":"papan tulis", "brand":"", "type":"Perabot", "category":"Perabot Kantor Bukan Logam", "serial":"", "location":"HEAD OFFICE", "initial_date":"2017-07-28", "asset_user":"", "valid_guaranty":"", "useful_life":"36", "note":"Papan whiteboard besar"},
             {"code":"001119", "name":"meja tamu", "brand":"", "type":"Perabot", "category":"Perabot Kantor Bukan Logam", "serial":"", "location":"HEAD OFFICE", "initial_date":"2017-07-28", "asset_user":"", "valid_guaranty":"", "useful_life":"60", "note":"Meja tamu lobby utama"},
-            {"code":"001120", "name":"mesin absensi face recognition", "brand":"ZKTeco", "type":"Mesin", "category":"Komputer (Hardware)", "serial":"ZK-FA-2017-001", "location":"HEAD OFFICE", "initial_date":"2017-08-01", "asset_user":"IT Dept", "valid_guaranty":"2021-08-01", "useful_life":"48", "note":"Mesin absensi wajah karyawan"}
+            {"code":"001120", "name":"mesin absensi face recognition", "brand":"ZKTeco", "type":"Mesin", "category":"Komputer (Hardware)", "serial":"ZK-FA-2017-001", "location":"HEAD OFFICE", "initial_date":"2017-08-01", "asset_user":"IT Dept", "valid_guaranty":"2021-08-01", "useful_life":"48", "note":"Mesin absensi wajah karyawan"},
+            {"code":"613036", "name":"MONITOR", "brand":"LENOVO", "type":"D186wA", "category":"Komputer (Hardware)", "serial":"V378785", "location":"HEAD OFFICE", "initial_date":"2023-01-15", "asset_user":"IT DEPT", "valid_guaranty":"2025-01-15", "useful_life":"36", "note":"Monitor Lenovo standard IT"}
         ]';
 
         $records = json_decode($jsonRecords, true);
         $asset = collect($records)->firstWhere('code', $code);
 
         if (!$asset) {
-            // fallback
-            $asset = [
-                'code' => $code,
-                'name' => 'Unknown Asset',
-                'brand' => '-',
-                'type' => '-',
-                'category' => '-',
-                'serial' => '-',
-                'location' => '-',
-                'initial_date' => '-',
-                'asset_user' => '-',
-                'valid_guaranty' => '-',
-                'useful_life' => '-',
-                'note' => ''
-            ];
+            abort(404, 'Asset not found');
         }
 
         return view('inventory.fixed_assets.public_detail', [

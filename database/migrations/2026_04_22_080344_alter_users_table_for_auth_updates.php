@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->renameColumn('nip', 'username');
-            $table->renameColumn('nama_lengkap', 'name');
-        });
+        // Using DB::statement for compatibility with MariaDB 10.4 (which doesn't support RENAME COLUMN)
+        DB::statement("ALTER TABLE users CHANGE nip username VARCHAR(255)");
+        DB::statement("ALTER TABLE users CHANGE nama_lengkap name VARCHAR(255)");
 
         Schema::table('users', function (Blueprint $table) {
             $table->enum('status', ['active', 'inactive'])->default('active')->after('is_active');
@@ -28,9 +27,7 @@ return new class extends Migration
             $table->dropColumn('is_active');
         });
 
-        Schema::table('password_reset_tokens', function (Blueprint $table) {
-            $table->renameColumn('nip', 'username');
-        });
+        DB::statement("ALTER TABLE password_reset_tokens CHANGE nip username VARCHAR(255)");
     }
 
     /**
@@ -38,9 +35,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('password_reset_tokens', function (Blueprint $table) {
-            $table->renameColumn('username', 'nip');
-        });
+        DB::statement("ALTER TABLE password_reset_tokens CHANGE username nip VARCHAR(255)");
 
         Schema::table('users', function (Blueprint $table) {
             $table->boolean('is_active')->default(true)->after('status');
@@ -48,9 +43,11 @@ return new class extends Migration
 
         DB::statement("UPDATE users SET is_active = IF(status = 'active', 1, 0)");
 
+        // Using DB::statement for compatibility with MariaDB 10.4
+        DB::statement("ALTER TABLE users CHANGE username nip VARCHAR(255)");
+        DB::statement("ALTER TABLE users CHANGE name nama_lengkap VARCHAR(255)");
+
         Schema::table('users', function (Blueprint $table) {
-            $table->renameColumn('username', 'nip');
-            $table->renameColumn('name', 'nama_lengkap');
             $table->dropColumn('status');
             $table->dropColumn('role');
             $table->dropColumn('last_login');

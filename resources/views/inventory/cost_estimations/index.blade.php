@@ -4,116 +4,85 @@
 
 @push('styles')
 <style>
-    :root {
-        --hr-primary: #1e293b;
-        --hr-border: #cbd5e1;
-        --hr-accent: #2563eb;
-    }
-
-    .main-tabs { display: flex; gap: 2px; background: #e2e8f0; padding: 2px; border-radius: 8px 8px 0 0; width: fit-content; }
-    .main-tab { padding: 6px 15px; font-size: 0.75rem; font-weight: normal; color: #334155; background: transparent; border: 1px solid transparent; cursor: pointer; border-radius: 0; text-transform: uppercase; }
-    .main-tab.active { background: white; color: black; border: 1px solid var(--hr-border); border-bottom: none; font-weight: normal; }
-    
-    .tab-content { background: #f1f5f9; border-top: 1px solid var(--hr-border); min-height: 500px; padding: 0; display: flex; flex-direction: column; overflow: hidden; margin-top: -1px; }
-    .tab-pane { display: none; flex: 1; flex-direction: column; height: 100%; min-height: calc(100vh - 150px); }
+    :root { --hr-border: #999; --hr-primary: #1e293b; --hr-accent: #2563eb; }
+    .fa-window { background: #f0f0f0; border: 1px solid #999; overflow: hidden; display: flex; flex-direction: column; height: calc(100vh - 120px); box-shadow: 2px 2px 5px rgba(0,0,0,0.2); color: #000; }
+    .window-title-bar { background: linear-gradient(to bottom, #4f78b1, #3a5a8f); color: white; padding: 4px 8px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: bold; }
+    .main-tabs { display: flex; background: #f0f0f0; padding: 4px 4px 0 4px; border-bottom: 1px solid #999; }
+    .main-tab { padding: 3px 10px; font-size: 11px; border: 1px solid #999; border-bottom: none; background: #e0e0e0; cursor: pointer; margin-right: 2px; border-radius: 3px 3px 0 0; text-transform: uppercase; }
+    .main-tab.active { background: #fff; font-weight: bold; margin-bottom: -1px; }
+    .tab-content { display: flex; flex-direction: column; flex: 1; overflow: hidden; border-top: none; min-height: 0; margin-top: 0; padding: 0; }
+    .tab-pane { display: none; flex: 1; flex-direction: column; overflow: hidden; background: #f0f0f0; }
     .tab-pane.active { display: flex; }
-
-    .bar-top { padding: 8px 10px; font-size: 0.75rem; color: #64748b; background: white; border-bottom: 1px solid var(--hr-border); flex-shrink: 0; display: flex; justify-content: space-between; align-items:center;}
-    .bar-search { padding: 4px 10px; display: flex; justify-content: flex-end; background: white; border-bottom: 1px solid var(--hr-border); flex-shrink: 0; }
-
-    /* Grid Styles */
-    .list-grid { width: 100%; border-collapse: collapse; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; font-size: 0.75rem; background: white;}
-    .list-grid th { background: white; color: #64748b; padding: 4px 6px; text-align: left; font-weight: normal; border-bottom: 1px solid var(--hr-border); border-right: 1px solid var(--hr-border); white-space: nowrap; text-transform: uppercase; font-size: 0.7rem; }
-    .list-grid td { padding: 4px 6px; border-bottom: 1px solid var(--hr-border); border-right: 1px solid var(--hr-border); white-space: nowrap; color: #334155; }
-    .list-grid tr:hover td { background: #f8fafc; cursor: pointer; }
-    .list-grid tr.selected td { background: #e2e8f0; }
-    
-    .grid-footer { display: flex; align-items: center; padding: 4px; border-top: 1px solid var(--hr-border); background: #f8fafc; gap: 2px; flex-shrink: 0; }
-    .pager-btn { background: white; border: 1px solid #cbd5e1; padding: 2px 6px; font-size: 0.65rem; cursor: pointer; color: #64748b; }
-    .pager-btn:hover { background: #f1f5f9; }
-
-    .detail-form-area { padding: 10px 15px; background: #f8fafc; border-bottom: 1px solid var(--hr-border); display: flex; justify-content: space-between; flex-shrink: 0; }
-    .form-group { display: flex; align-items: center; margin-bottom: 4px; font-size: 0.75rem; }
-    .form-label { width: 100px; text-align: right; margin-right: 10px; color: #475569; }
-    .form-input { border: 1px solid var(--hr-border); padding: 4px 8px; border-radius: 0; font-size: 0.75rem; background: white; }
-    .form-select { border: 1px solid var(--hr-border); padding: 3px 6px; border-radius: 0; font-size: 0.75rem; background: white; }
-    
-    /* Layout specific */
-    .vertical-label { writing-mode: vertical-rl; transform: rotate(180deg); text-align: center; font-size: 0.7rem; padding: 10px 4px; background: white; border-right: 1px solid var(--hr-border); color: #475569;}
-    .bordered-panel { border: 1px solid var(--hr-border); display: flex; background: white; margin-bottom: 10px; overflow: hidden;}
-    .panel-content { flex: 1; display:flex; flex-direction:column; overflow:hidden;}
-    
-    /* Summary inner tabs */
-    .summary-tabs { display: flex; gap: 2px; background: #e2e8f0; }
-    .summary-tab { padding: 4px 10px; font-size: 0.7rem; color: #334155; background: transparent; border: 1px solid transparent; cursor: pointer; text-transform: uppercase; }
-    .summary-tab.active { background: white; border: 1px solid var(--hr-border); border-bottom: none; }
-    .summary-pane { display: none; background: white; border: 1px solid var(--hr-border); border-top: none; }
-    .summary-pane.active { display: block; }
+    .list-grid { width: 100%; border-collapse: collapse; font-size: 11px; background: white; }
+    .list-grid th { background: #e0e0e0; color: #333; padding: 2px 4px; text-align: left; font-weight: bold; border: 1px solid #999; white-space: nowrap; font-size: 11px; position: sticky; top: 0; }
+    .list-grid td { padding: 2px 4px; border: 1px solid #ddd; white-space: nowrap; color: #000; font-size: 11px; }
+    .list-grid tr:hover td { background: #eef3f8; cursor: pointer; }
+    .list-grid tr.selected td { background: #b8cce4; }
+    .grid-footer { display: flex; align-items: center; padding: 2px 4px; border-top: 1px solid #999; background: #f0f0f0; gap: 2px; flex-shrink: 0; }
+    .pager-btn { background: white; border: 1px solid #999; padding: 1px 5px; font-size: 11px; cursor: pointer; color: #333; min-width: 22px; }
+    .pager-btn:hover { background: #e0e0e0; }
+    .bar-top { padding: 4px 8px; background: #f0f0f0; border-bottom: 1px solid #999; display: flex; justify-content: space-between; font-size: 11px; align-items: center; flex-shrink: 0; }
+    .detail-form-area { padding: 4px 8px; background: #f0f0f0; border-bottom: 1px solid #999; display: flex; justify-content: space-between; flex-shrink: 0; }
+    .form-group { display: flex; align-items: center; margin-bottom: 2px; font-size: 11px; }
+    .form-label { width: 90px; text-align: right; margin-right: 5px; color: #333; font-size: 11px; flex-shrink: 0; }
+    .form-input { border: 1px solid #999; padding: 1px 3px; border-radius: 0; font-size: 11px; background: white; height: 20px; box-sizing: border-box; }
+    .form-input[readonly] { background: #e8e8e8; }
+    .form-select { border: 1px solid #999; padding: 1px 3px; border-radius: 0; font-size: 11px; background: white; height: 20px; }
+    .vertical-label { writing-mode: vertical-rl; transform: rotate(180deg); text-align: center; font-size: 10px; padding: 6px 3px; background: #e8e8e8; border-right: 1px solid #999; color: #333; flex-shrink: 0; }
+    .bordered-panel { border: 1px solid #999; display: flex; background: white; margin-bottom: 4px; overflow: hidden; }
+    .panel-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .summary-tabs { display: flex; background: #e0e0e0; border-bottom: 1px solid #999; flex-shrink: 0; }
+    .summary-tab { padding: 2px 8px; font-size: 11px; color: #333; background: #e0e0e0; border: 1px solid #999; border-bottom: none; cursor: pointer; text-transform: uppercase; margin-right: 2px; border-radius: 2px 2px 0 0; }
+    .summary-tab.active { background: white; font-weight: bold; }
 </style>
 @endpush
 
 @section('content')
-<div x-data="costEstimationManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)" style="background: white; border: 1px solid var(--hr-border); margin: 10px;">
+<div class="fa-window" x-data="costEstimationManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)">
     <!-- Windows like Title bar -->
     <div class="window-title-bar">
-        <div style="display: flex; gap: 8px; align-items: center;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7" fill="#dc2626"></rect><rect x="14" y="14" width="7" height="7" fill="#2563eb"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-            <span style="font-weight: 600;">Cost Estimations</span>
-        </div>
-        <div style="display: flex; gap: 15px;">
-            <span style="cursor: pointer; font-size: 0.9rem;">◁</span>
-            <span style="cursor: pointer; font-size: 0.9rem;">▷</span>
-            <span style="cursor: pointer;">✕</span>
+        <span>Cost Estimations</span>
+        <div style="display:flex;gap:2px;">
+            <button style="background:#e0e0e0;border:1px solid #999;width:16px;height:14px;font-size:9px;cursor:pointer;">_</button>
+            <button style="background:#e0e0e0;border:1px solid #999;width:16px;height:14px;font-size:9px;cursor:pointer;">□</button>
+            <button style="background:#cc0000;border:1px solid #999;width:16px;height:14px;font-size:9px;color:white;cursor:pointer;">✕</button>
         </div>
     </div>
 
     @include('partials.ribbon_toolbar')
 
     <!-- Main Navigation Tabs -->
-    <div class="main-tabs" style="background: #f1f5f9; border-bottom: 1px solid var(--hr-border); padding-left: 10px; border-radius: 0;">
+    <div class="main-tabs" style="background: #e2e8f0; border-bottom: 1px solid var(--hr-border); padding-left: 10px; border-radius: 0; width: 100%;">
         <button class="main-tab" :class="activeMainTab === 'detail' ? 'active' : ''" @click="activeMainTab = 'detail'">RECORD DETAIL</button>
         <button class="main-tab" :class="activeMainTab === 'list' ? 'active' : ''" @click="activeMainTab = 'list'">RECORDS LIST</button>
     </div>
 
-    <div class="tab-content" style="border-top: none;">
+    <div class="tab-content" style="border-top: none; flex: 1;">
         
         <!-- RECORD DETAIL TAB -->
-        <div class="tab-pane" :class="activeMainTab === 'detail' ? 'active' : ''" style="background: #e2e8f0;">
+        <div class="tab-pane" :class="activeMainTab === 'detail' ? 'active' : ''">
             <!-- Header forms -->
             <div class="detail-form-area">
-                <div>
-                    <div class="form-group">
-                        <div class="form-label">Date</div>
-                        <input type="date" class="form-input" style="width: 140px;" x-model="formData.date">
-                        <div class="form-label" style="width: 60px;">Location</div>
-                        <div style="display: flex; align-items: center; background: white; border: 1px solid var(--hr-border); width: 250px;">
-                            <input type="text" style="flex: 1; border: none; font-size: 0.75rem; padding: 4px 8px; outline: none;" 
-                                   x-model="locationInput" list="location-names" placeholder="Type or Select Location" @change="onLocationSelect">
-                            <datalist id="location-names">
-                                <template x-for="loc in locations" :key="loc">
-                                    <option :value="loc"></option>
-                                </template>
-                            </datalist>
-                            <span style="background: #f1f5f9; padding: 4px 6px; border-left: 1px solid var(--hr-border); color: #64748b; pointer-events: none;">▼</span>
-                        </div>
+                <div style="display: flex; flex-direction: column; gap: 4px; padding: 10px 0;">
+                    <div style="display: flex; align-items: center; font-size: 11px;">
+                        <div style="width: 100px; text-align: right; padding-right: 5px; color: #333;">Date</div>
+                        <input type="date" class="form-input" style="width: 150px;" x-model="formData.date">
+                        <div style="width: 60px; text-align: right; padding-right: 5px; color: #333;">Location</div>
+                        <input type="text" class="form-input" style="width: 250px;" x-model="locationInput" placeholder="Type or Select Location" @change="onLocationSelect">
                     </div>
-                    <div class="form-group">
-                        <div class="form-label">Customer Name</div>
-                        <div style="display: flex; align-items: center; background: white; border: 1px solid var(--hr-border); width: 250px;">
-                            <input type="text" style="flex: 1; border: none; font-size: 0.75rem; padding: 4px 8px; outline: none;" 
-                                   x-model="customerNameInput" list="customer-names" placeholder="Type or Select Customer" @change="onCustomerSelect">
-                            <datalist id="customer-names">
-                                <template x-for="cust in customers" :key="cust.id">
-                                    <option :value="cust.name"></option>
-                                </template>
-                            </datalist>
-                            <span style="background: #f1f5f9; padding: 4px 6px; border-left: 1px solid var(--hr-border); color: #64748b; pointer-events: none;">▼</span>
-                        </div>
+                    <div style="display: flex; align-items: center; font-size: 11px;">
+                        <div style="width: 100px; text-align: right; padding-right: 5px; color: #333;">Customer Name</div>
+                        <select class="form-select" style="width: 460px;" x-model="customerNameInput" @change="onCustomerSelect">
+                            <option value="">Type or Select Customer</option>
+                            <template x-for="cust in customers" :key="cust.id">
+                                <option :value="cust.name" x-text="cust.name"></option>
+                            </template>
+                        </select>
                     </div>
-                    <div class="form-group">
-                        <div class="form-label">Product Services</div>
-                        <select class="form-select" style="width: 250px;" x-model="formData.productService">
-                            <option value="">Select Service</option>
+                    <div style="display: flex; align-items: center; font-size: 11px;">
+                        <div style="width: 100px; text-align: right; padding-right: 5px; color: #333;">Product Services</div>
+                        <select class="form-select" style="width: 460px;" x-model="formData.productService">
+                            <option value="Select Service">Select Service</option>
                             <template x-for="srv in productServices" :key="srv">
                                 <option :value="srv" x-text="srv"></option>
                             </template>
@@ -129,59 +98,62 @@
             </div>
 
             <!-- Body Layout Split -->
-            <div style="display: flex; padding: 10px; gap: 10px; flex: 1; overflow:hidden;">
-                <!-- LEFT COLUMN -->
-                <div style="flex: 1.2; display: flex; flex-direction: column;">
-                    
-                    <!-- SERVICE COST -->
-                    <div class="bordered-panel" style="flex: 1;">
-                        <div class="vertical-label">SERVICE COST</div>
-                        <div class="panel-content">
-                            <div style="flex: 1; overflow: auto;">
-                                <table class="list-grid">
-                                    <thead>
-                                        <tr>
-                                            <th style="width:50px;">CODE</th>
-                                            <th style="width:150px;">COMPONENT NAME</th>
-                                            <th style="width:200px;">DESCRIPTION</th>
-                                            <th style="width:50px;">MPP</th>
-                                            <th style="width:80px;">PRICE</th>
-                                            <th style="width:80px;">AMOUNT</th>
-                                            <th style="width:80px;">NEGOTIATION</th>
+            <div style="display: flex; flex-direction: column; padding: 4px; gap: 4px; flex: 1; overflow:hidden;">
+                
+                <!-- TOP HALF: SERVICE COST -->
+                <div class="bordered-panel" style="height: 35%; min-height: 150px; resize: vertical; overflow: hidden; margin-bottom: 0; position: relative;">
+                    <div class="vertical-label">SERVICE COST</div>
+                    <div class="panel-content">
+                        <div style="flex: 1; overflow: auto;">
+                            <table class="list-grid">
+                                <thead>
+                                    <tr>
+                                        <th style="width:50px;">CODE</th>
+                                        <th style="width:150px;">COMPONENT NAME</th>
+                                        <th style="width:200px;">DESCRIPTION</th>
+                                        <th style="width:50px;">MPP</th>
+                                        <th style="width:80px;">PRICE</th>
+                                        <th style="width:80px;">AMOUNT</th>
+                                        <th style="width:80px;">NEGOTIATION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template x-for="(row, index) in serviceCosts" :key="index">
+                                        <tr @click="selSvcIdx = index" :style="selSvcIdx === index ? 'background:#d0d8e8;' : ''" style="cursor:pointer;">
+                                            <td><input type="text" class="form-input" style="width:100%; border:none; background:transparent;" x-model="row.code"></td>
+                                            <td><input type="text" class="form-input" style="width:100%; border:none; background:transparent;" x-model="row.name"></td>
+                                            <td><input type="text" class="form-input" style="width:100%; border:none; background:transparent;" x-model="row.description"></td>
+                                            <td><input type="number" class="form-input" style="width:100%; border:none; background:transparent;" x-model="row.mpp" @input="updateCalculations(row)"></td>
+                                            <td><input type="number" class="form-input" style="width:100%; border:none; background:transparent;" x-model="row.price" @input="updateCalculations(row)"></td>
+                                            <td style="text-align:right;" x-text="formatCurrency(row.amount)"></td>
+                                            <td><input type="number" class="form-input" style="width:100%; border:none; background:transparent;" x-model="row.negotiation"></td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        <template x-for="(row, index) in serviceCosts" :key="index">
-                                            <tr>
-                                                <td><input type="text" class="form-input" style="width:100%; border:none;" x-model="row.code"></td>
-                                                <td><input type="text" class="form-input" style="width:100%; border:none;" x-model="row.name"></td>
-                                                <td><input type="text" class="form-input" style="width:100%; border:none;" x-model="row.description"></td>
-                                                <td><input type="number" class="form-input" style="width:100%; border:none;" x-model="row.mpp" @input="updateCalculations(row)"></td>
-                                                <td><input type="number" class="form-input" style="width:100%; border:none;" x-model="row.price" @input="updateCalculations(row)"></td>
-                                                <td style="text-align:right;" x-text="formatCurrency(row.amount)"></td>
-                                                <td><input type="number" class="form-input" style="width:100%; border:none;" x-model="row.negotiation"></td>
-                                            </tr>
-                                        </template>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div style="display:flex; justify-content:flex-end; gap:30px; padding: 5px 20px; border-top:1px solid var(--hr-border);">
-                                <div style="font-size: 0.75rem; color: #64748b; align-self: center;">TOTAL SERVICE COST:</div>
-                                <input type="text" class="form-input" style="width: 80px; text-align:right;" :value="formatCurrency(totals.service.amount)" readonly>
-                                <input type="text" class="form-input" style="width: 80px; text-align:right;" :value="formatCurrency(totals.service.nego)" readonly>
-                            </div>
-                            <div class="grid-footer" style="padding: 2px 4px;">
-                                <button class="pager-btn">|◀</button> <button class="pager-btn">◀◀</button> <button class="pager-btn">◀</button>
-                                <span class="pager-btn" style="border:none; background:transparent;">Record <span x-text="serviceCosts.length"></span> of <span x-text="serviceCosts.length"></span></span>
-                                <button class="pager-btn">▶</button> <button class="pager-btn">▶▶</button> <button class="pager-btn">▶|</button>
-                                <button class="pager-btn" style="margin-left:5px;" @click="addRow('service')">+</button> <button class="pager-btn" @click="removeRow('service', serviceCosts.length-1)">-</button>
-                            </div>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="grid-footer" style="padding: 2px 4px; border-top: 1px solid var(--hr-border);">
+                            <button class="pager-btn" @click="selSvcIdx=0">|◀</button> <button class="pager-btn" @click="selSvcIdx=Math.max(0,selSvcIdx-5)">◀◀</button> <button class="pager-btn" @click="selSvcIdx=Math.max(0,selSvcIdx-1)">◀</button>
+                            <span class="pager-btn" style="border:none; background:transparent;">Record <span x-text="serviceCosts.length ? selSvcIdx+1 : 0"></span> of <span x-text="serviceCosts.length"></span></span>
+                            <button class="pager-btn" @click="selSvcIdx=Math.min(serviceCosts.length-1,selSvcIdx+1)">▶</button> <button class="pager-btn" @click="selSvcIdx=Math.min(serviceCosts.length-1,selSvcIdx+5)">▶▶</button> <button class="pager-btn" @click="selSvcIdx=serviceCosts.length-1">▶|</button>
+                            <button class="pager-btn" style="margin-left:5px;" @click="addRow('service')">+</button> <button class="pager-btn" @click="removeRow('service', selSvcIdx)">-</button>
                         </div>
                     </div>
+                </div>
+
+                <!-- BOTTOM HALF -->
+                <div style="display: flex; flex: 1; gap: 4px; overflow: hidden;">
+                    
+                    <!-- BOTTOM LEFT COLUMN -->
+                    <div style="flex: 1.2; display: flex; flex-direction: column; gap: 4px; overflow: auto; padding-right: 2px;">
 
                     <!-- DIRECT COST -->
-                    <div class="bordered-panel" style="flex: 1;">
-                        <div class="vertical-label">DIRECT COST</div>
+                    <div class="bordered-panel" style="height: 50%; min-height: 150px; resize: vertical; overflow: hidden; margin-bottom: 0; flex-shrink: 0;">
+                        <div class="vertical-label" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                            <span>. COST</span>
+                            <span style="font-size: 8px; margin-top: 5px; transform: rotate(-180deg);">►</span>
+                            <span style="font-size: 8px; margin-top: 5px; transform: rotate(-180deg);">▼</span>
+                        </div>
                         <div class="panel-content">
                             <div style="flex: 1; overflow: auto;">
                                 <table class="list-grid">
@@ -196,67 +168,76 @@
                                     </thead>
                                     <tbody>
                                         <template x-for="(row, index) in directCosts" :key="index">
-                                            <tr>
-                                                <td><input type="text" class="form-input" style="width:100%; border:none;" x-model="row.name"></td>
-                                                <td><input type="number" class="form-input" style="width:100%; border:none;" x-model="row.mpp" @input="updateCalculations(row)"></td>
-                                                <td><input type="text" class="form-input" style="width:100%; border:none;" x-model="row.description"></td>
+                                            <tr @click="selDirIdx = index" :style="selDirIdx === index ? 'background:#d0d8e8;' : ''" style="cursor:pointer;">
+                                                <td><input type="text" class="form-input" style="width:100%; border:none; background:transparent;" x-model="row.name"></td>
+                                                <td><input type="number" class="form-input" style="width:100%; border:none; background:transparent;" x-model="row.mpp" @input="updateCalculations(row)"></td>
+                                                <td><input type="text" class="form-input" style="width:100%; border:none; background:transparent;" x-model="row.description"></td>
                                                 <td style="text-align:right;" x-text="formatCurrency(row.amount)"></td>
-                                                <td><input type="number" class="form-input" style="width:100%; border:none;" x-model="row.negotiation"></td>
+                                                <td><input type="number" class="form-input" style="width:100%; border:none; background:transparent;" x-model="row.negotiation"></td>
                                             </tr>
                                         </template>
                                     </tbody>
+                                    <tfoot>
+                                        <tr style="background: transparent;">
+                                            <td colspan="3" style="border:none;"></td>
+                                            <td style="border:none; padding: 2px 4px;"><input type="text" class="form-input" style="width:100%; text-align:right;" :value="formatCurrency(totals.direct.amount)" readonly></td>
+                                            <td style="border:none; padding: 2px 4px;"><input type="text" class="form-input" style="width:100%; text-align:right;" :value="formatCurrency(totals.direct.nego)" readonly></td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
-                            <div style="display:flex; justify-content:flex-end; gap:30px; padding: 5px 20px; border-top:1px solid var(--hr-border);">
-                                <div style="font-size: 0.75rem; color: #64748b; align-self: center;">TOTAL DIRECT COST:</div>
-                                <input type="text" class="form-input" style="width: 100px; text-align:right;" :value="formatCurrency(totals.direct.amount)" readonly>
-                                <input type="text" class="form-input" style="width: 100px; text-align:right;" :value="formatCurrency(totals.direct.nego)" readonly>
-                            </div>
-                            <div class="grid-footer" style="padding: 2px 4px;">
-                                <button class="pager-btn">|◀</button> <button class="pager-btn">◀◀</button> <button class="pager-btn">◀</button>
-                                <span class="pager-btn" style="border:none; background:transparent;">Record <span x-text="directCosts.length"></span> of <span x-text="directCosts.length"></span></span>
-                                <button class="pager-btn">▶</button> <button class="pager-btn">▶▶</button> <button class="pager-btn">▶|</button>
-                                <button class="pager-btn" style="margin-left:5px;" @click="addRow('direct')">+</button> <button class="pager-btn" @click="removeRow('direct', directCosts.length-1)">-</button>
+                            <div class="grid-footer" style="padding: 2px 4px; border-top: 1px solid var(--hr-border);">
+                                <button class="pager-btn" @click="selDirIdx=0">|◀</button> <button class="pager-btn" @click="selDirIdx=Math.max(0,selDirIdx-5)">◀◀</button> <button class="pager-btn" @click="selDirIdx=Math.max(0,selDirIdx-1)">◀</button>
+                                <span class="pager-btn" style="border:none; background:transparent;">Record <span x-text="directCosts.length ? selDirIdx+1 : 0"></span> of <span x-text="directCosts.length"></span></span>
+                                <button class="pager-btn" @click="selDirIdx=Math.min(directCosts.length-1,selDirIdx+1)">▶</button> <button class="pager-btn" @click="selDirIdx=Math.min(directCosts.length-1,selDirIdx+5)">▶▶</button> <button class="pager-btn" @click="selDirIdx=directCosts.length-1">▶|</button>
+                                <button class="pager-btn" style="margin-left:5px;" @click="addRow('direct')">+</button> <button class="pager-btn" @click="removeRow('direct', selDirIdx)">-</button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- INDIRECT COST -->
-                    <div class="bordered-panel" style="margin-bottom: 0;">
-                        <div class="vertical-label">INDIRECT COST</div>
+                    <!-- UN-DIRECT COST -->
+                    <div class="bordered-panel" style="flex: 1; min-height: 150px; resize: vertical; overflow: hidden; margin-bottom: 0; flex-shrink: 0;">
+                        <div class="vertical-label">UN-DIRECT COST</div>
                         <div class="panel-content">
                             <div style="flex: 1; overflow: auto; min-height: 40px;">
                                 <table class="list-grid">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:250px;">COMPONENT NAME</th>
+                                            <th style="width:120px;">PRICE</th>
+                                            <th style="width:120px;">NEGOTIATION</th>
+                                        </tr>
+                                    </thead>
                                     <tbody>
                                         <template x-for="(row, index) in indirectCosts" :key="index">
-                                            <tr>
-                                                <td style="width:200px;"><input type="text" class="form-input" style="width:100%; border:none;" x-model="row.name"></td>
-                                                <td style="width:80px;"><input type="number" class="form-input" style="width:100%; border:none;" x-model="row.mpp" @input="updateCalculations(row)"></td>
-                                                <td style="width:50px;"><input type="text" class="form-input" style="width:100%; border:none;" x-model="row.description"></td>
-                                                <td style="width:100px; text-align:right;" x-text="formatCurrency(row.amount)"></td>
-                                                <td style="width:100px;"><input type="number" class="form-input" style="width:100%; border:none;" x-model="row.negotiation"></td>
+                                            <tr @click="selIndIdx = index" :style="selIndIdx === index ? 'background:#d0d8e8;' : ''" style="cursor:pointer;">
+                                                <td><input type="text" class="form-input" style="width:100%; border:none; background:transparent;" x-model="row.name"></td>
+                                                <td><input type="number" class="form-input" style="width:100%; border:none; background:transparent;" x-model="row.price" @input="updateCalculations(row)"></td>
+                                                <td><input type="number" class="form-input" style="width:100%; border:none; background:transparent;" x-model="row.negotiation"></td>
                                             </tr>
                                         </template>
                                     </tbody>
+                                    <tfoot>
+                                        <tr style="background: transparent;">
+                                            <td style="border:none;"></td>
+                                            <td style="border:none; padding: 2px 4px;"><input type="text" class="form-input" style="width:100%; text-align:right;" :value="formatCurrency(totals.indirect.amount)" readonly></td>
+                                            <td style="border:none; padding: 2px 4px;"><input type="text" class="form-input" style="width:100%; text-align:right;" :value="formatCurrency(totals.indirect.nego)" readonly></td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
-                            <div style="display:flex; justify-content:flex-end; gap:30px; padding: 10px 20px; border-top:1px solid var(--hr-border);">
-                                <div style="font-size: 0.75rem; color: #64748b; align-self: center;">TOTAL INDIRECT COST:</div>
-                                <input type="text" class="form-input" style="width: 100px; text-align:right;" :value="formatCurrency(totals.indirect.amount)" readonly>
-                                <input type="text" class="form-input" style="width: 100px; text-align:right;" :value="formatCurrency(totals.indirect.nego)" readonly>
-                            </div>
                             <div class="grid-footer" style="padding: 2px 4px; border-top:1px solid var(--hr-border);">
-                                <button class="pager-btn">|◀</button> <button class="pager-btn">◀◀</button> <button class="pager-btn">◀</button>
-                                <span class="pager-btn" style="border:none; background:transparent;">Record <span x-text="indirectCosts.length"></span> of <span x-text="indirectCosts.length"></span></span>
-                                <button class="pager-btn">▶</button> <button class="pager-btn">▶▶</button> <button class="pager-btn">▶|</button>
-                                <button class="pager-btn" style="margin-left:5px;" @click="addRow('indirect')">+</button> <button class="pager-btn" @click="removeRow('indirect', indirectCosts.length-1)">-</button>
+                                <button class="pager-btn" @click="selIndIdx=0">|◀</button> <button class="pager-btn" @click="selIndIdx=Math.max(0,selIndIdx-5)">◀◀</button> <button class="pager-btn" @click="selIndIdx=Math.max(0,selIndIdx-1)">◀</button>
+                                <span class="pager-btn" style="border:none; background:transparent;">Record <span x-text="indirectCosts.length ? selIndIdx+1 : 0"></span> of <span x-text="indirectCosts.length"></span></span>
+                                <button class="pager-btn" @click="selIndIdx=Math.min(indirectCosts.length-1,selIndIdx+1)">▶</button> <button class="pager-btn" @click="selIndIdx=Math.min(indirectCosts.length-1,selIndIdx+5)">▶▶</button> <button class="pager-btn" @click="selIndIdx=indirectCosts.length-1">▶|</button>
+                                <button class="pager-btn" style="margin-left:5px;" @click="addRow('indirect')">+</button> <button class="pager-btn" @click="removeRow('indirect', selIndIdx)">-</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- RIGHT COLUMN -->
-                <div style="flex: 1; display: flex; flex-direction: column; padding-top: 190px;">
+                <!-- BOTTOM RIGHT COLUMN -->
+                <div style="flex: 1; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--hr-border); background: white;">
                     <!-- Inner Tabs -->
                     <div class="summary-tabs">
                         <button class="summary-tab" :class="innerTab === 'total' ? 'active' : ''" @click="innerTab = 'total'">TOTAL COST AND REFFRENS</button>
@@ -294,12 +275,20 @@
                                     <td><input type="text" class="form-input" style="width:100%; text-align:right; font-weight: bold;" :value="formatCurrency(totals.subTotal.nego)" readonly></td>
                                 </tr>
                                 <tr>
-                                    <td style="text-align:right; padding-right:10px;">MANAGEMENT FEE (<span x-text="managementFeePercent"></span>%)</td>  
+                                    <td style="text-align:right; padding-right:10px; white-space: nowrap;">
+                                        <div style="display:inline-flex; align-items:center; gap:5px; justify-content:flex-end; width:100%;">
+                                            MANAGEMENT FEE <input type="number" class="form-input" style="width:40px; text-align:center;" x-model="managementFeePercent">
+                                        </div>
+                                    </td>  
                                     <td><input type="text" class="form-input" style="width:100%; text-align:right;" :value="formatCurrency(totals.managementFee.amount)" readonly></td> 
                                     <td><input type="text" class="form-input" style="width:100%; text-align:right;" :value="formatCurrency(totals.managementFee.nego)" readonly></td>
                                 </tr>
                                 <tr>
-                                    <td style="text-align:right; padding-right:10px;">PPN (<span x-text="ppnPercent"></span>%)</td>               
+                                    <td style="text-align:right; padding-right:10px; white-space: nowrap;">
+                                        <div style="display:inline-flex; align-items:center; gap:5px; justify-content:flex-end; width:100%;">
+                                            PPN <input type="number" class="form-input" style="width:40px; text-align:center;" x-model="ppnPercent">
+                                        </div>
+                                    </td>               
                                     <td><input type="text" class="form-input" style="width:100%; text-align:right;" :value="formatCurrency(totals.ppn.amount)" readonly></td> 
                                     <td><input type="text" class="form-input" style="width:100%; text-align:right;" :value="formatCurrency(totals.ppn.nego)" readonly></td>
                                 </tr>
@@ -327,8 +316,11 @@
                                     </thead>
                                     <tbody>
                                         <template x-for="(item, idx) in costProcessList" :key="idx">
-                                            <tr>
-                                                <td x-text="item.code"></td>
+                                            <tr @click="selPrcIdx = idx" :style="selPrcIdx === idx ? 'background:#d0d8e8;' : ''" style="cursor:pointer;">
+                                                <td style="display:flex; align-items:center; gap:4px;">
+                                                    <span x-show="selPrcIdx === idx" style="font-size:0.5rem; color:#475569;">▶</span>
+                                                    <span x-text="item.code"></span>
+                                                </td>
                                                 <td>
                                                     <span x-text="item.description"></span>
                                                     <span style="color:#cbd5e1; float:right;">...</span>
@@ -338,16 +330,16 @@
                                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
                                                 </td>
                                                 <td x-text="item.lbl" style="text-align:center;"></td>
-                                                <td><div style="width:16px; height:10px; border:1px solid #cbd5e1; background:white;"></div></td>
+                                                <td><input type="checkbox" style="width:12px; height:12px;" disabled> White</td>
                                             </tr>
                                         </template>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="grid-footer" style="padding: 2px 4px; border-top:1px solid var(--hr-border);">
-                                <button class="pager-btn">|◀</button> <button class="pager-btn">◀◀</button> <button class="pager-btn">◀</button>
-                                <span class="pager-btn" style="border:none; background:transparent;">Record <span x-text="costProcessList.length"></span> of <span x-text="costProcessList.length"></span></span>
-                                <button class="pager-btn">▶</button> <button class="pager-btn">▶▶</button> <button class="pager-btn">▶|</button>
+                                <button class="pager-btn" @click="selPrcIdx=0">|◀</button> <button class="pager-btn" @click="selPrcIdx=Math.max(0,selPrcIdx-5)">◀◀</button> <button class="pager-btn" @click="selPrcIdx=Math.max(0,selPrcIdx-1)">◀</button>
+                                <span class="pager-btn" style="border:none; background:transparent;">Record <span x-text="costProcessList.length ? selPrcIdx+1 : 0"></span> of <span x-text="costProcessList.length"></span></span>
+                                <button class="pager-btn" @click="selPrcIdx=Math.min(costProcessList.length-1,selPrcIdx+1)">▶</button> <button class="pager-btn" @click="selPrcIdx=Math.min(costProcessList.length-1,selPrcIdx+5)">▶▶</button> <button class="pager-btn" @click="selPrcIdx=costProcessList.length-1">▶|</button>
                                 <button class="pager-btn" style="margin-left:5px;">+</button> <button class="pager-btn">-</button>
                                 <button class="pager-btn">✓</button> <button class="pager-btn">✕</button>
                             </div>
@@ -358,29 +350,32 @@
             </div>
         </div>
 
+        </div> <!-- End of RECORD DETAIL TAB -->
+
         <!-- RECORDS LIST TAB -->
-        <div class="tab-pane" :class="activeMainTab === 'list' ? 'active' : ''" style="background: white;">
+        <div class="tab-pane" :class="activeMainTab === 'list' ? 'active' : ''">
             <div class="bar-top">
-                <span>Drag a column header here to group by that column</span>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <label style="display:flex; align-items:center; gap:5px; font-size:0.75rem; color:#475569; cursor:pointer;">
-                        <input type="checkbox" x-model="exportToSinglePage"> Export to 1 page / file
-                    </label>
-                    <button @click="exportToPdf()" style="background:none; border:none; cursor:pointer; padding: 0; display: flex; align-items: center;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                    </button>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <span>Drag a column header here to group by that column</span>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <label style="display:flex; align-items:center; gap:5px; font-size:0.75rem; color:#475569; cursor:pointer;">
+                            <input type="checkbox" x-model="exportToSinglePage"> Export to 1 page / file
+                        </label>
+                        <button @click="exportToPdf()" style="background:none; border:none; cursor:pointer; padding: 0; display: flex; align-items: center;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        </button>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </div>
                 </div>
-            </div>
-            
-            <div style="flex: 1; overflow: auto;" id="records-list-content">
-                <table class="list-grid" id="records-list-table">
-                    <thead>
-                        <tr>
-                            <th colspan="7" style="text-align:center; border-bottom:1px solid var(--hr-border);">INFORMATION</th>
-                            <th colspan="4" style="text-align:center; border-bottom:1px solid var(--hr-border);">ESTIMATION</th>
-                        </tr>
+                
+                <div style="flex: 1; overflow: auto; background: white;" id="records-list-content">
+                    <table class="list-grid" id="records-list-table">
+                        <thead>
+                            <tr>
+                                <th colspan="2" style="border-bottom:1px solid var(--hr-border); border-right:1px solid var(--hr-border);"></th>
+                                <th colspan="5" style="text-align:center; border-bottom:1px solid var(--hr-border);">INFORMATION</th>
+                                <th colspan="4" style="text-align:center; border-bottom:1px solid var(--hr-border);">ESTIMATION</th>
+                            </tr>
                         <tr>
                             <th style="width: 80px;">DATE</th>
                             <th style="width: 150px;">CUSTOMER NAME</th>
@@ -398,8 +393,11 @@
                     </thead>
                     <tbody>
                         <template x-for="(est, i) in estimationsHistory" :key="i">
-                            <tr>
-                                <td x-text="est.date"></td>
+                            <tr @click="selectAndDetail(i)" :style="selHistIdx === i ? 'background:#d0d8e8;' : ''" style="cursor:pointer;">
+                                <td style="display:flex; align-items:center; gap:4px;">
+                                    <span x-show="selHistIdx === i" style="font-size:0.5rem; color:#475569;">▶</span>
+                                    <span x-text="est.date"></span>
+                                </td>
                                 <td x-text="est.customer"></td>
                                 <td x-text="est.location"></td>
                                 <td x-text="est.userno"></td>
@@ -412,20 +410,24 @@
                                 <td style="text-align:right;" x-text="est.management_fee"></td>
                             </tr>
                         </template>
-                    </tbody>
-                </table>
-            </div>
-            <div class="grid-footer" style="padding: 4px; background: transparent; border-top: 1px solid var(--hr-border); border-bottom: 1px solid var(--hr-border); display:flex; justify-content:space-between; min-height: 38px;">
-                <div style="display:flex; align-items:center;">
-                    <button class="pager-btn">|◀</button> <button class="pager-btn">◀◀</button> <button class="pager-btn">◀</button>
-                    <span class="pager-btn" style="border:none; background:transparent;">Record <span x-text="estimationsHistory.length"></span> of <span x-text="estimationsHistory.length"></span></span>
-                    <button class="pager-btn">▶</button> <button class="pager-btn">▶▶</button> <button class="pager-btn">▶|</button>
+                        </tbody>
+                        <tfoot>
+                            <tr style="background: transparent;">
+                                <td colspan="7" style="border:none;"></td>
+                                <td style="border:none; padding: 2px 4px;"><input type="text" class="form-input" style="width:100%; text-align:right;" value="0" readonly></td>
+                                <td style="border:none; padding: 2px 4px;"><input type="text" class="form-input" style="width:100%; text-align:right;" value="0" readonly></td>
+                                <td style="border:none; padding: 2px 4px;"><input type="text" class="form-input" style="width:100%; text-align:right;" value="0" readonly></td>
+                                <td style="border:none; padding: 2px 4px;"><input type="text" class="form-input" style="width:100%; text-align:right;" value="0" readonly></td>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
-                <div style="display:flex; gap:10px; padding-right:10px;">
-                    <input type="text" class="form-input" style="width: 100px; text-align:right;" value="20.700.000" readonly>
-                    <input type="text" class="form-input" style="width: 100px; text-align:right;" value="4.300.000" readonly>
-                    <input type="text" class="form-input" style="width: 100px; text-align:right;" value="800.000" readonly>
-                    <input type="text" class="form-input" style="width: 100px; text-align:right;" value="2.500.000" readonly>
+                <div class="grid-footer" style="padding: 4px; background: transparent; border-top: 1px solid var(--hr-border); border-bottom: 1px solid var(--hr-border); display:flex; justify-content:space-between; min-height: 38px;">
+                    <div style="display:flex; align-items:center;">
+                        <button class="pager-btn" @click="selHistIdx=0">|◀</button> <button class="pager-btn" @click="selHistIdx=Math.max(0,selHistIdx-5)">◀◀</button> <button class="pager-btn" @click="selHistIdx=Math.max(0,selHistIdx-1)">◀</button>
+                        <span class="pager-btn" style="border:none; background:transparent;">Record <span x-text="estimationsHistory.length ? selHistIdx+1 : 0"></span> of <span x-text="estimationsHistory.length"></span></span>
+                        <button class="pager-btn" @click="selHistIdx=Math.min(estimationsHistory.length-1,selHistIdx+1)">▶</button> <button class="pager-btn" @click="selHistIdx=Math.min(estimationsHistory.length-1,selHistIdx+5)">▶▶</button> <button class="pager-btn" @click="selHistIdx=estimationsHistory.length-1">▶|</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -462,6 +464,12 @@
             directCosts: [],
             indirectCosts: [],
 
+            selSvcIdx: 0,
+            selDirIdx: 0,
+            selIndIdx: 0,
+            selPrcIdx: 0,
+            selHistIdx: 0,
+
             managementFeePercent: 10,
             ppnPercent: 11,
 
@@ -470,6 +478,19 @@
                 this.addRow('service');
                 this.addRow('direct');
                 this.addRow('indirect');
+            },
+
+            selectAndDetail(idx) {
+                this.selHistIdx = idx;
+                
+                // Usually we'd populate the form with the selected record data here:
+                const record = this.estimationsHistory[idx];
+                if (record) {
+                    this.formData.date = record.date;
+                    // ... etc
+                }
+                
+                this.activeMainTab = 'detail';
             },
 
             addRow(type) {
@@ -494,7 +515,7 @@
             },
 
             updateCalculations(row) {
-                row.amount = Number(row.mpp || 0) * Number(row.price || 0);
+                row.amount = Number(row.mpp || 1) * Number(row.price || 0);
                 if (!row.negotiation || row.negotiation == 0) {
                     row.negotiation = row.amount;
                 }
@@ -510,7 +531,7 @@
 
                 const sTotal = sumAmount(this.serviceCosts);
                 const dTotal = sumAmount(this.directCosts);
-                const iTotal = sumAmount(this.indirectCosts);
+                const iTotal = this.indirectCosts.reduce((acc, row) => acc + Number(row.price || 0), 0);
 
                 const sNego = sumNego(this.serviceCosts);
                 const dNego = sumNego(this.directCosts);

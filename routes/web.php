@@ -13,6 +13,9 @@ Route::get('/login', [AuthController::class, 'index'])->name('login')->middlewar
 Route::post('/login', [AuthController::class, 'login'])->middleware('guest');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
+// Public Asset Scan Route
+Route::get('/a/{code}', [\App\Http\Controllers\FixedAssetController::class, 'showPublic'])->name('asset.scan');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/change-password', [PasswordController::class, 'showChangeForm'])->name('password.change');
     Route::post('/change-password', [PasswordController::class, 'update'])->name('password.update');
@@ -24,9 +27,7 @@ Route::middleware(['auth'])->group(function () {
 
         // Inventory Module
         Route::prefix('inventory')->name('inventory.')->middleware('check.menu:Inventory & GA')->group(function () {
-            Route::get('/', function () {
-                return "Inventory Module (Coming Soon)";
-            })->name('index');
+            Route::get('/', [\App\Http\Controllers\InventoryController::class, 'index'])->name('index');
 
             Route::get('/fixed-assets', [\App\Http\Controllers\FixedAssetController::class, 'index'])->name('fixed_assets');
             Route::get('/product-assets', [\App\Http\Controllers\ProductAssetController::class, 'index'])->name('product_assets');
@@ -43,8 +44,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/lsi-status', [\App\Http\Controllers\LsiStatusController::class, 'index'])->name('lsi_status');
         });
 
-        // Public Asset Scan Route (tidak butuh Inventory access)
-        Route::get('/a/{code}', [\App\Http\Controllers\FixedAssetController::class, 'showPublic'])->name('asset.scan');
 
         // Finance Module
         Route::prefix('finance')->name('finance.')->middleware('check.menu:Finance')->group(function () {
@@ -155,7 +154,7 @@ Route::middleware(['auth'])->group(function () {
             Route::resource('cash-receipt', \App\Http\Controllers\Finance\CashReceiptController::class);
         });
         Route::prefix('accounting')->name('accounting.')->middleware('check.menu:Accounting')->group(function () {
-            Route::get('/', function () { return "Accounting Module (Coming Soon)"; })->name('index');
+            Route::get('/', [\App\Http\Controllers\Accounting\OverviewController::class, 'index'])->name('index');
             Route::get('/journal-posting', function() { return "Journal Posting (Coming Soon)"; })->name('journal-posting');
             Route::get('/fx-ass-posting', function() { return "Fx. Ass. Posting (Coming Soon)"; })->name('fx-ass-posting');
             Route::get('/closing-month', function() { return "Closing Month (Coming Soon)"; })->name('closing-month');

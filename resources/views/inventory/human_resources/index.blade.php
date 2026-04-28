@@ -3,368 +3,200 @@
 @section('title', 'Human Resources')
 
 @push('styles')
-<style>
-    :root {
-        --hr-primary: #1e293b;
-        --hr-border: #e2e8f0;
-        --hr-bg-light: #f8fafc;
-        --hr-accent: #2563eb;
-    }
+    <style>
+        :root { --hr-border: #999; --hr-primary: #1e293b; --hr-accent: #2563eb; }
+        .fa-window { 
+            background: #f0f0f0; 
+            border: 1px solid #999; 
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 120px);
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            color: #000;
+        }
+        
+        .window-title-bar {
+            background: linear-gradient(to bottom, #4f78b1, #3a5a8f);
+            color: white;
+            padding: 4px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
 
-    .page-header {
-        margin-bottom: 20px;
-    }
+        .fa-tabs {
+            display: flex;
+            background: #f0f0f0;
+            padding: 4px 4px 0 4px;
+            border-bottom: 1px solid #999;
+        }
+        .fa-tab {
+            padding: 4px 12px;
+            font-size: 11px;
+            border: 1px solid #999;
+            border-bottom: none;
+            background: #e0e0e0;
+            cursor: pointer;
+            margin-right: 2px;
+            border-radius: 3px 3px 0 0;
+            text-transform: uppercase;
+        }
+        .fa-tab.active {
+            background: #fff;
+            font-weight: bold;
+            margin-bottom: -1px;
+            height: calc(100% + 1px);
+        }
 
-    .page-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--hr-primary);
-    }
+        /* Tab panes — note: HR uses .tab-pane not .fa-pane */
+        .tab-pane { display: none; flex: 1; flex-direction: column; overflow: auto; background: #f0f0f0; }
+        .tab-pane.active { display: flex; }
+        .fa-pane { display:none; flex:1; overflow:auto; background: #f0f0f0; }
+        .fa-pane.active { display:flex; flex-direction:column; }
 
-    .page-desc {
-        color: #64748b;
-        font-size: 0.875rem;
-    }
+        /* ── RECORD DETAIL LAYOUT ── */
+        .detail-layout {
+            display: flex;
+            gap: 15px;
+            padding: 12px;
+            flex: 1;
+            overflow: auto;
+            background: #f0f0f0;
+        }
+        .detail-left {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .detail-right {
+            width: 340px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #999;
+            background: white;
+        }
 
-    /* Tabs */
-    .main-tabs {
-        display: flex;
-        gap: 2px;
-        background: #e2e8f0;
-        padding: 2px;
-        border-radius: 8px 8px 0 0;
-        width: fit-content;
-    }
+        /* ── HR FORM GRID ── */
+        .hr-form-grid {
+            display: grid;
+            grid-template-columns: 110px 1fr;
+            gap: 3px 0;
+            align-items: center;
+        }
+        .hr-label {
+            font-size: 11px;
+            color: #444;
+            text-align: right;
+            padding-right: 8px;
+            white-space: nowrap;
+        }
+        .hr-input {
+            height: 22px;
+            border: 1px solid #999;
+            border-radius: 0;
+            font-size: 12px;
+            padding: 2px 4px;
+            background: white;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .hr-input:focus { outline: 1px solid #4f78b1; }
+        .hr-input[readonly] { background: #e0e0e0; }
 
-    .main-tab {
-        padding: 8px 20px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: #64748b;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        border-radius: 6px;
-        transition: all 0.2s;
-        text-transform: uppercase;
-    }
+        /* ── AVATAR BOX ── */
+        .avatar-box { 
+            width: 120px; height: 150px; border: 1px solid #999; background: #fff; 
+            display: flex; align-items: center; justify-content: center; font-size: 11px; color: #666;
+            cursor: pointer; flex-shrink: 0;
+        }
+        .avatar-img { width: 60px; height: 60px; color: #bbb; }
 
-    .main-tab.active {
-        background: white;
-        color: var(--hr-accent);
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
+        /* ── RADIO CLOTHES SIZE ── */
+        .clothes-size-group { display: flex; gap: 8px; flex-wrap: wrap; }
+        .radio-input { display: flex; align-items: center; gap: 3px; font-size: 11px; cursor: pointer; }
 
-    .tab-content {
-        background: white;
-        border: 1px solid var(--hr-border);
-        border-radius: 0 8px 8px 8px;
-        min-height: 500px;
-        padding: 0;
-    }
+        /* ── SUB TABS (right panel) ── */
+        .sub-tabs { display: flex; background: #e0e0e0; border-bottom: 1px solid #999; }
+        .sub-tab { padding: 4px 10px; font-size: 10px; border-right: 1px solid #999; cursor: pointer; background: #d0d0d0; border: none; }
+        .sub-tab.active { background: #fff; font-weight: bold; }
+        .sub-content { flex: 1; overflow: auto; }
 
-    .tab-pane {
-        display: none;
-    }
+        /* ── SUB TABLE ── */
+        .sub-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        .sub-table th { background: #e0e0e0; border: 1px solid #999; padding: 3px 5px; text-align: left; font-size: 10px; }
+        .sub-table td { border: 1px solid #ccc; padding: 3px 5px; }
+        .sub-table tr:hover td { background: #f0f0f0; }
+        .checkbox-cell { text-align: center; width: 40px; }
 
-    .tab-pane.active {
-        display: block;
-    }
+        /* ── DETAIL FOOTER ── */
+        .detail-footer { 
+            padding: 5px 8px; background: #f0f0f0; border-top: 1px solid #999; 
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 11px; color: #444; margin-top: auto;
+        }
 
-    /* Record Detail Layout */
-    .detail-layout {
-        display: flex;
-        height: calc(100vh - 250px);
-    }
+        /* ── RECORD LIST ── */
+        :root { --hr-border: #999; }
+        .list-grid { width: 100%; border-collapse: collapse; font-size: 11px; background: white; }
+        .list-grid th { background: #e0e0e0; color: #333; padding: 3px 5px; text-align: left; font-weight: bold; border: 1px solid #999; white-space: nowrap; font-size: 11px; position: sticky; top: 0; }
+        .list-grid td { padding: 3px 5px; border: 1px solid #ccc; white-space: nowrap; color: #000; font-size: 11px; }
+        .list-grid tr:hover td { background: #f0f0f0; cursor: pointer; }
+        .list-grid tr.selected td { background: #3a5a8f; color: white; }
+        .grid-cell-flex { display: flex; justify-content: space-between; align-items: center; }
+        .ellipsis { color: #bbb; font-size: 10px; }
 
-    .detail-left {
-        flex: 1.2;
-        padding: 20px;
-        border-right: 1px solid var(--hr-border);
-        overflow-y: auto;
-    }
+        /* ── PAGER ── */
+        .pager-footer { background: #f0f0f0; border-top: 1px solid #999; padding: 4px 8px; display: flex; align-items: center; gap: 4px; font-size: 11px; margin-top: auto; }
+        .pager-btn { padding: 2px 6px; border: 1px solid #999; background: #fff; cursor: pointer; min-width: 25px; font-size: 11px; }
+        .pager-btn:hover { background: #eee; }
+        .pager-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .detail-right {
-        flex: 1;
-        background: #fcfcfc;
-        display: flex;
-        flex-direction: column;
-    }
+        /* ── LOADING OVERLAY ── */
+        .loading-overlay {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.7);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; color: #444; z-index: 100;
+        }
 
-    /* Form Styles */
-    .hr-form-grid {
-        display: grid;
-        grid-template-columns: 120px 1fr;
-        gap: 10px 15px;
-        align-items: center;
-    }
-
-    .hr-label {
-        font-size: 0.8rem;
-        color: #64748b;
-        text-align: right;
-    }
-
-    .hr-input {
-        width: 100%;
-        padding: 6px 10px;
-        border: 1px solid #cbd5e1;
-        border-radius: 4px;
-        font-size: 0.85rem;
-        color: #1e293b;
-        background: #f1f5f944;
-    }
-
-    .hr-input[readonly] {
-        background: #f8fafc;
-        border-color: #e2e8f0;
-    }
-
-    .avatar-box {
-        width: 180px;
-        height: 220px;
-        border: 1px solid #cbd5e1;
-        background: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-left: auto;
-    }
-
-    .avatar-img {
-        max-width: 100%;
-        max-height: 100%;
-        opacity: 0.5;
-    }
-
-    .clothes-size-group {
-        display: flex;
-        gap: 15px;
-        font-size: 0.8rem;
-    }
-
-    .radio-input {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-    /* Secondary Tabs (Personal) */
-    .sub-tabs {
-        display: flex;
-        border-bottom: 1px solid var(--hr-border);
-        background: #f1f5f9;
-    }
-
-    .sub-tab {
-        padding: 10px 15px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: #64748b;
-        background: none;
-        border: none;
-        cursor: pointer;
-        border-bottom: 2px solid transparent;
-        text-transform: uppercase;
-    }
-
-    .sub-tab.active {
-        color: var(--hr-accent);
-        border-bottom-color: var(--hr-accent);
-        background: white;
-    }
-
-    .sub-content {
-        flex: 1;
-        overflow-y: auto;
-        padding: 0;
-    }
-
-    /* Data Table (Small) */
-    .sub-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.75rem;
-    }
-
-    .sub-table th {
-        background: #f8fafc;
-        padding: 8px 12px;
-        text-align: left;
-        color: #64748b;
-        border-bottom: 1px solid var(--hr-border);
-        font-weight: 600;
-    }
-
-    .sub-table td {
-        padding: 8px 12px;
-        border-bottom: 1px solid #f1f5f9;
-        color: #334155;
-    }
-
-    .sub-table tr:hover {
-        background: #f1f5f9;
-    }
-
-    .checkbox-cell {
-        width: 40px;
-        text-align: center;
-    }
-
-    /* List View Table */
-    .list-table-container {
-        padding: 20px;
-    }
-
-    .data-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.85rem;
-    }
-
-    .data-table th {
-        background: #f8fafc;
-        padding: 12px 15px;
-        text-align: left;
-        font-weight: 600;
-        color: #475569;
-        border-bottom: 2px solid var(--hr-border);
-    }
-
-    .data-table td {
-        padding: 12px 15px;
-        border-bottom: 1px solid var(--hr-border);
-    }
-
-    .data-table tr:hover {
-        background: #f8fafc;
-        cursor: pointer;
-    }
-
-    .status-badge {
-        padding: 2px 8px;
-        border-radius: 99px;
-        font-size: 0.7rem;
-        font-weight: 600;
-    }
-
-    .status-active { background: #dcfce7; color: #166534; }
-    .status-inactive { background: #fee2e2; color: #991b1b; }
-
-    .erp-list-container { overflow-x: auto; }
-    .erp-hint { font-size: 0.72rem; color: #94a3b8; padding: 6px 10px; font-style: italic; border-bottom: 1px solid #e2e8f0; background: #f8fafc; }
-    .erp-table { width: 100%; border-collapse: collapse; font-size: 0.76rem; min-width: 900px; }
-    .erp-table th { background: #dbeafe; color: #1e40af; padding: 6px 8px; text-align: left; font-weight: 700; border-bottom: 2px solid #93c5fd; border-right: 1px solid #bfdbfe; white-space: nowrap; font-size: 0.7rem; text-transform: uppercase; }
-    .erp-table td { padding: 5px 8px; border-bottom: 1px solid #e2e8f0; border-right: 1px solid #f1f5f9; white-space: nowrap; color: #1e293b; font-size: 0.75rem; }
-    .erp-table tr:hover td { background: #eff6ff; cursor: pointer; }
-    .erp-table tr.selected td { background: #dbeafe; color: #1e40af; font-weight: 600; }
-    .erp-table tr td:first-child, .erp-table tr th:first-child { text-align: center; width: 30px; }
-    .erp-footer-bar { display: flex; align-items: center; gap: 6px; padding: 6px 10px; border-top: 1px solid #e2e8f0; background: #f8fafc; font-size: 0.72rem; color: #64748b; }
-    .erp-footer-bar button { padding: 2px 6px; border: 1px solid #cbd5e1; border-radius: 3px; background: white; cursor: pointer; font-size: 0.72rem; }
-    .erp-footer-bar button:hover { background: #e2e8f0; }
-    .erp-search-bar { display: flex; justify-content: flex-end; padding: 8px 12px; border-bottom: 1px solid #e2e8f0; background: #f8fafc; gap: 8px; align-items: center; }
-    .erp-search-input { padding: 4px 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.78rem; width: 200px; }
-
-    /* Footer Stats in Detail */
-    .detail-footer {
-        padding: 15px 20px;
-        border-top: 1px solid var(--hr-border);
-        display: flex;
-        justify-content: space-between;
-        font-size: 0.8rem;
-        background: #f8fafc;
-    }
-
-    .loading-overlay {
-        position: absolute;
-        inset: 0;
-        background: rgba(255,255,255,0.7);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 10;
-    }
-    
-    .list-grid {
-        width: 100%;
-        border-collapse: collapse;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        font-size: 0.75rem;
-    }
-    .list-grid th {
-        background: #f1f5f9;
-        color: #64748b;
-        padding: 6px 8px;
-        text-align: left;
-        font-weight: normal;
-        border-bottom: 1px solid var(--hr-border);
-        border-right: 1px solid var(--hr-border);
-        white-space: nowrap;
-    }
-    .list-grid td {
-        padding: 4px 8px;
-        border-bottom: 1px solid var(--hr-border);
-        border-right: 1px solid var(--hr-border);
-        white-space: nowrap;
-        color: #334155;
-    }
-    .list-grid tr:hover td {
-        background: #f8fafc;
-        cursor: pointer;
-    }
-    .list-grid tr.selected td {
-        background: #e2e8f0;
-    }
-    .grid-cell-flex {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        height: 100%;
-    }
-    .ellipsis {
-        color: #94a3b8;
-        font-weight: bold;
-        letter-spacing: 1px;
-    }
-    .pager-btn {
-        background: white;
-        border: 1px solid #cbd5e1;
-        padding: 2px 6px;
-        font-size: 0.65rem;
-        cursor: pointer;
-        color: #64748b;
-    }
-    .pager-btn:hover {
-        background: #f1f5f9;
-    }
-</style>
+        /* ── MISC ── */
+        .main-content { padding: 15px; background: #f0f0f0; }
+        .box-panel { border: 1px solid #999; background: #fff; margin-bottom: 10px; display: flex; flex-direction: column; flex: 1; }
+        .panel-header { background: #e0e0e0; padding: 4px 8px; font-size: 11px; font-weight: bold; border-bottom: 1px solid #999; }
+        .panel-body { padding: 0; flex: 1; overflow-y: auto; }
+    </style>
 @endpush
 
 @section('content')
-<div x-data="hrManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)">
+<div class="fa-window" x-data="hrManager()" x-init="init()">
     <!-- Windows like Title bar -->
     <div class="window-title-bar">
-        <div style="display: flex; gap: 8px; align-items: center;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="#2563eb"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-            <span style="font-weight: 600;">Human Resources</span>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <div style="width: 28px; height: 28px; background: #eff6ff; border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            </div>
+            <span style="font-weight: 700; font-size: 13px; color: #fff;">Human Resources Management</span>
         </div>
-        <div style="display: flex; gap: 15px;">
-            <span style="cursor: pointer; font-size: 0.9rem;">◁</span>
-            <span style="cursor: pointer; font-size: 0.9rem;">▷</span>
-            <span style="cursor: pointer;">✕</span>
+        <div style="display: flex; gap: 8px; align-items:center;">
+            <div style="display:flex; gap:2px; margin-right: 10px;">
+                <button class="pager-btn" @click="prevRecord()">◁</button>
+                <button class="pager-btn" @click="nextRecord()">▷</button>
+            </div>
+            <button class="hamburger" style="padding: 4px; color: #fff;"><svg viewBox="0 0 24 24" style="width:16px; height:16px;"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2"/></svg></button>
         </div>
     </div>
 
     @include('partials.ribbon_toolbar')
 
-    <!-- Main Navigation Tabs -->
-    <div class="main-tabs">
-        <button class="main-tab" :class="activeMainTab === 'detail' ? 'active' : ''" @click="activeMainTab = 'detail'">RECORD DETAIL</button>
-        <button class="main-tab" :class="activeMainTab === 'list' ? 'active' : ''" @click="activeMainTab = 'list'">RECORD LIST</button>
+    <div class="fa-tabs">
+        <div class="fa-tab" :class="activeMainTab === 'detail' ? 'active' : ''" @click="activeMainTab = 'detail'">RECORD DETAIL</div>
+        <div class="fa-tab" :class="activeMainTab === 'list' ? 'active' : ''" @click="activeMainTab = 'list'">RECORD LIST</div>
     </div>
-
-    <div class="tab-content">
         <!-- TAB 1: RECORD DETAIL -->
         <div class="tab-pane" :class="activeMainTab === 'detail' ? 'active' : ''">
             <div class="detail-layout" style="position: relative;">
@@ -571,7 +403,7 @@
                             </thead>
                             <tbody>
                                 @foreach($employees as $emp)
-                                <tr @click="selectEmployee({{ $emp->id }})" :class="form.id === {{ $emp->id }} ? 'selected' : ''">
+                                <tr @click="selectAndDetail({{ $emp->id }})" :class="form.id === {{ $emp->id }} ? 'selected' : ''">
                                     <td style="text-align: center; color: #64748b; font-size: 0.6rem;">
                                         <div x-show="form.id === {{ $emp->id }}">▶</div>
                                     </td>
@@ -674,6 +506,9 @@
                 email: '',
                 is_active: true,
                 id_card_print: false,
+                pob: '', // Added Place of Birth
+                dob: '', // Added Date of Birth
+                gender: 'Male',
                 files: [],
                 attributes: []
             },
@@ -693,24 +528,33 @@
             async selectEmployee(id) {
                 if (!id) return;
                 this.loading = true;
+
+                // Immediately populate form from local data for instant feedback
+                const emp = this.employees.find(e => e.id === id);
+                if (emp) this.form = { ...this.form, ...emp };
+
+                // Switch to detail tab right away
                 this.activeMainTab = 'detail';
-                
+
                 try {
                     const response = await fetch(`/inventory/human-resources/${id}/details`);
                     if (!response.ok) throw new Error('Failed to fetch details');
                     const data = await response.json();
-                    
-                    // Populate form
-                    this.form = { ...data };
+                    // Merge with richer data from API
+                    this.form = { ...this.form, ...data };
                 } catch (error) {
-                    console.error('Error fetching employee details:', error);
+                    console.error('Could not fetch full details, using local data:', error);
                 } finally {
                     this.loading = false;
                 }
             },
 
             // Navigation
-            firstRecord() {
+            selectAndDetail(id) {
+                this.selectEmployee(id);
+                this.activeMainTab = 'detail';
+            },
+            goFirst() {
                 if (this.employees.length > 0) this.selectEmployee(this.employees[0].id);
             },
             prevRecord() {
@@ -721,9 +565,11 @@
                 const idx = this.currentIndex;
                 if (idx < this.employees.length - 1) this.selectEmployee(this.employees[idx + 1].id);
             },
-            lastRecord() {
+            goLast() {
                 if (this.employees.length > 0) this.selectEmployee(this.employees[this.employees.length - 1].id);
             },
+            firstRecord() { this.goFirst(); },
+            lastRecord() { this.goLast(); },
 
             // Actions
             addRecord() {
@@ -748,57 +594,27 @@
                     mobile: '', position: '', work_at: '', location: '',
                     join_date: '', clothes_size: '', pants_size: '',
                     email: '', is_active: true, id_card_print: false,
+                    pob: '', dob: '', gender: 'Male',
                     files: [], attributes: []
                 };
             },
 
             handleRibbonAction(action) {
                 switch(action) {
-                    case 'new': this.addRecord(); showToast('New record form cleared', 'info'); break;
-                    case 'save': 
-                        if(typeof exportToJSONFile === 'function') {
-                            exportToJSONFile(this.form, 'HumanResource_' + (this.form.code || 'Draft') + '.json');
-                        }
-                        showToast('Employee record saved to file', 'success'); 
-                        break;
+                    case 'new': this.addRecord(); break;
+                    case 'save': showToast('Employee record saved', 'success'); break;
                     case 'delete': this.removeRecord(); break;
                     case 'edit': this.focusFirstField(); break;
                     case 'refresh': window.location.reload(); break;
                     case 'preview': window.print(); break;
-                    case 'find': this.activeMainTab = 'list'; this.$nextTick(() => { if(typeof erpFindOpen === 'function') erpFindOpen(); }); break;
-                    case 'undo': this.undoChanges(); break;
-                    case 'save-as': 
-                        this.saveAsNew(); 
-                        if(typeof exportToJSONFile === 'function') {
-                            exportToJSONFile(this.form, 'HumanResource_Copy.json');
-                        }
-                        break;
-                    case 'barcode': showToast('Generating employee ID barcode...', 'info'); break;
-                    case 'resend': showToast('Re-sending employee data...', 'info'); break;
+                    case 'find': this.activeMainTab = 'list'; break;
                 }
-            },
-
-            undoChanges() {
-                if (this.form.id && confirm('Revert all unsaved changes for this employee?')) {
-                    this.selectEmployee(this.form.id);
-                    showToast('Changes reverted', 'info');
-                }
-            },
-
-            saveAsNew() {
-                if (!this.form.id) return;
-                const clone = JSON.parse(JSON.stringify(this.form));
-                clone.id = null;
-                clone.code = 'NEW-COPY';
-                clone.full_name += ' (COPY)';
-                this.form = clone;
-                showToast('Record ready to save as new', 'info');
             },
 
             focusFirstField() {
                 this.activeMainTab = 'detail';
                 this.$nextTick(() => {
-                    const firstInput = document.querySelector('.tab-content input:not([readonly])');
+                    const firstInput = document.querySelector('.fa-pane.active input:not([readonly])');
                     if (firstInput) firstInput.focus();
                 });
             }

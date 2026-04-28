@@ -115,17 +115,18 @@
 <div x-data="arInvoiceManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)" style="background: white; border: 1px solid var(--hr-border); margin: 10px; display: flex; flex-direction: column; height: calc(100vh - 80px);">
     <!-- Windows like Title bar -->
     <div class="window-title-bar">
-        <div style="display: flex; gap: 8px; align-items: center;">
-            <div style="display: flex; gap: 2px;">
-                <div style="width: 6px; height: 6px; background: #ef4444;"></div>
-                <div style="width: 6px; height: 6px; background: #eab308;"></div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <div style="width: 28px; height: 28px; background: #eff6ff; border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M4 2h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/><polyline points="22 7 12 14 2 7"/></svg>
             </div>
-            <span style="font-weight: 500; font-size: 0.8rem;">Customer Invoice</span>
+            <span style="font-weight: 700; font-size: 13px; color: #1e293b;">Customer Invoice</span>
         </div>
-        <div style="display: flex; gap: 15px;">
-            <span style="cursor: pointer; font-size: 1rem;" class="nav-btn">-</span>
-            <span style="cursor: pointer; font-size: 1rem;" class="nav-btn">□</span>
-            <span style="cursor: pointer; font-size: 1rem;" class="nav-btn">✕</span>
+        <div style="display: flex; gap: 8px; align-items:center;">
+            <div style="display:flex; gap:2px; margin-right: 10px;">
+                <button class="pager-btn" @click="prevRecord()" :disabled="currentIndex <= 0">◁</button>
+                <button class="pager-btn" @click="nextRecord()" :disabled="currentIndex >= invoices.length - 1">▷</button>
+            </div>
+            <button class="hamburger" style="padding: 4px; color: #94a3b8;"><svg viewBox="0 0 24 24" style="width:16px; height:16px;"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2"/></svg></button>
         </div>
     </div>
 

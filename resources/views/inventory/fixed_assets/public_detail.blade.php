@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assets Detail - {{ $code }}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -20,21 +20,26 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            border-left: 1px solid #f0f0f0;
+            border-right: 1px solid #f0f0f0;
         }
         header {
-            padding: 20px;
-            border-bottom: 1px solid #eee;
+            padding: 15px 20px;
+            border-bottom: 1px solid #eeeeee;
             display: flex;
             align-items: center;
             gap: 15px;
+            background-color: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
         .logo-container {
-            width: 70px;
-            height: 70px;
+            width: 55px;
+            height: 55px;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
         }
         .logo-container img {
             max-width: 100%;
@@ -42,79 +47,90 @@
             object-fit: contain;
         }
         .company-info {
-            font-size: 0.75rem;
-            line-height: 1.2;
+            font-size: 11px;
+            line-height: 1.3;
+            color: #1a1a1a;
         }
         .company-name {
-            font-weight: 800;
-            font-size: 0.9rem;
-            margin-bottom: 2px;
+            font-weight: 900;
+            font-size: 14px;
+            margin-bottom: 1px;
         }
 
         .content {
-            padding: 30px 20px;
+            padding: 25px 20px;
             flex: 1;
         }
 
         h1 {
-            font-size: 2.2rem;
+            font-size: 28px;
             font-weight: 800;
             margin-bottom: 30px;
             text-transform: uppercase;
-            letter-spacing: -1px;
+            letter-spacing: -0.5px;
+            color: #000;
         }
 
         .detail-item {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .label {
-            font-size: 1.1rem;
+            font-size: 16px;
             color: #666;
-            margin-bottom: 10px;
-            font-weight: 500;
+            margin-bottom: 8px;
+            font-weight: 400;
         }
 
         .value-box {
-            background-color: #f2f2f2;
-            padding: 20px;
+            background-color: #f4f4f4;
+            padding: 15px 20px;
             border-radius: 4px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #444;
-            min-height: 60px;
+            font-size: 16px;
+            font-weight: 400;
+            color: #333;
+            min-height: 50px;
             display: flex;
             align-items: center;
+            border: 1px solid #eaeaea;
         }
 
         .section-title {
-            font-size: 2.2rem;
+            font-size: 20px;
             font-weight: 800;
-            margin-top: 40px;
-            margin-bottom: 30px;
+            margin-top: 35px;
+            margin-bottom: 20px;
             text-transform: uppercase;
+            color: #000;
         }
 
         footer {
-            background-color: #222;
+            background-color: #1a1a1a;
             color: #fff;
             padding: 40px 20px;
-            font-size: 0.9rem;
+            font-size: 14px;
         }
         .copyright {
-            color: #eee;
-            margin-bottom: 5px;
+            color: #fff;
+            margin-bottom: 8px;
+            font-weight: 400;
         }
         .copyright span {
-            color: #2bd48d;
-            font-weight: 700;
+            color: #fff;
+            font-weight: 800;
         }
         .design-by {
-            color: #aaa;
+            color: #888;
+            font-size: 13px;
         }
         .design-by span {
-            color: #2bd48d;
+            color: #888;
             font-weight: 700;
+        }
+
+        @media (max-width: 400px) {
+            h1 { font-size: 26px; }
+            .label, .value-box { font-size: 15px; }
         }
     </style>
 </head>
@@ -192,12 +208,12 @@
         <div class="section-title">NOTES</div>
 
         <div class="detail-item">
-            <div class="value-box" style="align-items: flex-start; min-height: 120px;">{{ $asset['note'] ?: '-' }}</div>
+            <div class="value-box" style="align-items: flex-start; min-height: 150px; line-height: 1.4;">{{ $asset['note'] ?: '-' }}</div>
         </div>
     </div>
 
     <footer>
-        <div class="copyright">&copy; <span>JAYATAMA</span>, Inc. All rights Resevered.</div>
+        <div class="copyright">&copy; <span>JAYATAMA</span>, Inc. All rights Reserved.</div>
         <div class="design-by">Design by <span>IBP Software House</span></div>
     </footer>
 </body>

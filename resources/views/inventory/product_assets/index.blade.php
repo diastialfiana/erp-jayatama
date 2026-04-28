@@ -3,870 +3,331 @@
 
 @push('styles')
     <style>
-        .page-header {
-            margin-bottom: 24px;
-        }
-
-        .page-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 5px;
-        }
-
-        .page-desc {
-            font-size: 0.85rem;
-            color: #64748b;
-        }
-
-        /* ── Tabs ── */
-        .main-tabs {
-            display: flex;
-            gap: 2px;
-            margin-bottom: 0;
-            border-bottom: 1px solid #cbd5e1;
-        }
-
-        .main-tab {
-            padding: 8px 16px;
-            font-size: 0.85rem;
-            color: #475569;
-            background-color: #f1f5f9;
-            border: 1px solid #cbd5e1;
-            border-bottom: none;
-            cursor: pointer;
-            border-radius: 4px 4px 0 0;
-        }
-
-        .main-tab.active {
-            background-color: #fff;
-            color: #1e293b;
-            font-weight: 600;
-            border-bottom: 1px solid #fff;
-            margin-bottom: -1px;
-            z-index: 10;
-        }
-
-        .inner-tabs {
-            display: flex;
-            gap: 2px;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #cbd5e1;
-        }
-
-        .inner-tab {
-            padding: 6px 16px;
-            font-size: 0.8rem;
-            color: #475569;
-            background-color: #f8fafc;
-            border: 1px solid #cbd5e1;
-            border-bottom: none;
-            cursor: default;
-            border-radius: 4px 4px 0 0;
-        }
-
-        .inner-tab.active {
-            background-color: #fff;
-            color: #1e293b;
-            font-weight: 600;
-            border-bottom: 1px solid #fff;
-            margin-bottom: -1px;
-            z-index: 10;
-        }
-
-        /* ── Main Wrapper ── */
-        .main-content {
-            background: #fff;
-            padding: 24px;
-            border: 1px solid #cbd5e1;
-            border-top: none;
-            min-height: 500px;
-        }
-
-        /* ── Layout grids ── */
-        .flex-row {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 15px;
-        }
-
-        .box-panel {
-            border: 1px solid #cbd5e1;
-            padding: 15px;
+        :root { --hr-border: #999; --hr-primary: #1e293b; --hr-accent: #2563eb; }
+        .fa-window { 
+            background: #f0f0f0; 
+            border: 1px solid #999; 
             border-radius: 4px;
-            background: #fff;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 120px);
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            color: #000;
         }
         
-        .box-panel.no-pad {
-            padding: 0;
-        }
-
-        .box-panel.gray-header {
-            border-top: none;
-        }
-
-        .gray-header-title {
-            background: #e2e8f0;
-            padding: 8px 15px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: #334155;
-            border: 1px solid #cbd5e1;
-            border-bottom: none;
-            border-radius: 4px 4px 0 0;
-        }
-
-        .col-left { flex: 6; }
-        .col-right { flex: 4; }
-
-        /* ── Forms ── */
-        .form-group-sm {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .form-group-sm>label {
-            flex: 0 0 130px;
-            font-size: 0.8rem;
-            color: #475569;
-            text-align: right;
-            margin-right: 12px;
-        }
-
-        .form-control-sm {
-            flex: 1;
+        .window-title-bar {
+            background: linear-gradient(to bottom, #4f78b1, #3a5a8f);
+            color: white;
             padding: 4px 8px;
-            font-size: 0.8rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 3px;
-            color: #1e293b;
-            background-color: #fff;
-        }
-
-        select.form-control-sm {
-            appearance: auto;
-        }
-
-        .form-control-sm:read-only {
-            background-color: #f1f5f9;
-        }
-
-        input[type="checkbox"] {
-            margin-left: 8px;
-            width: 14px;
-            height: 14px;
-            cursor: pointer;
-        }
-
-        .inline-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex: 1;
-        }
-
-        /* ── Top Right Block ── */
-        .top-right-header {
-            display: flex;
-            justify-content: flex-end;
-            gap: 15px;
-            margin-bottom: 10px;
-            font-size: 0.8rem;
-            color: #475569;
-        }
-
-        .top-right-header label {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-        }
-
-        .image-placeholder {
-            border: 1px solid #cbd5e1;
-            height: 190px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: #f8fafc;
-            color: #64748b;
-            font-size: 0.8rem;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .image-placeholder-text {
-            margin-bottom: 20px;
-        }
-
-        .image-placeholder-action {
-            font-size: 0.75rem;
-            position: absolute;
-            bottom: 10px;
-        }
-
-        /* ── Middle Blocks ── */
-        .accounting-fields {
-            padding: 15px;
-            border: 1px solid #cbd5e1;
-            border-top: none;
-            border-radius: 0 0 4px 4px;
-        }
-
-        .conditions-label {
-            font-size: 0.85rem;
-            color: #334155;
-            background: #fff;
-            padding: 0 5px;
-            margin-left: 10px;
-            position: relative;
-            top: 10px;
-            display: inline-block;
-        }
-
-        .conditions-box {
-            border: 1px solid #cbd5e1;
-            padding: 20px 15px 15px 15px;
-            border-radius: 4px;
-        }
-
-        .cond-group {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
-            justify-content:flex-end;
-        }
-
-        .cond-group>label {
-            font-size: 0.8rem;
-            color: #475569;
-            margin-right: 12px;
-        }
-
-        .cond-group .form-control-sm {
-            flex: 0 0 120px;
-            text-align: right;
-        }
-
-        /* ── Bottom Bar ── */
-        .bottom-bar {
-            display: flex;
-            gap: 20px;
-            margin-top: 20px;
-            align-items: flex-end;
-        }
-
-        .note-section {
-            flex: 1;
-        }
-
-        .note-section label {
-            display: block;
-            font-size: 0.8rem;
-            color: #475569;
-            margin-bottom: 5px;
-        }
-
-        .note-textarea {
-            width: 100%;
-            height: 40px;
-            resize: none;
-            border: 1px solid #cbd5e1;
-            border-radius: 3px;
-        }
-
-        .stats-section {
-            display: flex;
-            gap: 15px;
-            align-items: flex-end;
-            margin-bottom: 2px;
-        }
-
-        .stat-box {
-            text-align: center;
-        }
-
-        .stat-box label {
-            display: block;
-            font-size: 0.75rem;
-            color: #475569;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-        }
-
-        .stat-box input {
-            width: 90px;
-            text-align: center;
-            background: #f8fafc;
-        }
-
-        .pagination-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.8rem;
-            color: #475569;
-            background: #fff;
-            padding: 4px;
-        }
-
-        .page-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #64748b;
-            padding: 2px 4px;
-        }
-        .page-btn:hover {
-            color: #1e293b;
-        }
-        
-        /* Loading Spinner */
-        .spinner {
-            border: 2px solid #e2e8f0;
-            border-top: 2px solid #2563EB;
-            border-radius: 50%;
-            width: 16px;
-            height: 16px;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-            vertical-align: middle;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* ── Product List Tab Styles ── */
-        .list-split-layout {
-            display: flex;
-            gap: 15px;
-            height: calc(100vh - 250px);
-            min-height: 500px;
-        }
-        
-        .list-col-left {
-            flex: 7;
-            display: flex;
-            flex-direction: column;
-            border: 1px solid #cbd5e1;
-            background: #fff;
-            position: relative;
-        }
-        
-        .list-col-right {
-            flex: 3;
-            display: flex; /* We rely on AlpineJS x-show to hide it initially */
-            flex-direction: column;
-            border: 1px solid #cbd5e1;
-            background: #fff;
-            position: relative;
-        }
-        
-        .grid-toolbar {
-            padding: 8px 12px;
-            background: #f1f5f9;
-            border-bottom: 1px solid #cbd5e1;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.8rem;
-            color: #64748b;
+            font-size: 12px;
+            font-weight: bold;
         }
-        
-        .grid-search {
-            background: transparent;
-            border: none;
-            outline: none;
-            width: 20px;
-            cursor: pointer;
-        }
-        
-        .data-table-container {
-            flex: 1;
-            overflow: auto;
-        }
-        
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.75rem;
-        }
-        
-        .data-table th {
-            background: #f8fafc;
-            position: sticky;
-            top: 0;
-            padding: 6px 10px;
-            border: 1px solid #e2e8f0;
-            color: #475569;
-            font-weight: 500;
-            text-align: left;
-            white-space: nowrap;
-            z-index: 5;
-        }
-        
-        .data-table td {
-            padding: 4px 10px;
-            border: 1px solid #e2e8f0;
-            color: #1e293b;
-            white-space: nowrap;
-        }
-        
-        .data-table tr:hover:not(.selected) {
-            background: #f1f5f9;
-            cursor: pointer;
-        }
-        
-        .data-table tr.selected {
-            background: #c7d2fe;
-        }
-        
-        .data-table td.num {
-            text-align: right;
-        }
-        
-        .panel-tabs {
+
+        .fa-tabs {
             display: flex;
-            background: #f1f5f9;
-            border-bottom: 1px solid #cbd5e1;
+            background: #f0f0f0;
+            padding: 4px 4px 0 4px;
+            border-bottom: 1px solid #999;
         }
-        
-        .panel-tab {
-            padding: 6px 12px;
-            font-size: 0.8rem;
-            color: #475569;
-            cursor: pointer;
-            border-right: 1px solid #cbd5e1;
-        }
-        
-        .panel-tab.active {
-            background: #fff;
-            color: #1e293b;
-            font-weight: 600;
-            border-bottom: 2px solid #2563EB;
-        }
-        
-        .panel-content {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            background: #f8fafc;
-        }
-        
-        /* We remove the hardcoded display:none / block logic since Alpine x-show handles it dynamically */
-        
-        .stat-grid {
-            display: grid;
-            grid-template-columns: 100px 1fr 1fr;
-            gap: 5px 10px;
-            align-items: center;
-            font-size: 0.8rem;
-        }
-        
-        .stat-label {
-            text-align: right;
-            color: #475569;
-        }
-        
-        .stat-input {
-            width: 100%;
-            padding: 3px 6px;
-            border: 1px solid #cbd5e1;
-            text-align: right;
-            background: #fff;
-        }
-        
-        .stat-input[readonly] {
-            background: #fff;
-            border-color: #e2e8f0;
-        }
-
-        .tab-pane {
-            display: none;
-        }
-        .tab-pane.active {
-            display: block;
-        }
-
-        /* ── Budget Tab Styles ── */
-        .budget-filter-bar {
-            background: #f1f5f9;
-            padding: 10px 15px;
-            border: 1px solid #cbd5e1;
+        .fa-tab {
+            padding: 4px 12px;
+            font-size: 12px;
+            border: 1px solid #999;
             border-bottom: none;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .budget-filter-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .budget-filter-group label {
-            font-size: 0.8rem;
-            color: #475569;
-            white-space: nowrap;
-        }
-
-        .searchable-select-container {
-            position: relative;
-            flex: 1;
-            min-width: 250px;
-        }
-
-        .searchable-select-input {
-            width: 100%;
-            padding: 4px 30px 4px 8px;
-            font-size: 0.8rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 3px;
-        }
-
-        .searchable-select-dropdown {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: #fff;
-            border: 1px solid #cbd5e1;
-            border-top: none;
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 100;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        .searchable-select-option {
-            padding: 6px 10px;
-            font-size: 0.8rem;
+            background: #e0e0e0;
             cursor: pointer;
+            margin-right: 2px;
+            border-radius: 3px 3px 0 0;
         }
-
-        .searchable-select-option:hover {
-            background: #f1f5f9;
-        }
-
-        .searchable-select-header {
-            padding: 4px 10px;
-            font-weight: 600;
-            font-size: 0.75rem;
-            color: #64748b;
-            background: #f8fafc;
-            border-bottom: 1px solid #e2e8f0;
-            text-transform: uppercase;
-        }
-
-        .month-select {
-            padding: 4px 8px;
-            font-size: 0.8rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 3px;
-            width: 150px;
-            background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E") no-repeat right 8px center;
-            appearance: none;
-            padding-right: 32px;
-        }
-
-        .refresh-btn {
-            background: #f8fafc;
-            border: 1px solid #cbd5e1;
-            border-radius: 3px;
-            padding: 4px 8px;
-            cursor: pointer;
-            color: #64748b;
-            display: flex;
-            align-items: center;
-        }
-
-        .refresh-btn:hover {
-            background: #f1f5f9;
-            color: #2563eb;
-        }
-
-        .icon-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #64748b;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2px;
-        }
-
-        .icon-btn:hover {
-            color: #2563eb;
-        }
-
-        .budget-table-container {
-            border: 1px solid #cbd5e1;
-            height: calc(100vh - 350px);
-            min-height: 300px;
-            overflow: auto;
+        .fa-tab.active {
             background: #fff;
+            font-weight: bold;
+            margin-bottom: -1px;
+            height: calc(100% + 1px);
         }
 
-        .budget-summary-bar {
-            display: flex;
-            justify-content: flex-end;
-            padding: 10px 15px;
-            background: #f8fafc;
-            border: 1px solid #cbd5e1;
-            border-top: none;
-            gap: 10px;
+        .fa-pane { display:none; flex:1; overflow:auto; background: #f0f0f0; }
+        .fa-pane.active { display:flex; flex-direction:column; }
+
+        .main-content { padding: 15px; background: #f0f0f0; }
+        .form-grid { display: grid !important; grid-template-columns: 1.2fr 1fr !important; gap: 20px !important; }
+        
+        .form-group { display: flex !important; flex-direction: row !important; align-items: center !important; margin-bottom: 3px !important; }
+        .form-group label { display: block !important; width: 130px !important; font-size: 11px !important; text-align: right !important; margin-right: 8px !important; flex-shrink: 0 !important; font-weight: normal !important; margin-bottom: 0 !important; }
+        .form-control { display: block !important; flex: 1 !important; height: 22px !important; padding: 2px 4px !important; border: 1px solid #999 !important; font-size: 12px !important; border-radius: 0 !important; background: white !important; box-sizing: border-box !important; }
+        .form-control:read-only { background: #e0e0e0 !important; }
+
+        .form-row { display: flex !important; flex-direction: row !important; gap: 10px !important; margin-bottom: 3px !important; align-items: center !important; flex-wrap: nowrap !important; }
+        .form-row .form-group { flex: 1 !important; margin-bottom: 0 !important; }
+        .form-row .form-group label { width: 130px !important; }
+
+        .checkbox-group { display: flex; align-items: center; gap: 10px; font-size: 11px; margin-left: 10px; }
+        .checkbox-item { display: flex; align-items: center; gap: 4px; cursor: pointer; }
+
+        .textarea-control { height: 60px !important; resize: none; font-family: monospace; font-size: 12px; }
+        
+        .box-panel { border: 1px solid #999; background: #fff; margin-bottom: 10px; }
+        .panel-header { background: #e0e0e0; padding: 4px 8px; font-size: 11px; font-weight: bold; border-bottom: 1px solid #999; }
+        .panel-body { padding: 10px; }
+
+        .image-placeholder { 
+            width: 100%; height: 160px; border: 1px solid #999; background: #fff; 
+            display: flex; align-items: center; justify-content: center; font-size: 11px; color: #666;
+            margin-bottom: 10px; cursor: pointer;
         }
 
-        .summary-input-group {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+        .stat-grid { border: 1px solid #999; padding: 8px; background: #e8e8e8; margin-top: 5px; }
+        .stat-row { display: flex; gap: 10px; margin-top: 5px; }
+        .stat-item { flex: 1; text-align: center; }
+        .stat-item label { display: block; font-size: 10px; color: #444; margin-bottom: 2px; }
+        .stat-item input { width: 100%; height: 22px; text-align: center; border: 1px solid #999; font-size: 11px; }
 
-        .summary-input-group input {
-            width: 120px;
-            text-align: right;
-            padding: 4px 8px;
-            font-size: 0.8rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 3px;
-            background: #fff;
-        }
+        .rec-table-wrap { overflow:auto; flex:1; background: white; }
+        .rec-table { width:100%; border-collapse:collapse; font-size:11px; }
+        .rec-table th { background: #e0e0e0; border: 1px solid #999; padding: 4px; text-align: left; position: sticky; top: 0; z-index: 10; }
+        .rec-table td { border: 1px solid #ccc; padding: 3px 5px; }
+        .rec-table tr.selected td { background: #3a5a8f; color: white; }
+
+        .pager-footer { background: #f0f0f0; border-top: 1px solid #999; padding: 4px 8px; display: flex; align-items: center; gap: 4px; font-size: 11px; }
+        .pager-btn { padding: 2px 6px; border: 1px solid #999; background: #fff; cursor: pointer; min-width: 25px; }
+        .pager-btn:hover { background: #eee; }
+        .pager-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     </style>
 @endpush
 
 @section('content')
+<div class="fa-window" x-data="{ activeTab: 'detail' }">
     <!-- Windows like Title bar -->
     <div class="window-title-bar">
         <div style="display: flex; gap: 8px; align-items: center;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="#2563eb"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-            <span style="font-weight: 600;">Product Assets</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            <span>Product Asset</span>
         </div>
-        <div style="display: flex; gap: 15px;">
-            <span style="cursor: pointer; font-size: 0.9rem;">◁</span>
-            <span style="cursor: pointer; font-size: 0.9rem;">▷</span>
-            <span style="cursor: pointer;">✕</span>
+        <div style="display: flex; gap: 4px;">
+            <div style="width:14px;height:14px;background:#ddd;border:1px solid #999;cursor:pointer;"></div>
+            <div style="width:14px;height:14px;background:#ddd;border:1px solid #999;cursor:pointer;"></div>
+            <div style="width:14px;height:14px;background:#e81123;border:1px solid #999;cursor:pointer;"></div>
         </div>
     </div>
 
     @include('partials.ribbon_toolbar')
-    <div class="main-tabs">
-        <button class="main-tab active" data-target="tab-record">RECORD DETAIL</button>
-        <button class="main-tab" id="btn-tab-list" data-target="tab-list">PRODUCT LIST & TOOLS</button>
-        <button class="main-tab" data-target="tab-budget">PRODUCT BUDGET</button>
-        <button class="main-tab" data-target="tab-summary">PRODUCT SUMMARY</button>
+    <div class="fa-tabs">
+        <div class="fa-tab" :class="activeTab === 'detail' ? 'active' : ''" @click="activeTab = 'detail'">RECORD DETAIL</div>
+        <div class="fa-tab" :class="activeTab === 'list' ? 'active' : ''" @click="activeTab = 'list'">PRODUCT LIST & TOOLS</div>
+        <div class="fa-tab" :class="activeTab === 'budget' ? 'active' : ''" @click="activeTab = 'budget'">PRODUCT BUDGET</div>
+        <div class="fa-tab" :class="activeTab === 'summary' ? 'active' : ''" @click="activeTab = 'summary'">PRODUCT SUMMARY</div>
     </div>
 
-    <div class="main-content">
-        <!-- TAB 1: RECORD DETAIL -->
-        <div id="tab-record" class="tab-pane active"
-             x-data="productDetailManager()"
-             x-init="init()"
-             x-on:ribbon-action.window="handleRibbonAction($event.detail)">
-        <div class="inner-tabs">
-            <button class="inner-tab active">PRODUCT ID</button>
-        </div>
-
-        <div class="flex-row">
-            <!-- Top Left -->
-            <div class="col-left box-panel">
-                <div class="form-group-sm">
-                    <label>Category</label>
-                    <select class="form-control-sm" x-model="cur.category">
-                        <option>ACCESSORIES</option>
-                        <option>CHEMICAL</option>
-                        <option>ELECTRICAL</option>
-                        <option>FURNITURE</option>
-                        <option>MECHANICAL</option>
-                        <option>SAFETY</option>
-                    </select>
-                    <input type="checkbox" :checked="cur.cat_chk" @change="cur.cat_chk = $event.target.checked">
-                </div>
-                <div class="form-group-sm">
-                    <label>Supplier / Brand</label>
-                    <select class="form-control-sm" x-model="cur.supplier">
-                        <option>LAIN-LAIN</option>
-                        <option>PT. MEGA SUPPLIER</option>
-                        <option>CV. BERKAH JAYA</option>
-                        <option>PT. SUMBER MAKMUR</option>
-                    </select>
-                    <input type="checkbox" :checked="cur.sup_chk" @change="cur.sup_chk = $event.target.checked">
-                </div>
-                <div class="form-group-sm">
-                    <label>Model / Type</label>
-                    <select class="form-control-sm" x-model="cur.model">
-                        <option>DRY CHEMICAL</option>
-                        <option>CO2</option>
-                        <option>FOAM</option>
-                        <option>WATER</option>
-                    </select>
-                    <input type="checkbox" :checked="cur.model_chk" @change="cur.model_chk = $event.target.checked">
-                </div>
-                <div class="form-group-sm">
-                    <label>Quality, Style / Color</label>
-                    <select class="form-control-sm" x-model="cur.quality">
-                        <option>POWDER 2.5KG</option>
-                        <option>POWDER 6KG</option>
-                        <option>LIQUID 9L</option>
-                        <option>GREEN</option>
-                        <option>BLACK</option>
-                    </select>
-                    <input type="checkbox" :checked="cur.qual_chk" @change="cur.qual_chk = $event.target.checked">
-                </div>
-
-                <div class="form-group-sm">
-                    <label>Internal Code</label>
-                    <div class="inline-group">
-                        <input type="text" class="form-control-sm" x-model="cur.internal_code">
-                        <span style="font-size:0.8rem; color:#475569; white-space:nowrap; margin-left:10px; margin-right:5px;">Ext. Code</span>
-                        <input type="text" class="form-control-sm" x-model="cur.ext_code">
-                    </div>
-                </div>
-
-                <div class="form-group-sm">
-                    <label>Product Name</label>
-                    <input type="text" class="form-control-sm" x-model="cur.product_name" style="background: #f1f5f9;">
-                </div>
-
-                <div class="form-group-sm">
-                    <label>Physical Units</label>
-                    <div class="inline-group">
-                        <input type="text" class="form-control-sm" x-model="cur.unit" style="background: #f1f5f9;">
-                        <span style="font-size:0.8rem; color:#475569; white-space:nowrap; margin-left:10px; margin-right:5px;">Volume in Units</span>
-                        <input type="number" class="form-control-sm" x-model="cur.volume" style="text-align:right;">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Top Right -->
-            <div class="col-right">
-                <div class="top-right-header">
-                    <label>Not for Count <input type="checkbox" :checked="cur.not_for_count" @change="cur.not_for_count = $event.target.checked"></label>
-                    <label>Services <input type="checkbox" :checked="cur.services" @change="cur.services = $event.target.checked"></label>
-                    <label>Discontinue <input type="checkbox" :checked="cur.discontinue" @change="cur.discontinue = $event.target.checked"></label>
-                </div>
-                <div class="image-placeholder" style="position:relative;">
-                    <div class="image-placeholder-text">
-                        Fill with your image<br>
-                        (W:292px H:190px) Max
-                    </div>
-                    <div class="image-placeholder-action">
-                        Click on image above or here to add product image
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="flex-row">
-            <!-- Middle Left: Accounting -->
-            <div class="col-left box-panel no-pad gray-header">
-                <div class="gray-header-title">Accounting</div>
-                <div class="accounting-fields">
-                    <div class="form-group-sm">
-                        <label>Inventory Account</label>
-                        <select class="form-control-sm" x-model="cur.inv_account">
-                            <option>BIAYA KEBERSIHAN</option>
-                            <option>PERSEDIAAN BARANG</option>
-                            <option>BIAYA OPERASIONAL</option>
-                            <option>ASET TETAP</option>
+    <div class="fa-pane" :class="activeTab === 'detail' ? 'active' : ''"
+         x-data="productDetailManager()"
+         x-init="init()"
+         x-on:ribbon-action.window="handleRibbonAction($event.detail)">
+        
+        <div class="main-content">
+            <div class="form-grid">
+                <!-- Left Column -->
+                <div class="form-col-left">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select class="form-control" x-model="cur.category">
+                            <option>ACCESSORIES</option>
+                            <option>CHEMICAL</option>
+                            <option>ELECTRICAL</option>
+                            <option>FURNITURE</option>
+                            <option>MECHANICAL</option>
+                            <option>SAFETY</option>
                         </select>
+                        <input type="checkbox" :checked="cur.cat_chk" @change="cur.cat_chk = $event.target.checked" style="margin-left:5px;">
                     </div>
-                    <div class="form-group-sm">
-                        <label>COGS Account</label>
-                        <select class="form-control-sm" x-model="cur.cogs_account">
-                            <option>HUTANG VENDOR</option>
-                            <option>HARGA POKOK PENJUALAN</option>
-                            <option>BEBAN POKOK</option>
+                    <div class="form-group">
+                        <label>Supplier / Brand</label>
+                        <select class="form-control" x-model="cur.supplier">
+                            <option>LAIN-LAIN</option>
+                            <option>PT. MEGA SUPPLIER</option>
+                            <option>CV. BERKAH JAYA</option>
+                            <option>PT. SUMBER MAKMUR</option>
                         </select>
+                        <input type="checkbox" :checked="cur.sup_chk" @change="cur.sup_chk = $event.target.checked" style="margin-left:5px;">
                     </div>
-                    <div class="form-group-sm">
-                        <label>Cost Center</label>
-                        <select class="form-control-sm" x-model="cur.cost_center">
-                            <option value=""></option>
-                            <option>GA</option>
-                            <option>IT</option>
-                            <option>FINANCE</option>
-                            <option>OPERATIONS</option>
+                    <div class="form-group">
+                        <label>Model / Type</label>
+                        <select class="form-control" x-model="cur.model">
+                            <option>DRY CHEMICAL</option>
+                            <option>CO2</option>
+                            <option>FOAM</option>
+                            <option>WATER</option>
                         </select>
+                        <input type="checkbox" :checked="cur.model_chk" @change="cur.model_chk = $event.target.checked" style="margin-left:5px;">
                     </div>
-                    <div class="form-group-sm">
-                        <label>Account Dept.</label>
-                        <select class="form-control-sm" x-model="cur.account_dept">
-                            <option value=""></option>
-                            <option>DEPT-001</option>
-                            <option>DEPT-002</option>
-                            <option>DEPT-003</option>
+                    <div class="form-group">
+                        <label>Quality, Style / Color</label>
+                        <select class="form-control" x-model="cur.quality">
+                            <option>POWDER 2.5KG</option>
+                            <option>POWDER 6KG</option>
+                            <option>LIQUID 9L</option>
+                            <option>GREEN</option>
+                            <option>BLACK</option>
                         </select>
+                        <input type="checkbox" :checked="cur.qual_chk" @change="cur.qual_chk = $event.target.checked" style="margin-left:5px;">
+                    </div>
+
+                    <div class="form-row" style="margin-top: 10px;">
+                        <div class="form-group">
+                            <label>Internal Code</label>
+                            <input type="text" class="form-control" x-model="cur.internal_code">
+                        </div>
+                        <div class="form-group">
+                            <label style="width: 70px;">Ext. Code</label>
+                            <input type="text" class="form-control" x-model="cur.ext_code">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Product Name</label>
+                        <input type="text" class="form-control" x-model="cur.product_name" style="background: #fdfdfd;">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Physical Units</label>
+                            <input type="text" class="form-control" x-model="cur.unit" style="background: #fdfdfd;">
+                        </div>
+                        <div class="form-group">
+                            <label style="width: 100px;">Volume in Units</label>
+                            <input type="number" class="form-control" x-model="cur.volume" style="text-align:right;">
+                        </div>
+                    </div>
+
+                    <!-- Accounting Panel -->
+                    <div class="box-panel" style="margin-top: 15px;">
+                        <div class="panel-header">Accounting</div>
+                        <div class="panel-body" style="padding: 5px 10px;">
+                            <div class="form-group">
+                                <label>Inventory Account</label>
+                                <select class="form-control" x-model="cur.inv_account">
+                                    <option>BIAYA KEBERSIHAN</option>
+                                    <option>PERSEDIAAN BARANG</option>
+                                    <option>BIAYA OPERASIONAL</option>
+                                    <option>ASET TETAP</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>COGS Account</label>
+                                <select class="form-control" x-model="cur.cogs_account">
+                                    <option>HUTANG VENDOR</option>
+                                    <option>HARGA POKOK PENJUALAN</option>
+                                    <option>BEBAN POKOK</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Cost Center</label>
+                                    <select class="form-control" x-model="cur.cost_center">
+                                        <option value=""></option>
+                                        <option>GA</option>
+                                        <option>IT</option>
+                                        <option>FINANCE</option>
+                                        <option>OPERATIONS</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label style="width: 90px;">Account Dept.</label>
+                                    <select class="form-control" x-model="cur.account_dept">
+                                        <option value=""></option>
+                                        <option>DEPT-001</option>
+                                        <option>DEPT-002</option>
+                                        <option>DEPT-003</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Middle Right: Conditions -->
-            <div class="col-right">
-                <div class="conditions-label">Conditions</div>
-                <div class="conditions-box">
-                    <div class="cond-group">
-                        <label>Minimum Stock</label>
-                        <input type="number" class="form-control-sm" x-model="cur.min_stock">
+                <!-- Right Column -->
+                <div class="form-col-right">
+                    <div style="display: flex; justify-content: flex-end; gap: 15px; margin-bottom: 5px;">
+                        <label class="checkbox-item"><input type="checkbox" x-model="cur.not_for_count"> Not for Count</label>
+                        <label class="checkbox-item"><input type="checkbox" x-model="cur.services"> Services</label>
+                        <label class="checkbox-item"><input type="checkbox" x-model="cur.discontinue"> Discontinue</label>
                     </div>
-                    <div class="cond-group">
-                        <label>Cost Price</label>
-                        <input type="text" class="form-control-sm" x-model="cur.cost_price">
+
+                    <div class="image-placeholder">
+                        <div style="text-align: center;">
+                            Fill with your image<br>
+                            (W:292px H:160px) Max
+                        </div>
                     </div>
-                    <div class="cond-group">
-                        <label>On Order</label>
-                        <input type="number" class="form-control-sm" x-model="cur.on_order">
+
+                    <!-- Conditions Panel -->
+                    <div class="box-panel">
+                        <div class="panel-header">Conditions</div>
+                        <div class="panel-body" style="padding: 5px 10px;">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Minimum Stock</label>
+                                    <input type="number" class="form-control" x-model="cur.min_stock" style="text-align: right;">
+                                </div>
+                                <div class="form-group">
+                                    <label style="width: 80px;">Cost Price</label>
+                                    <input type="text" class="form-control" x-model="cur.cost_price" style="text-align: right;">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>On Order</label>
+                                    <input type="number" class="form-control" x-model="cur.on_order" style="text-align: right;">
+                                </div>
+                                <div class="form-group">
+                                    <label style="width: 80px;">Sales Price</label>
+                                    <input type="text" class="form-control" x-model="cur.sales_price" style="text-align: right;">
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="cond-group">
-                        <label>Sales Price</label>
-                        <input type="text" class="form-control-sm" x-model="cur.sales_price">
+
+                    <div class="form-group" style="align-items: flex-start; margin-top: 10px;">
+                        <label>NOTE</label>
+                        <textarea class="form-control textarea-control" x-model="cur.note"></textarea>
+                    </div>
+
+                    <div class="stat-grid">
+                        <div class="stat-row">
+                            <div class="stat-item">
+                                <label>ON TRANSIT</label>
+                                <input type="number" x-model="cur.on_transit" readonly>
+                            </div>
+                            <div class="stat-item">
+                                <label>STOCK</label>
+                                <input type="text" x-model="cur.stock" readonly>
+                            </div>
+                            <div class="stat-item">
+                                <label>BALANCE</label>
+                                <input type="number" x-model="cur.balance" readonly>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Bottom Bar -->
-        <div class="bottom-bar">
-            <div class="note-section">
-                <label>NOTE</label>
-                <textarea class="note-textarea" x-model="cur.note"></textarea>
-            </div>
-
-            <div class="stats-section">
-                <div class="stat-box">
-                    <label>ON TRANSIT</label>
-                    <input type="number" class="form-control-sm" x-model="cur.on_transit">
-                </div>
-                <div class="stat-box">
-                    <label>STOCK</label>
-                    <input type="text" class="form-control-sm" x-model="cur.stock">
-                </div>
-                <div class="stat-box">
-                    <label>BALANCE</label>
-                    <input type="number" class="form-control-sm" x-model="cur.balance">
-                </div>
-
-                <div class="pagination-controls pb-1">
-                    <button class="page-btn" @click="goFirst()" :disabled="currentIndex === 0" title="First Record">⏮</button>
-                    <button class="page-btn" @click="prevRecord()" :disabled="currentIndex === 0" title="Previous Record">◀</button>
-                    <span x-text="'Record ' + (currentIndex + 1) + ' of ' + records.length"></span>
-                    <button class="page-btn" @click="nextRecord()" :disabled="currentIndex === records.length - 1" title="Next Record">▶</button>
-                    <button class="page-btn" @click="goLast()" :disabled="currentIndex === records.length - 1" title="Last Record">⏭</button>
-                </div>
-            </div>
+        <div class="pager-footer">
+            <button class="pager-btn" @click="goFirst()">|◀</button>
+            <button class="pager-btn" @click="prevRecord()">◀</button>
+            <span style="margin: 0 10px;">Record <span x-text="currentIndex + 1"></span> of <span x-text="records.length"></span></span>
+            <button class="pager-btn" @click="nextRecord()">▶</button>
+            <button class="pager-btn" @click="goLast()">▶|</button>
         </div>
-        </div>
+    </div><!-- /fa-pane detail -->
         <!-- END TAB 1 -->
 
-        <div id="tab-list" class="tab-pane" 
-             x-data="productAssets()" 
-             x-init="init()">
+    <div class="fa-pane" :class="activeTab === 'list' ? 'active' : ''" 
+         x-data="productAssets()" 
+         x-init="init()">
             <div class="list-split-layout">
                 <!-- Left Grid -->
                 <div class="list-col-left">
@@ -1142,11 +603,11 @@
 
                 </div><!-- /list-col-right -->
             </div><!-- /list-split-layout -->
-        </div><!-- END TAB 2 -->
+    </div><!-- /fa-pane list -->
 
-
-
-        <div id="tab-budget" class="tab-pane" x-data='productBudget({!! json_encode($customers) !!}, {!! json_encode($products) !!})' x-init="init()">
+    <div class="fa-pane" :class="activeTab === 'budget' ? 'active' : ''" 
+         x-data='productBudget({!! json_encode($customers) !!}, {!! json_encode($products) !!})' x-init="init()">
+        <div class="main-content">
             <!-- Filter Bar -->
             <div class="budget-filter-bar">
                 <div class="budget-filter-group" style="flex: 1;">
@@ -1252,8 +713,11 @@
                 </div>
             </div>
         </div>
-        
-        <div id="tab-summary" class="tab-pane" x-data='productSummary({!! json_encode($customers) !!}, {!! json_encode($products) !!})' x-init="init()">
+    </div><!-- /fa-pane budget -->
+    
+    <div class="fa-pane" :class="activeTab === 'summary' ? 'active' : ''" 
+         x-data='productSummary({!! json_encode($customers) !!}, {!! json_encode($products) !!})' x-init="init()">
+        <div class="main-content">
             <!-- Filter Bar -->
             <div class="budget-filter-bar">
                 <div class="budget-filter-group" style="flex: 1;">
@@ -1365,7 +829,8 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div><!-- /fa-pane summary -->
+</div><!-- /fa-window -->
 
 @endsection
 

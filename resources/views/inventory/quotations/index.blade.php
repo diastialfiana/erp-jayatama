@@ -4,75 +4,60 @@
 
 @push('styles')
 <style>
-    :root {
-        --hr-primary: #1e293b;
-        --hr-border: #cbd5e1;
-        --hr-accent: #2563eb;
-    }
-
-    .main-tabs { display: flex; gap: 2px; background: #e2e8f0; padding: 2px; border-radius: 8px 8px 0 0; width: fit-content; }
-    .main-tab { padding: 6px 15px; font-size: 0.75rem; font-weight: normal; color: #334155; background: transparent; border: 1px solid transparent; cursor: pointer; border-radius: 0; text-transform: uppercase; }
-    .main-tab.active { background: white; color: black; border: 1px solid var(--hr-border); border-bottom: none; font-weight: normal; }
-    
-    .tab-content { background: white; border-top: 1px solid var(--hr-border); min-height: 500px; padding: 0; display: flex; flex-direction: column; overflow: hidden; margin-top: -1px; }
-    .tab-pane { display: none; flex: 1; flex-direction: column; height: 100%; min-height: calc(100vh - 150px); }
+    :root { --hr-border: #999; --hr-primary: #1e293b; --hr-accent: #2563eb; }
+    .fa-window { background: #f0f0f0; border: 1px solid #999; overflow: hidden; display: flex; flex-direction: column; height: calc(100vh - 120px); box-shadow: 2px 2px 5px rgba(0,0,0,0.2); color: #000; }
+    .window-title-bar { background: linear-gradient(to bottom, #4f78b1, #3a5a8f); color: white; padding: 4px 8px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: bold; }
+    .main-tabs { display: flex; background: #f0f0f0; padding: 4px 4px 0 4px; border-bottom: 1px solid #999; flex-shrink: 0; }
+    .main-tab { padding: 3px 10px; font-size: 11px; border: 1px solid #999; border-bottom: none; background: #e0e0e0; cursor: pointer; margin-right: 2px; border-radius: 3px 3px 0 0; text-transform: uppercase; }
+    .main-tab.active { background: #fff; font-weight: bold; margin-bottom: -1px; }
+    .tab-content { display: flex; flex-direction: column; flex: 1; overflow: hidden; border-top: none; min-height: 0; margin-top: 0; padding: 0; }
+    .tab-pane { display: none; flex: 1; flex-direction: column; overflow: hidden; background: #f0f0f0; }
     .tab-pane.active { display: flex; }
-
-    .bar-top { padding: 8px 10px; font-size: 0.75rem; color: #64748b; background: white; border-bottom: 1px solid var(--hr-border); flex-shrink: 0; display: flex; justify-content: space-between; align-items:center;}
-    .bar-search { padding: 4px 10px; display: flex; justify-content: flex-end; background: white; border-bottom: 1px solid var(--hr-border); flex-shrink: 0; }
-
-    /* Grid Styles */
-    .list-grid { width: 100%; border-collapse: collapse; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; font-size: 0.75rem; background: white;}
-    .list-grid th { background: white; color: #64748b; padding: 4px 6px; text-align: left; font-weight: normal; border-bottom: 1px solid var(--hr-border); border-right: 1px solid var(--hr-border); white-space: nowrap; text-transform: uppercase; font-size: 0.7rem; }
-    .list-grid td { padding: 4px 6px; border-bottom: 1px solid var(--hr-border); border-right: 1px solid var(--hr-border); white-space: nowrap; color: #334155; }
-    .list-grid tr:hover td { background: #f8fafc; cursor: pointer; }
-    .list-grid tr.selected td { background: #e2e8f0; }
-    
-    .grid-footer { display: flex; align-items: center; padding: 4px; border-top: 1px solid var(--hr-border); background: #f8fafc; gap: 2px; flex-shrink: 0; }
-    .pager-btn { background: white; border: 1px solid #cbd5e1; padding: 2px 6px; font-size: 0.65rem; cursor: pointer; color: #64748b; }
-    .pager-btn:hover { background: #f1f5f9; }
-
-    .detail-form-area { padding: 10px 15px; background: #e2e8f0; border-bottom: 1px solid var(--hr-border); display: flex; justify-content: space-between; flex-shrink: 0; }
-    .form-group { display: flex; align-items: center; margin-bottom: 4px; font-size: 0.75rem; }
-    .form-label { width: 100px; text-align: right; margin-right: 10px; color: #475569; }
-    .form-input { border: 1px solid var(--hr-border); padding: 4px 8px; border-radius: 0; font-size: 0.75rem; background: white; }
-    .form-select { border: 1px solid var(--hr-border); padding: 3px 6px; border-radius: 0; font-size: 0.75rem; background: white; }
-    
-    .vertical-label { writing-mode: vertical-rl; transform: rotate(180deg); text-align: center; font-size: 0.7rem; padding: 10px 4px; background: white; border-right: 1px solid var(--hr-border); color: #475569; letter-spacing: 1px;}
-    .bordered-panel { border: 1px solid var(--hr-border); display: flex; background: white; flex: 1; overflow: hidden; margin: 5px 10px 0 10px;}
-    .panel-content { flex: 1; display:flex; flex-direction:column; overflow:hidden;}
+    .list-grid { width: 100%; border-collapse: collapse; font-size: 11px; background: white; }
+    .list-grid th { background: #e0e0e0; color: #333; padding: 2px 4px; text-align: left; font-weight: bold; border: 1px solid #999; white-space: nowrap; font-size: 11px; position: sticky; top: 0; }
+    .list-grid td { padding: 2px 4px; border: 1px solid #ddd; white-space: nowrap; color: #000; font-size: 11px; }
+    .list-grid tr:hover td { background: #eef3f8; cursor: pointer; }
+    .list-grid tr.selected td { background: #b8cce4; }
+    .grid-footer { display: flex; align-items: center; padding: 2px 4px; border-top: 1px solid #999; background: #f0f0f0; gap: 2px; flex-shrink: 0; }
+    .pager-btn { background: white; border: 1px solid #999; padding: 1px 5px; font-size: 11px; cursor: pointer; color: #333; min-width: 22px; }
+    .pager-btn:hover { background: #e0e0e0; }
+    .detail-form-area { padding: 4px 8px; background: #f0f0f0; border-bottom: 1px solid #999; display: flex; justify-content: space-between; flex-shrink: 0; }
+    .form-group { display: flex; align-items: center; margin-bottom: 2px; font-size: 11px; }
+    .form-label { width: 90px; text-align: right; margin-right: 5px; color: #333; font-size: 11px; flex-shrink: 0; }
+    .form-input { border: 1px solid #999; padding: 1px 3px; border-radius: 0; font-size: 11px; background: white; height: 20px; box-sizing: border-box; }
+    .form-select { border: 1px solid #999; padding: 1px 3px; border-radius: 0; font-size: 11px; background: white; height: 20px; }
+    .vertical-label { writing-mode: vertical-rl; transform: rotate(180deg); text-align: center; font-size: 10px; padding: 6px 3px; background: #e8e8e8; border-right: 1px solid #999; color: #333; flex-shrink: 0; }
+    .bordered-panel { border: 1px solid #999; display: flex; background: white; flex: 1; overflow: hidden; margin: 3px 4px 0 4px; }
+    .panel-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .bar-top { padding: 2px 6px; font-size: 11px; color: #555; background: #f0f0f0; border-bottom: 1px solid #ccc; flex-shrink: 0; display: flex; justify-content: space-between; align-items: center; }
 </style>
 @endpush
 
 @section('content')
-<div x-data="quotationManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)" style="background: white; border: 1px solid var(--hr-border); margin: 10px;">
-    <!-- Windows like Title bar -->
-    <!-- Windows like Title bar -->
+<div class="fa-window" x-data="quotationManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)">
+    <!-- Title Bar -->
     <div class="window-title-bar">
-        <div style="display: flex; gap: 8px; align-items: center;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7" fill="#dc2626"></rect><rect x="14" y="14" width="7" height="7" fill="#2563eb"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-            <span style="font-weight: 600;">Quotations</span>
-        </div>
-        <div style="display: flex; gap: 15px;">
-            <span style="cursor: pointer; font-size: 0.9rem;">◁</span>
-            <span style="cursor: pointer; font-size: 0.9rem;">▷</span>
-            <span style="cursor: pointer;">✕</span>
+        <span>Quotations</span>
+        <div style="display:flex;gap:2px;">
+            <button style="background:#e0e0e0;border:1px solid #999;width:16px;height:14px;font-size:9px;cursor:pointer;">_</button>
+            <button style="background:#e0e0e0;border:1px solid #999;width:16px;height:14px;font-size:9px;cursor:pointer;">□</button>
+            <button style="background:#cc0000;border:1px solid #999;width:16px;height:14px;font-size:9px;color:white;cursor:pointer;">✕</button>
         </div>
     </div>
 
     @include('partials.ribbon_toolbar')
 
     <!-- Main Navigation Tabs -->
-    <div class="main-tabs" style="background: #f1f5f9; border-bottom: 1px solid var(--hr-border); padding-left: 10px; border-radius: 0;">
-        <button class="main-tab" :class="activeMainTab === 'detail' ? 'active' : ''" @click="activeMainTab = 'detail'">QUOTATION DETAIL</button>
-        <button class="main-tab" :class="activeMainTab === 'list' ? 'active' : ''" @click="activeMainTab = 'list'">QUOTATION LIST</button>
+    <div class="main-tabs" style="background: #e2e8f0; border-bottom: 1px solid var(--hr-border); padding-left: 10px; border-radius: 0; width: 100%;">
+        <button class="main-tab" :class="activeMainTab === 'detail' ? 'active' : ''" @click="activeMainTab = 'detail'">RECORD DETAIL</button>
+        <button class="main-tab" :class="activeMainTab === 'list' ? 'active' : ''" @click="activeMainTab = 'list'">RECORDS LIST</button>
         <button class="main-tab" :class="activeMainTab === 'detail_list' ? 'active' : ''" @click="activeMainTab = 'detail_list'">DETAIL QUOTATION</button>
     </div>
 
-    <div class="tab-content" style="border-top: none;">
+    <div class="tab-content" style="border-top: none; flex: 1;">
         
-        <!-- QUOTATION DETAIL TAB -->
-        <div class="tab-pane" :class="activeMainTab === 'detail' ? 'active' : ''" style="background: #e2e8f0;">
+        <!-- RECORD DETAIL TAB -->
+        <div class="tab-pane" :class="activeMainTab === 'detail' ? 'active' : ''">
             <!-- Header forms -->
             <div class="detail-form-area" style="justify-content: flex-start; gap: 30px;">
                 <div>
@@ -219,7 +204,7 @@
         </div>
 
         <!-- QUOTATION LIST TAB -->
-        <div class="tab-pane" :class="activeMainTab === 'list' ? 'active' : ''" style="background: white;">
+        <div class="tab-pane" :class="activeMainTab === 'list' ? 'active' : ''">
             <div style="flex: 1; overflow: auto;">
                 <table class="list-grid">
                     <thead>
@@ -286,7 +271,7 @@
         </div>
 
         <!-- DETAIL QUOTATION TAB -->
-        <div class="tab-pane" :class="activeMainTab === 'detail_list' ? 'active' : ''" style="background: white;">
+        <div class="tab-pane" :class="activeMainTab === 'detail_list' ? 'active' : ''">
             <div class="bar-top" style="border-bottom:none;">
                 <span>Drag a column header here to group by that column</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #64748b;"><circle cx="11" cy="11" r="8"></circle> <line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>

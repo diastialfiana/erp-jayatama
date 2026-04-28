@@ -1,79 +1,71 @@
 @extends('layouts.app')
 
-@section('title', 'Rembursment Contract')
+@section('title', 'Resource Services')
 
 @push('styles')
 <style>
-    :root {
-        --hr-primary: #1e293b;
-        --hr-border: #cbd5e1;
-        --hr-accent: #2563eb;
-    }
-
-    .main-tabs { display: flex; gap: 2px; background: #e2e8f0; padding: 2px; border-radius: 8px 8px 0 0; width: fit-content; }
-    .main-tab { padding: 6px 15px; font-size: 0.75rem; font-weight: normal; color: #334155; background: transparent; border: 1px solid transparent; cursor: pointer; border-radius: 0; text-transform: uppercase; }
-    .main-tab.active { background: white; color: black; border: 1px solid var(--hr-border); border-bottom: none; font-weight: normal; }
-    
-    .tab-content { background: white; border-top: 1px solid var(--hr-border); min-height: 500px; padding: 0; display: flex; flex-direction: column; overflow: hidden; margin-top: -1px; }
-    .tab-pane { display: none; flex: 1; flex-direction: column; height: 100%; min-height: calc(100vh - 150px); }
+    :root { --hr-border: #999; --hr-primary: #1e293b; --hr-accent: #2563eb; }
+    .fa-window { background: #f0f0f0; border: 1px solid #999; overflow: hidden; display: flex; flex-direction: column; height: calc(100vh - 120px); box-shadow: 2px 2px 5px rgba(0,0,0,0.2); color: #000; }
+    .window-title-bar { background: linear-gradient(to bottom, #4f78b1, #3a5a8f); color: white; padding: 4px 8px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: bold; }
+    .main-tabs { display: flex; background: #f0f0f0; padding: 4px 4px 0 4px; border-bottom: 1px solid #999; flex-shrink: 0; }
+    .main-tab { padding: 3px 10px; font-size: 11px; border: 1px solid #999; border-bottom: none; background: #e0e0e0; cursor: pointer; margin-right: 2px; border-radius: 3px 3px 0 0; text-transform: uppercase; }
+    .main-tab.active { background: #fff; font-weight: bold; margin-bottom: -1px; }
+    .tab-content { display: flex; flex-direction: column; flex: 1; overflow: hidden; border-top: none; min-height: 0; margin-top: 0; padding: 0; }
+    .tab-pane { display: none; flex: 1; flex-direction: column; overflow: hidden; background: #f0f0f0; }
     .tab-pane.active { display: flex; }
-
-    .bar-top { padding: 8px 10px; font-size: 0.75rem; color: #64748b; background: white; border-bottom: 1px solid var(--hr-border); flex-shrink: 0; display: flex; justify-content: space-between; align-items:center;}
-    
-    /* Grid Styles */
-    .list-grid { width: 100%; border-collapse: collapse; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; font-size: 0.75rem; background: white;}
-    .list-grid th { background: white; color: #64748b; padding: 4px 6px; text-align: left; font-weight: normal; border-bottom: 1px solid var(--hr-border); border-right: 1px solid var(--hr-border); white-space: nowrap; text-transform: uppercase; font-size: 0.7rem; }
-    .list-grid td { padding: 4px 6px; border-bottom: 1px solid var(--hr-border); border-right: 1px solid var(--hr-border); white-space: nowrap; color: #334155; }
-    .list-grid tr:hover td { background: #f8fafc; cursor: pointer; }
-    .list-grid tr.selected td { background: #e2e8f0; }
-    .list-grid td.red-text { color: #dc2626; }
-    
-    .grid-footer { display: flex; align-items: center; padding: 4px; border-top: 1px solid var(--hr-border); background: #f8fafc; gap: 2px; flex-shrink: 0; min-height: 38px;}
-    .pager-btn { background: white; border: 1px solid #cbd5e1; padding: 2px 6px; font-size: 0.65rem; cursor: pointer; color: #64748b; }
-    .pager-btn:hover { background: #f1f5f9; }
-
-    .detail-form-area { padding: 10px 15px; background: #f8fafc; border-bottom: 1px solid var(--hr-border); display: flex; justify-content: space-between; flex-shrink: 0; }
-    .form-group { display: flex; align-items: center; margin-bottom: 4px; font-size: 0.75rem; }
-    .form-label { width: 110px; text-align: right; margin-right: 10px; color: #475569; }
-    .form-input { border: 1px solid var(--hr-border); padding: 4px 8px; border-radius: 0; font-size: 0.75rem; background: white; }
-    .form-select { border: 1px solid var(--hr-border); padding: 3px 6px; border-radius: 0; font-size: 0.75rem; background: white; }
-    
-    .bordered-panel { border: 1px solid var(--hr-border); display: flex; background: white; flex: 1; flex-direction: column; overflow: hidden; margin: 10px 10px 0 10px;}
-    
-    /* Summary Inner Tab */
-    .detail-tabs { display: flex; border-bottom: 1px solid var(--hr-border); background: #f1f5f9;}
-    .detail-tab { padding: 6px 15px; font-size: 0.7rem; color: #334155; background: transparent; border: 1px solid transparent; border-right: 1px solid var(--hr-border); border-bottom: none; cursor: pointer; text-transform: uppercase; }
-    .detail-tab.active { background: white; border-bottom-color: white;}
+    .list-grid { width: 100%; border-collapse: collapse; font-size: 11px; background: white; }
+    .list-grid th { background: #e0e0e0; color: #333; padding: 2px 4px; text-align: left; font-weight: bold; border: 1px solid #999; white-space: nowrap; font-size: 11px; position: sticky; top: 0; }
+    .list-grid td { padding: 2px 4px; border: 1px solid #ddd; white-space: nowrap; color: #000; font-size: 11px; }
+    .list-grid tr:hover td { background: #eef3f8; cursor: pointer; }
+    .list-grid tr.selected td { background: #b8cce4; }
+    .red-text { color: red; }
+    .grid-footer { display: flex; align-items: center; padding: 2px 4px; border-top: 1px solid #999; background: #f0f0f0; gap: 2px; flex-shrink: 0; }
+    .pager-btn { background: white; border: 1px solid #999; padding: 1px 5px; font-size: 11px; cursor: pointer; color: #333; min-width: 22px; }
+    .pager-btn:hover { background: #e0e0e0; }
+    .detail-form-area { padding: 4px 8px; background: #f0f0f0; border-bottom: 1px solid #999; display: flex; justify-content: space-between; flex-shrink: 0; }
+    .form-group { display: flex; align-items: center; margin-bottom: 2px; font-size: 11px; }
+    .form-label { width: 90px; text-align: right; margin-right: 5px; color: #333; font-size: 11px; flex-shrink: 0; }
+    .form-input { border: 1px solid #999; padding: 1px 3px; border-radius: 0; font-size: 11px; background: white; height: 20px; box-sizing: border-box; }
+    .form-select { border: 1px solid #999; padding: 1px 3px; border-radius: 0; font-size: 11px; background: white; height: 20px; }
+    .bordered-panel { border: 1px solid #999; display: flex; flex-direction: column; background: white; flex: 1; overflow: hidden; margin: 3px 4px; }
+    .detail-tabs { display: flex; background: #e0e0e0; border-bottom: 1px solid #999; flex-shrink: 0; }
+    .detail-tab { padding: 2px 10px; font-size: 11px; border: 1px solid #999; border-bottom: none; background: #e0e0e0; cursor: pointer; margin-right: 2px; border-radius: 2px 2px 0 0; text-transform: uppercase; }
+    .detail-tab.active { background: white; font-weight: bold; }
+    .bar-top { padding: 2px 6px; font-size: 11px; color: #555; background: #f0f0f0; border-bottom: 1px solid #ccc; flex-shrink: 0; display: flex; justify-content: space-between; align-items: center; }
 </style>
 @endpush
 
 @section('content')
-<div x-data="resourceServiceManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)" style="background: white; border: 1px solid var(--hr-border); margin: 10px;">
+<div class="fa-window" x-data="resourceManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)">
     <!-- Windows like Title bar -->
     <div class="window-title-bar">
-        <div style="display: flex; gap: 8px; align-items: center;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7" fill="#dc2626"></rect><rect x="14" y="14" width="7" height="7" fill="#2563eb"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-            <span style="font-weight: 600;">Rembursment Contract</span>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <div style="width: 28px; height: 28px; background: #eff6ff; border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <span style="font-weight: 700; font-size: 13px; color: #1e293b;">Resource & Services Management</span>
         </div>
-        <div style="display: flex; gap: 15px;">
-            <span style="cursor: pointer; font-size: 0.9rem;">◁</span>
-            <span style="cursor: pointer; font-size: 0.9rem;">▷</span>
-            <span style="cursor: pointer;">✕</span>
+        <div style="display: flex; gap: 8px; align-items:center;">
+            <div style="display:flex; gap:2px; margin-right: 10px;">
+                <button class="pager-btn" @click="navigate('prev')">◁</button>
+                <button class="pager-btn" @click="navigate('next')">▷</button>
+            </div>
+            <button class="hamburger" style="padding: 4px; color: #94a3b8;"><svg viewBox="0 0 24 24" style="width:16px; height:16px;"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2"/></svg></button>
         </div>
     </div>
 
     @include('partials.ribbon_toolbar')
 
     <!-- Main Navigation Tabs -->
-    <div class="main-tabs" style="background: #f1f5f9; border-bottom: 1px solid var(--hr-border); padding-left: 10px; border-radius: 0;">
+    <div class="main-tabs" style="width:100%;">
         <button class="main-tab" :class="activeMainTab === 'detail' ? 'active' : ''" @click="activeMainTab = 'detail'">RECORD DETAIL</button>
         <button class="main-tab" :class="activeMainTab === 'list' ? 'active' : ''" @click="activeMainTab = 'list'">RECORDS LIST</button>
     </div>
 
-    <div class="tab-content" style="border-top: none;">
+    <div class="tab-content" style="border-top: none; flex: 1;">
         
         <!-- RECORD DETAIL TAB -->
-        <div class="tab-pane" :class="activeMainTab === 'detail' ? 'active' : ''" style="background: #e2e8f0;">
+        <div class="tab-pane" :class="activeMainTab === 'detail' ? 'active' : ''">
             <!-- Header forms -->
             <div class="detail-form-area" style="padding-top:20px; position: relative;" x-show="selectedContract">
                 <div style="display:flex; gap: 20px;">
@@ -244,7 +236,7 @@
         </div>
 
         <!-- RECORDS LIST TAB -->
-        <div class="tab-pane" :class="activeMainTab === 'list' ? 'active' : ''" style="background: white;">
+        <div class="tab-pane" :class="activeMainTab === 'list' ? 'active' : ''">
             <div class="bar-top" style="border-bottom:none;">
                 <span>Drag a column header here to group by that column</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #64748b;"><circle cx="11" cy="11" r="8"></circle> <line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>

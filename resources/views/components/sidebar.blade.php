@@ -170,6 +170,23 @@
         </button>
         <ul class="submenu">
             <a href="{{ route('inventory.index') }}" class="submenu-item {{ request()->routeIs('inventory.index') ? 'active' : '' }}">Overview Inventory</a>
+            
+            <li class="submenu-title">ASSETS & STOCK</li>
+            <a href="{{ route('inventory.fixed_assets') }}" class="submenu-item {{ request()->routeIs('inventory.fixed_assets') ? 'active' : '' }}">Fixed Assets</a>
+            <a href="{{ route('inventory.product_assets') }}" class="submenu-item {{ request()->routeIs('inventory.product_assets') ? 'active' : '' }}">Product Assets</a>
+            <a href="{{ route('inventory.human_resources') }}" class="submenu-item {{ request()->routeIs('inventory.human_resources') ? 'active' : '' }}">Human Resources</a>
+            
+            <li class="submenu-title">REQUESTS</li>
+            <a href="{{ route('inventory.order_requests') }}" class="submenu-item {{ request()->routeIs('inventory.order_requests') ? 'active' : '' }}">Order Request</a>
+            <a href="{{ route('inventory.advance_requests') }}" class="submenu-item {{ request()->routeIs('inventory.advance_requests') ? 'active' : '' }}">Advance Request</a>
+            <a href="{{ route('inventory.goods_requests') }}" class="submenu-item {{ request()->routeIs('inventory.goods_requests') ? 'active' : '' }}">Goods Request</a>
+            <a href="{{ route('inventory.hr_ebanking') }}" class="submenu-item {{ request()->routeIs('inventory.hr_ebanking') ? 'active' : '' }}">HR. E-Banking</a>
+
+            <li class="submenu-title">SERVICES & LSI</li>
+            <a href="{{ route('inventory.cost_estimations') }}" class="submenu-item {{ request()->routeIs('inventory.cost_estimations') ? 'active' : '' }}">Cost Estimation</a>
+            <a href="{{ route('inventory.quotations') }}" class="submenu-item {{ request()->routeIs('inventory.quotations') ? 'active' : '' }}">Quotations</a>
+            <a href="{{ route('inventory.resource_services') }}" class="submenu-item {{ request()->routeIs('inventory.resource_services') ? 'active' : '' }}">Resource Services</a>
+            <a href="{{ route('inventory.lsi_status') }}" class="submenu-item {{ request()->routeIs('inventory.lsi_status') ? 'active' : '' }}">LSI Status</a>
         </ul>
     </li>
     @endif

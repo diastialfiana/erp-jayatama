@@ -1,138 +1,137 @@
 @extends('layouts.app')
 
-@section('title', 'Advance Request')
+@section('title', 'Advance Requests')
 
 @push('styles')
 <style>
-    :root {
-        --hr-primary: #1e293b;
-        --hr-border: #cbd5e1;
-        --hr-accent: #2563eb;
-    }
+    :root { --hr-border: #999; }
 
-    .main-tabs { display: flex; gap: 2px; background: #e2e8f0; padding: 2px; border-radius: 8px 8px 0 0; width: fit-content; }
-    .main-tab { padding: 6px 15px; font-size: 0.75rem; font-weight: normal; color: #334155; background: transparent; border: 1px solid transparent; cursor: pointer; border-radius: 0; text-transform: uppercase; }
-    .main-tab.active { background: white; color: black; border: 1px solid var(--hr-border); border-bottom: none; font-weight: normal; }
-    
-    .tab-content { background: white; border-top: 1px solid var(--hr-border); min-height: 500px; padding: 0; display: flex; flex-direction: column; overflow: hidden; margin-top: -1px; }
-    .tab-pane { display: none; flex: 1; flex-direction: column; height: 100%; min-height: calc(100vh - 150px); }
+    .fa-window { background: #f0f0f0; border: 1px solid #999; border-radius: 4px; overflow: hidden; display: flex; flex-direction: column; height: calc(100vh - 120px); box-shadow: 2px 2px 5px rgba(0,0,0,0.2); color: #000; }
+    .window-title-bar { background: linear-gradient(to bottom, #4f78b1, #3a5a8f); color: white; padding: 4px 8px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: bold; }
+
+    .main-tabs { display: flex; background: #f0f0f0; padding: 4px 4px 0 4px; border-bottom: 1px solid #999; }
+    .main-tab { padding: 3px 10px; font-size: 11px; border: 1px solid #999; border-bottom: none; background: #e0e0e0; cursor: pointer; margin-right: 2px; border-radius: 3px 3px 0 0; text-transform: uppercase; }
+    .main-tab.active { background: #fff; font-weight: bold; margin-bottom: -1px; height: calc(100% + 1px); }
+    .tab-content { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+    .tab-pane { display: none; flex: 1; flex-direction: column; overflow: auto; background: #f0f0f0; }
     .tab-pane.active { display: flex; }
 
-    .bar-top { padding: 8px 10px; font-size: 0.75rem; color: #64748b; background: white; border-bottom: 1px solid var(--hr-border); flex-shrink: 0; }
-    .bar-search { padding: 4px 10px; display: flex; justify-content: flex-end; background: white; border-bottom: 1px solid var(--hr-border); flex-shrink: 0; }
+    .list-grid { width: 100%; border-collapse: collapse; font-size: 11px; background: white; }
+    .list-grid th { background: #e0e0e0; color: #333; padding: 2px 4px; text-align: left; font-weight: bold; border: 1px solid #999; white-space: nowrap; font-size: 11px; position: sticky; top: 0; }
+    .list-grid td { padding: 2px 4px; border: 1px solid #ddd; white-space: nowrap; color: #000; font-size: 11px; }
+    .list-grid tr:hover td { background: #eef3f8; cursor: pointer; }
+    .list-grid tr.selected td { background: #b8cce4; color: #000; }
 
-    /* Grid Styles */
-    .list-grid { width: 100%; border-collapse: collapse; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; font-size: 0.75rem; }
-    .list-grid th { background: #f1f5fb; color: #475569; padding: 4px 6px; text-align: left; font-weight: normal; border-bottom: 1px solid #cbd5e1; border-right: 1px solid #cbd5e1; white-space: nowrap; text-transform: uppercase; font-size: 0.65rem; }
-    .list-grid td { padding: 4px 6px; border-bottom: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; white-space: nowrap; color: #334155; height: 22px; }
-    .list-grid tr:hover td { background: #f1f5f9; cursor: pointer; }
-    .list-grid tr.selected td { background: #cbdcfd; }
-    
-    /* Status Table Specific Styles */
-    .status-active-row { background-color: #cbdcfd !important; }
-    .focus-text { border: 1px dotted #333; padding: 0 2px; }
-    .blue-square { width: 14px; height: 14px; background: blue; margin: auto; }
-    
-    .grid-footer { display: flex; align-items: center; padding: 4px; border-top: 1px solid var(--hr-border); background: #f8fafc; gap: 2px; flex-shrink: 0; }
-    .pager-btn { background: white; border: 1px solid #cbd5e1; padding: 2px 6px; font-size: 0.65rem; cursor: pointer; color: #64748b; }
-    .pager-btn:hover { background: #f1f5f9; }
-    .pager-btn:disabled { color: #cbd5e1; cursor: default; background: #f8fafc; }
+    .grid-footer { display: flex; align-items: center; padding: 2px 4px; border-top: 1px solid #999; background: #f0f0f0; gap: 2px; flex-shrink: 0; }
+    .pager-btn { background: white; border: 1px solid #999; padding: 1px 5px; font-size: 11px; cursor: pointer; color: #333; min-width: 22px; }
+    .pager-btn:hover { background: #e0e0e0; }
 
-    .detail-form-area { padding: 15px; background: white; border-bottom: 1px solid var(--hr-border); display: flex; justify-content: space-between; flex-shrink: 0; }
-    .form-group { display: flex; align-items: center; margin-bottom: 4px; font-size: 0.75rem; }
-    .form-label { width: 100px; text-align: right; margin-right: 10px; color: #475569; }
-    .form-input { border: 1px solid var(--hr-border); padding: 4px 8px; border-radius: 0; font-size: 0.75rem; background: white; }
-    .form-select { border: 1px solid var(--hr-border); padding: 3px 6px; border-radius: 0; font-size: 0.75rem; background: white; }
+    .detail-form-area { padding: 5px 10px; background: #f0f0f0; border-bottom: 1px solid #999; flex-shrink: 0; }
+    .form-row { display: flex; align-items: center; margin-bottom: 2px; font-size: 11px; }
+    .form-label { width: 90px; text-align: right; margin-right: 5px; color: #333; font-size: 11px; flex-shrink: 0; }
+    .form-input { border: 1px solid #999; padding: 1px 3px; border-radius: 0; font-size: 11px; background: white; height: 20px; box-sizing: border-box; }
+    .form-input[readonly] { background: #e8e8e8; }
+    .form-select { border: 1px solid #999; padding: 1px 3px; border-radius: 0; font-size: 11px; background: white; height: 20px; }
+    .dd-arrow { border: 1px solid #999; border-left: none; background: #e8e8e8; padding: 1px 4px; font-size: 9px; cursor: pointer; height: 20px; display: flex; align-items: center; }
 
+    .bar-top { padding: 3px 8px; font-size: 11px; color: #555; background: #f0f0f0; border-bottom: 1px solid #ccc; flex-shrink: 0; }
+    .bar-search { padding: 2px 6px; display: flex; justify-content: flex-end; align-items: center; background: #f0f0f0; border-bottom: 1px solid #ccc; flex-shrink: 0; cursor: pointer; }
+
+    .blue-square { width: 16px; height: 16px; background: #2a5cb8; margin: 0 auto; }
+
+    .note-section { background: #f0f0f0; border-top: 2px solid #999; flex-shrink: 0; }
+    .note-header { font-size: 11px; font-weight: bold; padding: 2px 8px; background: #d8d8d8; border-bottom: 1px solid #999; color: #333; }
+    .note-body { display: flex; padding: 3px 6px; gap: 3px; }
+    .note-body textarea { width: 220px; height: 45px; font-size: 11px; border: 1px solid #999; resize: none; padding: 2px 4px; }
+    .note-scroll-btns { display: flex; flex-direction: column; gap: 2px; }
+    .note-scroll-btns button { border: 1px solid #999; background: #e0e0e0; width: 18px; height: 18px; cursor: pointer; font-size: 9px; padding: 0; line-height: 1; }
 </style>
 @endpush
 
 @section('content')
-<div x-data="advanceRequestManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)" style="background: white; border: 1px solid var(--hr-border); margin: 10px;">
+<div class="fa-window" x-data="advanceRequestManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)">
     <!-- Windows like Title bar -->
     <div class="window-title-bar">
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="#1d4ed8"><path d="M12 2l10 20H2L12 2z"/></svg>
-            <span style="font-weight: 500;">Advance Request</span>
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <span>Advance Request</span>
         </div>
-        <div style="display: flex; gap: 15px;">
-            <span style="cursor: pointer; font-size: 0.9rem;" @click="prevRecord()">◁</span>
-            <span style="cursor: pointer; font-size: 0.9rem;" @click="nextRecord()">▷</span>
-            <span style="cursor: pointer;">✕</span>
+        <div style="display: flex; gap: 4px;">
+            <div style="width:14px;height:14px;background:#ddd;border:1px solid #999;cursor:pointer;"></div>
+            <div style="width:14px;height:14px;background:#ddd;border:1px solid #999;cursor:pointer;"></div>
+            <div style="width:14px;height:14px;background:#e81123;border:1px solid #999;cursor:pointer;"></div>
         </div>
     </div>
 
     @include('partials.ribbon_toolbar')
 
     <!-- Main Navigation Tabs -->
-    <div class="main-tabs" style="background: #f1f5f9; border-bottom: 1px solid var(--hr-border); padding-left: 10px; border-radius: 0;">
-        <button class="main-tab" :class="activeMainTab === 'detail' ? 'active' : ''" @click="activeMainTab = 'detail'">RECORD DETAIL</button>
-        <button class="main-tab" :class="activeMainTab === 'list' ? 'active' : ''" @click="activeMainTab = 'list'">RECORDS LIST</button>
-        <button class="main-tab" :class="activeMainTab === 'status' ? 'active' : ''" @click="activeMainTab = 'status'">ADVANCE STATUS</button>
+    <div class="main-tabs">
+        <div class="main-tab" :class="activeMainTab === 'detail' ? 'active' : ''" @click="activeMainTab = 'detail'">RECORD DETAIL</div>
+        <div class="main-tab" :class="activeMainTab === 'list' ? 'active' : ''" @click="activeMainTab = 'list'">RECORDS LIST</div>
+        <div class="main-tab" :class="activeMainTab === 'status' ? 'active' : ''" @click="activeMainTab = 'status'">ADVANCE STATUS</div>
     </div>
 
-    <div class="tab-content" style="border-top: none;">
+    <div class="tab-content" style="flex: 1;">
         
         <!-- RECORD DETAIL TAB -->
-        <div class="tab-pane" :class="activeMainTab === 'detail' ? 'active' : ''">
-            <div class="detail-form-area" x-show="selectedRequest" style="padding: 10px 15px;">
-                <div style="flex: 2;">
-                    <div class="form-group" style="gap: 5px;">
-                        <div class="form-label" style="width: 80px;">Date</div>
-                        <div style="display: flex; align-items: center; width: 140px;">
-                            <input type="date" class="form-input" style="width: 110px;" x-model="selectedRequest.date" x-ref="dateDetail" @change="onDateChange($event)">
-                            <span style="border: 1px solid var(--hr-border); background:#f1f5f9; padding: 4px 6px; border-left:none; cursor: pointer;" @click="$refs.dateDetail.showPicker()">▼</span>
+        <div class="tab-pane" :class="activeMainTab === 'detail' ? 'active' : ''" style="flex-direction:column;">
+            <!-- Form header: Date/Duedate/Reff + right numbers -->
+            <div class="detail-form-area" x-show="selectedRequest" style="display: flex; justify-content: space-between;">
+                <div>
+                    <!-- Row 1: Date, Duedate, Reff -->
+                    <div class="form-row">
+                        <span class="form-label" style="width:40px;">Date</span>
+                        <div style="display:flex;align-items:center;">
+                            <input type="date" class="form-input" style="width:100px;" x-model="selectedRequest.date" x-ref="dateDetail" @change="onDateChange($event)">
+                            <span class="dd-arrow" @click="$refs.dateDetail.showPicker()">▼</span>
                         </div>
-                        
-                        <div class="form-label" style="width: 70px; margin-left:10px;">Duedate</div>
-                        <div style="display: flex; align-items: center; width: 140px;">
-                            <input type="date" class="form-input" style="width: 110px;" x-model="selectedRequest.due_date" x-ref="dueDetail">
-                            <span style="border: 1px solid var(--hr-border); background:#f1f5f9; padding: 4px 6px; border-left:none; cursor: pointer;" @click="$refs.dueDetail.showPicker()">▼</span>
+                        <span style="margin-left:10px; margin-right:5px; font-size:11px;">Duedate</span>
+                        <div style="display:flex;align-items:center;">
+                            <input type="date" class="form-input" style="width:100px;" x-model="selectedRequest.due_date" x-ref="dueDetail">
+                            <span class="dd-arrow" @click="$refs.dueDetail.showPicker()">▼</span>
                         </div>
-
-                        <div class="form-label" style="width: 50px; margin-left:10px;">Reff.</div>
-                        <input type="text" class="form-input" style="background:#f8fafc; width: 140px;" x-model="selectedRequest.doc_ref" readonly>
+                        <span style="margin-left:10px; margin-right:5px; font-size:11px;">Reff.</span>
+                        <input type="text" class="form-input" style="width:130px;" x-model="selectedRequest.doc_ref" readonly>
                     </div>
-                    <div class="form-group" style="gap: 5px;">
-                        <div class="form-label" style="width: 80px;">Employes Name</div>
-                        <div style="display: flex; align-items: center; background: white; border: 1px solid var(--hr-border); width: 275px;">
-                            <input type="text" style="flex: 1; border: none; font-size: 0.75rem; padding: 4px 8px; outline: none;" 
-                                   x-model="employeeNameInput" list="employee-names" placeholder="Type or Select Employee" @change="onEmployeeSelect">
-                            <datalist id="employee-names">
-                                <template x-for="emp in employees" :key="emp">
-                                    <option :value="emp"></option>
-                                </template>
-                            </datalist>
-                            <span style="border:none; border-left:1px solid var(--hr-border); background:#f1f5f9; cursor:pointer; padding: 4px 6px;">▼</span>
+                    <!-- Row 2: Employes Name -->
+                    <div class="form-row">
+                        <span class="form-label">Employes Name</span>
+                        <div style="display:flex;align-items:center;">
+                            <input type="text" class="form-input" style="width:200px;" x-model="employeeNameInput" list="employee-names" @change="onEmployeeSelect">
+                            <datalist id="employee-names"><template x-for="emp in employees" :key="emp"><option :value="emp"></option></template></datalist>
+                            <span class="dd-arrow">▼</span>
                         </div>
                     </div>
-                    <div class="form-group" style="gap: 5px;">
-                        <div class="form-label" style="width: 80px;">Bank Name</div>
-                        <input type="text" class="form-input" style="width: 250px;" x-model="selectedRequest.bank_name">
+                    <!-- Row 3: Bank Name -->
+                    <div class="form-row">
+                        <span class="form-label">Bank Name</span>
+                        <input type="text" class="form-input" style="width:220px;" x-model="selectedRequest.bank_name">
                     </div>
-                    <div class="form-group" style="gap: 5px;">
-                        <div class="form-label" style="width: 80px;">Account No</div>
-                        <input type="text" class="form-input" style="width: 250px;" x-model="selectedRequest.account_no">
+                    <!-- Row 4: Account No -->
+                    <div class="form-row">
+                        <span class="form-label">Account No</span>
+                        <input type="text" class="form-input" style="width:220px;" x-model="selectedRequest.account_no">
                     </div>
-                    <div class="form-group" style="gap: 5px;">
-                        <div class="form-label" style="width: 80px;">Acccount Name</div>
-                        <input type="text" class="form-input" style="width: 250px;" x-model="selectedRequest.account_name">
+                    <!-- Row 5: Account Name -->
+                    <div class="form-row">
+                        <span class="form-label">Account Name</span>
+                        <input type="text" class="form-input" style="width:220px;" x-model="selectedRequest.account_name">
                     </div>
                 </div>
-                <!-- Right Side Info -->
-                <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; padding-right: 30px; font-size: 0.8rem; color: #475569;">
-                    <div style="display: flex; gap: 40px; margin-top: 10px;">
+                <!-- Right: numbers + label -->
+                <div style="display:flex;flex-direction:column;align-items:flex-end;padding-right:20px;">
+                    <div style="display:flex;gap:30px;font-size:11px;color:#333;margin-top:4px;">
                         <span x-text="selectedRequest.user_no"></span>
-                        <span x-text="selectedRequest.link || '0'"></span>
+                        <span x-text="selectedRequest.link ?? '0'"></span>
                         <span x-text="selectedRequest.unique_id"></span>
                     </div>
-                    <div style="font-size: 1.2rem; font-weight: bold; color: #334155; margin-bottom: 30px;">
-                        advance request
-                    </div>
+                    <div style="font-size:14px;font-weight:bold;color:#333;margin-top:auto;padding-bottom:8px;">advance request</div>
                 </div>
             </div>
-            
-            <div style="flex: 1; overflow: auto;" x-show="selectedRequest">
+
+            <!-- Items Grid -->
+            <div style="flex: 1; overflow: auto; background:white;" x-show="selectedRequest">
                 <table class="list-grid">
                     <thead>
                         <tr>
@@ -146,8 +145,9 @@
                             <th style="width: 200px;">ACCOUNT NAME</th>
                         </tr>
                     </thead>
+                    <tbody>
                         <template x-for="(item, idx) in (selectedRequest ? selectedRequest.items || [] : [])" :key="idx">
-                            <tr>
+                            <tr @click="selectedItemIdx = idx" :class="idx === selectedItemIdx ? 'selected' : ''">
                                 <td style="text-align: center; font-size: 0.5rem; color: #475569;">
                                     <span x-show="idx === selectedItemIdx">▶</span>
                                     <button @click="removeItem(idx)" x-show="idx === selectedItemIdx" style="background:#ef4444; color:white; border:none; border-radius:2px; font-size:8px; padding:2px 4px; cursor:pointer;" title="Remove Item">✕</button>
@@ -189,28 +189,35 @@
                 </table>
             </div>
 
-            <!-- Detail Footer -->
-            <div class="grid-footer" style="padding: 10px; background: #f8fafc; justify-content: flex-start; gap: 20px; border-bottom: 1px solid var(--hr-border);">
-                <!-- To align with AMOUNT column in grid -->
-                <div style="width: 535px; text-align: right;">
-                    <input type="text" class="form-input" style="width: 120px; text-align: right; background: white;" :value="selectedRequest ? selectedRequest.total_amount : ''" readonly>
-                </div>
+            <!-- Amount total footer -->
+            <div style="background:#f0f0f0; border-top:1px solid #ccc; padding:3px 8px; display:flex; justify-content:center; flex-shrink:0;">
+                <input type="text" class="form-input" style="width:120px;text-align:right;" :value="selectedRequest ? (selectedRequest.total_amount || '') : ''" readonly>
             </div>
-            <div class="grid-footer" style="padding: 4px; background: white; border-bottom: 1px solid var(--hr-border);">
+            <!-- Pager -->
+            <div class="grid-footer">
                 <button class="pager-btn" @click="firstRecord()" :disabled="currentIdx <= 0">|◀</button>
                 <button class="pager-btn" @click="firstRecord()" :disabled="currentIdx <= 0">◀◀</button>
                 <button class="pager-btn" @click="prevRecord()" :disabled="currentIdx <= 0">◀</button>
-                <span class="pager-btn" style="border:none; background:transparent;">Record <span x-text="currentIdx + 1"></span> of <span x-text="requests.length"></span></span>
+                <span style="font-size:11px;padding:0 8px;">Record <span x-text="currentIdx + 1"></span> of <span x-text="requests.length"></span></span>
                 <button class="pager-btn" @click="nextRecord()" :disabled="currentIdx >= requests.length - 1">▶</button>
                 <button class="pager-btn" @click="lastRecord()" :disabled="currentIdx >= requests.length - 1">▶▶</button>
                 <button class="pager-btn" @click="lastRecord()" :disabled="currentIdx >= requests.length - 1">▶|</button>
+                <span style="margin-left:6px;"><button class="pager-btn">—</button></span>
+                <button class="pager-btn">◀</button>
             </div>
-            
-            <div style="padding: 10px; background: #e2e8f0;">
-                <div style="font-size: 0.75rem; font-weight: bold; color: #475569; margin-bottom: 5px;">NOTE</div>
-                <textarea x-model="selectedRequest.note" style="width: 300px; height: 60px; border: 1px solid var(--hr-border);"></textarea>
+
+            <!-- NOTE section at bottom -->
+            <div class="note-section" x-show="selectedRequest">
+                <div class="note-header">NOTE</div>
+                <div class="note-body">
+                    <textarea x-model="selectedRequest.note"></textarea>
+                    <div class="note-scroll-btns">
+                        <button>▲</button>
+                        <button>▼</button>
+                    </div>
+                </div>
             </div>
-        </div>
+        </div><!-- end RECORD DETAIL tab-pane -->
 
         <!-- RECORDS LIST TAB -->
         <div class="tab-pane" :class="activeMainTab === 'list' ? 'active' : ''">
@@ -242,7 +249,7 @@
                     </thead>
                     <template x-for="(item, idx) in requests" :key="item.id">
                         <tbody :class="selectedRequest && selectedRequest.id === item.id ? 'selected-group' : ''">
-                            <tr @click="selectRequest(item.id, idx)" :class="selectedRequest && selectedRequest.id === item.id ? 'selected' : ''" class="main-row">
+                            <tr @click="selectAndDetail(item.id, idx)" :class="selectedRequest && selectedRequest.id === item.id ? 'selected' : ''" class="main-row">
                                 <td style="text-align: center; font-size: 0.5rem; color: #475569;">
                                     <span x-show="selectedRequest && selectedRequest.id === item.id">▶</span>
                                 </td>
@@ -353,7 +360,6 @@
                             </tr>
                         </tbody>
                     </template>
-                    </tbody>
                 </table>
             </div>
             <div class="grid-footer" style="padding: 4px; background: #e2e8f0; border-top: 1px solid var(--hr-border);">
@@ -368,7 +374,7 @@
         </div>
 
         <!-- ADVANCE STATUS TAB -->
-        <div class="tab-pane" :class="activeMainTab === 'status' ? 'active' : ''" style="display: flex; flex-direction: column;">
+        <div class="tab-pane" :class="activeMainTab === 'status' ? 'active' : ''">
             <div x-show="selectedRequest" style="padding: 10px 15px; border-bottom: 1px solid #cbd5e1; background: #f8fafc; position: relative;">
                 <!-- Top Row: Date, Duedate, Reff -->
                 <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 5px;">
@@ -551,6 +557,11 @@
                 } else {
                     this.expandedStatusIds = [...this.expandedStatusIds, id];
                 }
+            },
+
+            selectAndDetail(id, idx) {
+                this.selectRequest(id, idx);
+                this.activeMainTab = 'detail';
             },
 
             onEmployeeSelect() {

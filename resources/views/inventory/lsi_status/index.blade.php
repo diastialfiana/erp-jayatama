@@ -5,33 +5,36 @@
 @push('styles')
 <style>
     :root {
+        --hr-border: #999;
         --hr-primary: #1e293b;
-        --hr-border: #cbd5e1;
+        --hr-accent: #2563eb;
     }
 
-    .lsi-container { background: white; border: 1px solid var(--hr-border); margin: 10px; display: flex; flex-direction: column; height: calc(100vh - 120px); }
+    .fa-window { background: #f0f0f0; border: 1px solid #999; margin: 10px; border-radius: 4px; overflow: hidden; display: flex; flex-direction: column; height: calc(100vh - 100px); box-shadow: 2px 2px 5px rgba(0,0,0,0.2); color: #000; }
+    .window-title-bar { background: linear-gradient(to bottom, #4f78b1, #3a5a8f); color: white; padding: 4px 8px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: bold; }
     
-    .lsi-top-bar { display: flex; align-items: center; padding: 10px 15px; font-size: 0.75rem; color: #334155; gap: 20px;}
+    .lsi-top-bar { display: flex; align-items: center; padding: 10px 15px; font-size: 0.75rem; color: #334155; gap: 20px; background: #f0f0f0; border-bottom: 1px solid var(--hr-border); }
     .lsi-radio-group { display: flex; align-items: center; gap: 15px; }
     .lsi-radio { display: flex; align-items: center; gap: 5px; cursor: pointer; }
     
-    .lsi-info-panel { margin: 0 10px; border: 1px solid var(--hr-border); background: #f8fafc; }
-    .lsi-info-header { background: #e2e8f0; padding: 4px 10px; font-weight: 600; font-size: 0.75rem; color: #475569; }
-    .lsi-info-body { padding: 10px; }
+    .lsi-info-panel { margin: 10px; border: 1px solid var(--hr-border); background: #f8fafc; border-radius: 4px; overflow: hidden; }
+    .lsi-info-header { background: #e2e8f0; padding: 6px 12px; font-weight: 700; font-size: 0.7rem; color: #475569; text-transform: uppercase; letter-spacing: 0.05em; }
+    .lsi-info-body { padding: 15px; }
     
     .form-row { display: flex; margin-bottom: 8px; font-size: 0.75rem; align-items: center; }
     .form-label { width: 140px; text-align: right; margin-right: 15px; color: #64748b; }
-    .form-input { border: 1px solid var(--hr-border); padding: 3px 6px; border-radius: 0; font-size: 0.75rem; background: white; }
+    .form-input { border: 1px solid var(--hr-border); padding: 4px 8px; border-radius: 0; font-size: 0.75rem; background: white; }
     .form-select { border: 1px solid var(--hr-border); padding: 3px 6px; border-radius: 0; font-size: 0.75rem; background: white; }
     
     .list-grid { width: 100%; border-collapse: collapse; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; font-size: 0.7rem; background: white; table-layout: fixed; }
-    .list-grid th { background: #f8fafc; color: #64748b; padding: 6px; text-align: left; font-weight: normal; border-bottom: 1px solid var(--hr-border); border-right: 1px solid var(--hr-border); border-top: 1px solid var(--hr-border); text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
-    .list-grid td { padding: 4px 6px; border-bottom: 1px solid var(--hr-border); border-right: 1px solid var(--hr-border); white-space: nowrap; color: #334155; }
+    .list-grid th { background: #f8fafc; color: #64748b; padding: 8px 6px; text-align: left; font-weight: 600; border-bottom: 1px solid var(--hr-border); border-right: 1px solid var(--hr-border); border-top: none; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.65rem; }
+    .list-grid td { padding: 6px; border-bottom: 1px solid var(--hr-border); border-right: 1px solid var(--hr-border); white-space: nowrap; color: #334155; }
+    .list-grid tr:hover td { background: #f1f5f9; }
 </style>
 @endpush
 
 @section('content')
-<div x-data="{ 
+<div class="fa-window" x-data="{ 
     selectedStatus: 'AP', 
     handleRibbonAction(action) {
         switch(action) {
@@ -57,20 +60,17 @@
             case 'resend': showToast('Emailing current status...', 'info'); break;
         }
     }
-}" x-on:ribbon-action.window="handleRibbonAction($event.detail)" class="lsi-container">
+}" x-on:ribbon-action.window="handleRibbonAction($event.detail)">
     <!-- Title Bar -->
     <div class="window-title-bar">
         <div style="display: flex; gap: 8px; align-items: center;">
-            <div style="display:flex;">
-                <div style="width:7px; height:7px; background:#f59e0b; margin:1px;"></div>
-                <div style="width:7px; height:7px; background:#dc2626; margin:1px;"></div>
-            </div>
-            <span style="font-weight: 600;">View Status</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span>LSI View Status</span>
         </div>
-        <div style="display: flex; gap: 15px;">
-            <span style="cursor: pointer; font-size: 0.9rem;">◁</span>
-            <span style="cursor: pointer; font-size: 0.9rem;">▷</span>
-            <span style="cursor: pointer;">✕</span>
+        <div style="display: flex; gap: 4px;">
+            <div style="width:14px;height:14px;background:#ddd;border:1px solid #999;cursor:pointer;"></div>
+            <div style="width:14px;height:14px;background:#ddd;border:1px solid #999;cursor:pointer;"></div>
+            <div style="width:14px;height:14px;background:#e81123;border:1px solid #999;cursor:pointer;"></div>
         </div>
     </div>
 
@@ -78,24 +78,27 @@
 
     <!-- Actions Bar -->
     <div class="lsi-top-bar">
-        <span>Select Status</span>
+        <span style="font-weight: 600;">Select Status:</span>
         <div class="lsi-radio-group">
-            <label class="lsi-radio" style="border: 1px dotted #94a3b8; padding: 2px 4px;">
-                <input type="radio" name="statusOptions" value="AP" x-model="selectedStatus"> AP (Account Payable)
+            <label class="lsi-radio">
+                <input type="radio" name="statusOptions" value="AP" x-model="selectedStatus"> 
+                <span :class="selectedStatus === 'AP' ? 'font-bold text-blue-600' : ''">AP (Account Payable)</span>
             </label>
             <label class="lsi-radio">
-                <input type="radio" name="statusOptions" value="AR" x-model="selectedStatus"> AR (Advance Request)
+                <input type="radio" name="statusOptions" value="AR" x-model="selectedStatus"> 
+                <span :class="selectedStatus === 'AR' ? 'font-bold text-blue-600' : ''">AR (Advance Request)</span>
             </label>
         </div>
         
-        <span style="margin-left: 50px;">Type User numbering</span>
+        <span style="margin-left: auto;">Type User numbering</span>
         <div style="display:flex;">
-            <input type="text" class="form-input" style="width: 100px;">
-            <span style="border: 1px solid var(--hr-border); background:#f1f5f9; padding: 3px 6px; border-left:none; cursor: pointer;">
+            <input type="text" class="form-input" style="width: 120px; height: 28px;">
+            <span style="border: 1px solid var(--hr-border); background:#f1f5f9; padding: 0 8px; border-left:none; cursor: pointer; display: flex; align-items: center;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
             </span>
         </div>
     </div>
+
 
     <!-- Information Panel -->
     <div class="lsi-info-panel">

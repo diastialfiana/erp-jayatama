@@ -3,222 +3,6 @@
 
 @push('styles')
     <style>
-        .page-header {
-            margin-bottom: 24px;
-        }
-
-        .page-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 5px;
-        }
-
-        .page-desc {
-            font-size: 0.85rem;
-            color: #64748b;
-        }
-
-        /* ── Main Content Wrapper ── */
-        .main-content {
-            background: #fff;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-            border: 1px solid #eef2ff;
-        }
-
-        /* ── Form Layout ── */
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-        }
-
-        .form-group {
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-        }
-
-        .form-group label {
-            flex: 0 0 160px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #374151;
-            margin-right: 15px;
-            text-align: right;
-        }
-
-        .form-control {
-            flex: 1;
-            padding: 8px 12px;
-            font-size: 0.85rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            color: #1e293b;
-            background-color: #f8fafc;
-            transition: all 0.2s;
-            width: 100%;
-        }
-        
-        .form-control:focus {
-            outline: none;
-            border-color: #2563EB;
-            background-color: #fff;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        select.form-control {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 16px;
-            padding-right: 32px;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .form-row .form-group {
-            flex: 1;
-            margin-bottom: 0;
-            display: flex;
-            align-items: center;
-        }
-        
-        .form-row .form-group label {
-            flex: 0 0 160px; /* Primary label in a row */
-            margin-right: 15px;
-        }
-        
-        .form-row .form-group.pl-3 label {
-            flex: 0 0 95px; /* Secondary label alignment */
-            margin-left: 10px;
-            text-align: right;
-        }
-
-        .radio-group {
-            display: flex;
-            gap: 15px;
-            flex: 1;
-            align-items: center;
-        }
-
-        .radio-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.85rem;
-            color: #374151;
-            cursor: pointer;
-        }
-
-        input[type="radio"] {
-            accent-color: #2563EB;
-            width: 14px;
-            height: 14px;
-        }
-
-        .textarea-control {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        /* ── QR Code Section ── */
-        .qr-section {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-            padding: 20px;
-            background: #f8fafc;
-            border: 1px dashed #cbd5e1;
-            border-radius: 12px;
-        }
-
-        .qr-placeholder {
-            text-align: center;
-        }
-        
-        .qr-placeholder img {
-            width: 120px;
-            height: 120px;
-            background: #fff;
-            padding: 8px;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            margin-bottom: 10px;
-        }
-
-        .qr-label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #64748b;
-            letter-spacing: 0.05em;
-        }
-
-        /* ── Status Section ── */
-        .status-grid {
-            background: #f8fafc;
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid #e2e8f0;
-            margin-top: 20px;
-        }
-
-        .status-grid .form-group label {
-            flex: 0 0 120px;
-        }
-
-        /* ── Buttons ── */
-        .btn-group {
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-            padding-top: 20px;
-            border-top: 1px solid #e2e8f0;
-            margin-top: 20px;
-        }
-
-        .btn {
-            padding: 8px 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid transparent;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn-primary {
-            background: #2563EB;
-            color: #fff;
-        }
-
-        .btn-primary:hover {
-            background: #1d4ed8;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border-color: #cbd5e1;
-            color: #475569;
-        }
-
-        .btn-outline:hover {
-            background: #f1f5f9;
-            color: #1e293b;
-        }
-
         /* ── Modal Styles ── */
         .modal-overlay {
             position: fixed;
@@ -416,26 +200,111 @@
         .rec-table td.red { color:#dc2626; }
         .rec-footer { display:flex; align-items:center; padding:4px 10px; border-top:1px solid #e2e8f0; background:#f8fafc; gap:2px; min-height:30px; }
         .pager-btn { background:white; border:1px solid #cbd5e1; padding:2px 7px; font-size:0.65rem; cursor:pointer; color:#64748b; }
-        .pager-btn:hover { background:#f1f5f9; }
-        .pager-btn:disabled { color:#cbd5e1; cursor:not-allowed; }
+        .pager-btn:hover { background: #f1f5f9; }
 
         /* ── Detail nav bar ── */
-        .detail-nav { display:flex; align-items:center; gap:4px; padding:6px 10px; border-bottom:1px solid #e2e8f0; background:#f8fafc; }
+        .detail-nav { display:flex; align-items:center; gap:4px; padding:6px 10px; border-bottom: 1px solid #e2e8f0; background:#f8fafc; }
+        
+        /* ── Override fa-window to be cleaner ── */
+        .fa-window { 
+            background: #f0f0f0; 
+            border: 1px solid #999; 
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 120px);
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            color: #000;
+        }
+        
+        .window-title-bar {
+            background: linear-gradient(to bottom, #4f78b1, #3a5a8f);
+            color: white;
+            padding: 4px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .fa-tabs {
+            display: flex;
+            background: #f0f0f0;
+            padding: 4px 4px 0 4px;
+            border-bottom: 1px solid #999;
+        }
+        .fa-tab {
+            padding: 4px 12px;
+            font-size: 12px;
+            border: 1px solid #999;
+            border-bottom: none;
+            background: #e0e0e0;
+            cursor: pointer;
+            margin-right: 2px;
+            border-radius: 3px 3px 0 0;
+        }
+        .fa-tab.active {
+            background: #fff;
+            font-weight: bold;
+            margin-bottom: -1px;
+            height: calc(100% + 1px);
+        }
+
+        .fa-pane { display:none; flex:1; overflow:auto; background: #f0f0f0; }
+        .fa-pane.active { display:flex; flex-direction:column; }
+
+        .main-content { padding: 15px; background: #f0f0f0; }
+        .form-grid { display: grid !important; grid-template-columns: 1.2fr 1fr !important; gap: 20px !important; }
+        
+        .form-group { display: flex !important; flex-direction: row !important; align-items: center !important; margin-bottom: 3px !important; }
+        .form-group label { display: block !important; width: 130px !important; font-size: 11px !important; text-align: right !important; margin-right: 8px !important; flex-shrink: 0 !important; font-weight: normal !important; margin-bottom: 0 !important; }
+        .form-control { display: block !important; flex: 1 !important; height: 22px !important; padding: 2px 4px !important; border: 1px solid #999 !important; font-size: 12px !important; border-radius: 0 !important; background: white !important; box-sizing: border-box !important; }
+        .form-control:read-only { background: #e0e0e0 !important; }
+
+        .form-row { display: flex !important; flex-direction: row !important; gap: 10px !important; margin-bottom: 3px !important; align-items: center !important; flex-wrap: nowrap !important; }
+        .form-row .form-group { flex: 1 !important; margin-bottom: 0 !important; }
+        .form-row .form-group label { width: 130px !important; }
+        .form-row .small-group label { width: 40px !important; }
+
+        .radio-group { display: flex; align-items: center; gap: 15px; font-size: 11px; margin-left: 5px; }
+        .radio-item { display: flex; align-items: center; gap: 4px; cursor: pointer; }
+
+        .textarea-control { height: 80px !important; resize: none; font-family: monospace; }
+        
+        .qr-section { margin: 15px 0; display: flex; justify-content: center; background: white; padding: 10px; border: 1px solid #999; }
+        .qr-placeholder img { width: 150px; height: 150px; }
+
+        .status-grid { border: 1px solid #999; padding: 10px; background: #e8e8e8; margin-top: 10px; }
+        .status-grid .form-group label { width: 100px; }
+
+        .rec-table-wrap { overflow:auto; flex:1; background: white; }
+        .rec-table { width:100%; border-collapse:collapse; font-size:11px; }
+        .rec-table th { background: #e0e0e0; border: 1px solid #999; padding: 4px; text-align: left; position: sticky; top: 0; }
+        .rec-table td { border: 1px solid #ccc; padding: 3px 5px; }
+        .rec-table tr.selected td { background: #3a5a8f; color: white; }
+
+        .btn-group { margin-top: 15px; display: flex; justify-content: flex-end; gap: 10px; }
+        .btn { padding: 4px 15px; font-size: 12px; cursor: pointer; border: 1px solid #666; background: #e0e0e0; border-radius: 3px; }
+        .btn-primary { background: #3a5a8f; color: white; border-color: #2a4a7f; }
+        .btn:hover { background: #d0d0d0; }
+        .btn-primary:hover { background: #4a6a9f; }
     </style>
 @endpush
 
 @section('content')
 <div x-data="fixedAssetManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)" class="fa-window">
-    <!-- Title Bar -->
+    <!-- Windows like Title bar -->
     <div class="window-title-bar">
-        <div style="display:flex;gap:8px;align-items:center;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7" fill="#dc2626"></rect><rect x="14" y="14" width="7" height="7" fill="#2563eb"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-            <span style="font-weight:600;">Fixed Asset</span>
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            <span>Fixed Asset</span>
         </div>
-        <div style="display:flex;gap:15px;">
-            <button @click="prevRecord()" class="pager-btn" :disabled="currentIndex === 0">◁</button>
-            <button @click="nextRecord()" class="pager-btn" :disabled="currentIndex === records.length - 1">▷</button>
-            <span style="cursor:pointer;">✕</span>
+        <div style="display: flex; gap: 4px;">
+            <div style="width: 14px; height: 14px; background: #ddd; border: 1px solid #999; cursor: pointer;"></div>
+            <div style="width: 14px; height: 14px; background: #ddd; border: 1px solid #999; cursor: pointer;"></div>
+            <div style="width: 14px; height: 14px; background: #e81123; border: 1px solid #999; cursor: pointer;"></div>
         </div>
     </div>
 
@@ -443,8 +312,8 @@
 
     <!-- Tabs -->
     <div class="fa-tabs">
-        <button class="fa-tab" :class="activeTab === 'detail' ? 'active' : ''" @click="activeTab = 'detail'">RECORD DETAIL</button>
-        <button class="fa-tab" :class="activeTab === 'list' ? 'active' : ''" @click="activeTab = 'list'">RECORDS LIST</button>
+        <div class="fa-tab" :class="activeTab === 'detail' ? 'active' : ''" @click="activeTab = 'detail'">RECORD DETAIL</div>
+        <div class="fa-tab" :class="activeTab === 'list' ? 'active' : ''" @click="activeTab = 'list'">RECORDS LIST</div>
     </div>
 
     <!-- ══ RECORD DETAIL PANE ══ -->
@@ -458,39 +327,38 @@
             <button @click="nextRecord()" class="pager-btn" :disabled="currentIndex === records.length - 1">▶|</button>
         </div>
 
-    <!-- MAIN FORM WRAPPER -->
-    <div class="main-content" style="border-radius:0;border:none;box-shadow:none;">
+    <div class="main-content">
         <div class="form-grid">
             <!-- Left Column -->
             <div class="form-col-left">
                 <div class="form-row">
                     <div class="form-group">
                         <label>Code</label>
-                        <input type="text" id="main-asset-code" class="form-control" :value="records[currentIndex].code" @input="records[currentIndex].code = $event.target.value">
+                        <input type="text" class="form-control" x-model="records[currentIndex].code" style="width: 120px; flex: none;">
                     </div>
-                    <div class="form-group pl-3">
-                        <label>Currency</label>
+                    <div class="form-group">
+                        <label style="width: 80px;">Currency</label>
                         <select class="form-control" x-model="records[currentIndex].curr">
-                            <option>IDR</option>
+                            <option>Indonesia</option>
                             <option>USD</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Fixed Asset Name</label>
-                        <input type="text" class="form-control" x-model="records[currentIndex].name">
-                    </div>
-                    <div class="form-group pl-3">
-                        <label>Qty</label>
-                        <input type="number" class="form-control" x-model="records[currentIndex].qty">
-                    </div>
+                <div class="form-group">
+                    <label>Fixed Asset Name</label>
+                    <input type="text" class="form-control" x-model="records[currentIndex].name">
                 </div>
 
-                <div class="form-group">
-                    <label>Initial Date</label>
-                    <input type="date" class="form-control" x-model="records[currentIndex].initial_date" @change="onDateChange($event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Initial Date</label>
+                        <input type="date" class="form-control" x-model="records[currentIndex].initial_date" @change="onDateChange($event)">
+                    </div>
+                    <div class="form-group">
+                        <label style="width: 60px;">Qty</label>
+                        <input type="number" class="form-control" x-model="records[currentIndex].qty" style="width: 80px; flex: none; text-align: right;">
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -502,21 +370,17 @@
                     <label>Department</label>
                     <select class="form-control" x-model="records[currentIndex].dept">
                         <option value=""></option>
+                        <option value="UMUM">UMUM</option>
                         <option value="IT">IT</option>
-                        <option value="Finance">Finance</option>
-                        <option value="Procurement">Procurement</option>
                         <option value="GA">GA</option>
-                        <option value="HR">HR</option>
-                        <option value="HC">HC</option>
-                        <option value="Legal">Legal</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label>Category</label>
-                    <div style="display:flex; flex:1; gap:6px;">
-                        <input type="text" id="main_category_input" class="form-control" :value="records[currentIndex].category" readonly style="cursor: pointer; background-color: #fff;" onclick="openCategoryModal()">
-                        <button type="button" class="btn btn-outline" style="padding: 0 10px;" onclick="openCategoryModal()">...</button>
+                    <div style="display:flex; flex:1; gap:2px;">
+                        <input type="text" class="form-control" x-model="records[currentIndex].category">
+                        <button type="button" style="width:22px; height:22px; border:1px solid #999; background:#eee; cursor:pointer;" onclick="openCategoryModal()">...</button>
                     </div>
                 </div>
 
@@ -528,20 +392,20 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Initial Cost</label>
-                        <input type="text" class="form-control" x-model="records[currentIndex].initial_cost">
+                        <input type="text" class="form-control" x-model="records[currentIndex].initial_cost" style="text-align: right;">
                     </div>
-                    <div class="form-group pl-3">
-                        <label>Rate</label>
-                        <input type="number" class="form-control" x-model="records[currentIndex].rate">
+                    <div class="form-group">
+                        <label style="width: 60px;">Rate</label>
+                        <input type="number" class="form-control" x-model="records[currentIndex].rate" style="width: 80px; flex: none; text-align: right;">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label>Residual Values</label>
-                    <input type="text" class="form-control" x-model="records[currentIndex].residual">
+                    <input type="text" class="form-control" x-model="records[currentIndex].residual" style="text-align: right; width: 150px; flex: none;">
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" style="margin-top: 10px;">
                     <label>Deprec. Method</label>
                     <div class="radio-group">
                         <label class="radio-item"><input type="radio" name="deprec_method" value="None" :checked="records[currentIndex].deprec_method === 'None'" @change="records[currentIndex].deprec_method = 'None'"> (None)</label>
@@ -550,21 +414,21 @@
                     </div>
                 </div>
 
-                <div class="form-row">
+                <div class="form-row" style="margin-top: 5px;">
                     <div class="form-group">
                         <label>Useful Life</label>
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <input type="number" class="form-control" style="width: 70px;" x-model="records[currentIndex].useful_life">
-                            <span style="font-size:0.8rem; color:#64748b;">Month</span>
+                        <div style="display:flex; align-items:center; gap:4px; flex:1;">
+                            <input type="number" class="form-control" style="width: 60px; flex: none; text-align: right;" x-model="records[currentIndex].useful_life">
+                            <span style="font-size:11px;">Month</span>
                         </div>
                     </div>
-                    <div class="form-group pl-3">
-                        <label>% Depreciation</label>
-                        <input type="text" class="form-control" x-model="records[currentIndex].deprec_pct">
+                    <div class="form-group">
+                        <label style="width: 100px;">% Depreciation</label>
+                        <input type="text" class="form-control" x-model="records[currentIndex].deprec_pct" style="width: 80px; flex: none; text-align: right;">
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" style="margin-top: 5px;">
                     <label>Reg. / Serial No.</label>
                     <input type="text" class="form-control" x-model="records[currentIndex].serial">
                 </div>
@@ -603,8 +467,8 @@
             <!-- Right Column -->
             <div class="form-col-right">
                 <div class="form-group">
-                    <label>Accumulated Account</label>
-                    <select class="form-control" id="main_accumulated_account" x-model="records[currentIndex].accumulated_account">
+                    <label style="width: 150px;">Accumulated Account</label>
+                    <select class="form-control" x-model="records[currentIndex].accumulated_account">
                         <option>AKUM PENYST PERABOT KTR UNSUR LOGAM</option>
                         <option>AKUM PENYST BANG.GEDUNG KANTOR</option>
                         <option>AKUM PENYST INSTALASI LISTRIK</option>
@@ -615,8 +479,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Depreciation Expense</label>
-                    <select class="form-control" id="main_depreciation_expense" x-model="records[currentIndex].depreciation_expense">
+                    <label style="width: 150px;">Depreciation Expense</label>
+                    <select class="form-control" x-model="records[currentIndex].depreciation_expense">
                         <option>BIAYA PENYUSUTAN PERABOT KANTOR UNSUR LOGAM</option>
                         <option>BIAYA PENYUSUTAN GEDUNG</option>
                         <option>BIAYA PENYUSUTAN INSTALASI</option>
@@ -626,22 +490,21 @@
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label>Note</label>
+                <div class="form-group" style="flex-direction: column; align-items: flex-start;">
+                    <label style="text-align: left; margin-bottom: 2px;">Note</label>
                     <textarea class="form-control textarea-control" x-model="records[currentIndex].note"></textarea>
                 </div>
 
-                <!-- QR CODE SECTION -->
-                <div class="qr-section">
-                    <a id="qr-link" :href="'/a/' + records[currentIndex].code" target="_blank" style="text-decoration: none; color: inherit;">
-                        <div class="qr-placeholder" style="cursor: pointer;" title="Klik untuk membuka detail publik">
-                            <div style="position: relative; display: inline-block;">
-                                <img id="qr-image" :src="'https://api.qrserver.com/v1/create-qr-code/?size=150x150&ecc=H&data=' + encodeURIComponent(window.location.origin + '/a/' + records[currentIndex].code)" alt="QR Code Asset">
-                                <img src="{{ asset('images/JSU.jpg') }}" alt="JSU Logo" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 36px; height: auto; border: 2px solid white; border-radius: 4px; box-shadow: 0 0 4px rgba(0,0,0,0.1);">
+                <!-- QR CODE / BARCODE SECTION -->
+                <div class="qr-section" style="background: white; border: 1px solid #999; padding: 10px; margin: 10px 0;">
+                    <div style="text-align: center;">
+                        <a :href="window.location.origin + '/a/' + records[currentIndex].code" target="_blank" style="text-decoration: none; display: inline-block;">
+                            <div style="background: white; padding: 5px; border: 1px solid #ccc; display: inline-block; cursor: pointer;">
+                                <img :src="'https://api.qrserver.com/v1/create-qr-code/?size=150x150&ecc=H&data=' + encodeURIComponent(window.location.origin + '/a/' + records[currentIndex].code)" alt="QR" style="width: 120px; height: 120px; border: none;">
                             </div>
-                            <div id="qr-label-display" class="qr-label" x-text="records[currentIndex].code + ' - ' + records[currentIndex].name"></div>
-                        </div>
-                    </a>
+                        </a>
+                        <div style="font-size: 11px; margin-top: 5px; font-family: monospace; font-weight: bold;" x-text="records[currentIndex].code"></div>
+                    </div>
                 </div>
 
                 <div class="status-grid">
@@ -650,13 +513,13 @@
                             <label>Start</label>
                             <input type="date" class="form-control" x-model="records[currentIndex].depr_start">
                         </div>
-                        <div class="form-group pl-3">
-                            <label>End</label>
+                        <div class="form-group">
+                            <label style="width: 60px;">End</label>
                             <input type="date" class="form-control" x-model="records[currentIndex].depr_end">
                         </div>
                     </div>
 
-                    <div class="form-group mt-3">
+                    <div class="form-group" style="margin-top: 10px;">
                         <label>Life to date</label>
                         <input type="text" class="form-control" x-model="records[currentIndex].life_to_date" style="text-align: right;">
                     </div>
@@ -670,19 +533,11 @@
                         <label>Monthly</label>
                         <input type="text" class="form-control" x-model="records[currentIndex].monthly" style="text-align: right;">
                     </div>
-
-                    <div class="form-group">
-                        <label>Journal Posted</label>
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <input type="number" class="form-control" x-model="records[currentIndex].journal_posted" style="text-align: right; width: 80px;">
-                            <span style="font-size:0.8rem; color:#64748b;">Times</span>
-                        </div>
-                    </div>
                 </div>
                 
                 <div class="btn-group">
-                    <button type="button" class="btn btn-outline">Cancel</button>
-                    <button type="button" class="btn btn-primary">Save Changes</button>
+                    <button type="button" class="btn" @click="activeTab = 'list'">Cancel</button>
+                    <button type="button" class="btn btn-primary" @click="showToast('Success', 'Record updated successfully')">Save Changes</button>
                 </div>
             </div>
         </div>
@@ -776,6 +631,7 @@
                     { code:'001118', curr:'IDR', rate:'1', brand:'', name:'papan tulis', type:'Perabot', qty:0, cat:'009', serial:'', location:'HEAD OFFICE', since:'28/07/2017', initial_date:'2017-07-28', cost_center:'UMUM', dept:'GA', category:'Perabot Kantor Bukan Logam', initial_cost:'225.000', residual:'0', deprec_method:'Straight Line', useful_life:36, deprec_pct:'0,33', supplier:'', services_provider:'', asset_user:'', valid_guaranty:'', note:'Papan whiteboard besar', accumulated_account:'AKUM PENYST PERABOT KTR UNSUR LOGAM', depreciation_expense:'BIAYA PENYUSUTAN PERABOT KANTOR UNSUR LOGAM', depr_start:'2017-08-28', depr_end:'2020-07-28', life_to_date:'0,00', year_to_date:'75.000,00', monthly:'6.250,00', journal_posted:0 },
                     { code:'001119', curr:'IDR', rate:'1', brand:'', name:'meja tamu', type:'Perabot', qty:0, cat:'009', serial:'', location:'HEAD OFFICE', since:'28/07/2017', initial_date:'2017-07-28', cost_center:'UMUM', dept:'GA', category:'Perabot Kantor Bukan Logam', initial_cost:'1.200.000', residual:'0', deprec_method:'Straight Line', useful_life:60, deprec_pct:'0,20', supplier:'', services_provider:'', asset_user:'', valid_guaranty:'', note:'Meja tamu lobby utama', accumulated_account:'AKUM PENYST PERABOT KTR UNSUR LOGAM', depreciation_expense:'BIAYA PENYUSUTAN PERABOT KANTOR UNSUR LOGAM', depr_start:'2017-08-28', depr_end:'2022-07-28', life_to_date:'0,00', year_to_date:'240.000,00', monthly:'20.000,00', journal_posted:0 },
                     { code:'001120', curr:'IDR', rate:'1', brand:'ZKTeco', name:'mesin absensi face recognition', type:'Mesin', qty:0, cat:'008', serial:'ZK-FA-2017-001', location:'HEAD OFFICE', since:'01/08/2017', initial_date:'2017-08-01', cost_center:'ADMINISTRASI', dept:'IT', category:'Komputer (Hardware)', initial_cost:'4.500.000', residual:'0', deprec_method:'Straight Line', useful_life:48, deprec_pct:'0,25', supplier:'ZKTeco Indonesia', services_provider:'ZKTeco Indonesia', asset_user:'IT Dept', valid_guaranty:'2021-08-01', note:'Mesin absensi wajah karyawan', accumulated_account:'AKUM PENYST KOMPUTER (HARDWARE)', depreciation_expense:'BIAYA PENYUSUTAN KOMPUTER', depr_start:'2017-09-01', depr_end:'2021-08-01', life_to_date:'0,00', year_to_date:'1.125.000,00', monthly:'93.750,00', journal_posted:24 },
+                    { code:'613036', curr:'IDR', rate:'1', brand:'LENOVO', name:'MONITOR', type:'D186wA', qty:1, cat:'007', serial:'V378785', location:'HEAD OFFICE', since:'15/01/2023', initial_date:'2023-01-15', cost_center:'ADMINISTRASI', dept:'IT', category:'Komputer (Hardware)', initial_cost:'1.500.000', residual:'0', deprec_method:'Straight Line', useful_life:36, deprec_pct:'0,33', supplier:'Lenovo Center', services_provider:'', asset_user:'IT DEPT', valid_guaranty:'2025-01-15', note:'Monitor Lenovo standard IT', accumulated_account:'AKUM PENYST KOMPUTER (HARDWARE)', depreciation_expense:'BIAYA PENYUSUTAN KOMPUTER', depr_start:'2023-02-15', depr_end:'2026-01-15', life_to_date:'0,00', year_to_date:'500.000,00', monthly:'41.666,67', journal_posted:0 },
                 ],
 
                 init() {},
