@@ -36,7 +36,7 @@
 @endpush
 
 @section('content')
-<div class="fa-window" x-data="resourceManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)">
+<div class="fa-window" x-data="resourceServiceManager()" x-init="init()" x-on:ribbon-action.window="handleRibbonAction($event.detail)">
     <!-- Windows like Title bar -->
     <div class="window-title-bar">
         <div style="display: flex; gap: 10px; align-items: center;">
@@ -67,65 +67,74 @@
         <!-- RECORD DETAIL TAB -->
         <div class="tab-pane" :class="activeMainTab === 'detail' ? 'active' : ''">
             <!-- Header forms -->
-            <div class="detail-form-area" style="padding-top:20px; position: relative;" x-show="selectedContract">
-                <div style="display:flex; gap: 20px;">
-                    <div>
-                        <div class="form-group">
-                            <div class="form-label">Date</div>
-                            <select class="form-select" style="width: 140px;" x-model="selectedContract.order_date">
+            <!-- Header forms -->
+            <div class="detail-form-area" style="padding: 10px; position: relative;" x-show="selectedContract">
+                <div style="display:flex; justify-content: space-between; width: 100%;">
+                    <!-- Form fields -->
+                    <div style="display: flex; flex-direction: column; gap: 2px;">
+                        <!-- Row 1: Date & BAP. Reff -->
+                        <div style="display: flex; align-items: center;">
+                            <div style="width: 90px; text-align: right; margin-right: 5px; font-size: 11px;">Date</div>
+                            <select class="form-select" style="width: 120px;" x-model="selectedContract.order_date">
                                 <option x-text="selectedContract.order_date"></option>
                             </select>
-                            <span style="margin-left: 10px; margin-right: 10px; font-size: 0.75rem; color: #475569;">BAP. Reff</span>
+                            <div style="width: 60px; text-align: right; margin-right: 5px; font-size: 11px;">BAP. Reff</div>
                             <input type="text" class="form-input" style="width: 150px;" x-model="selectedContract.ref">
                         </div>
-                        <div class="form-group">
-                            <div class="form-label">Customer</div>
-                            <div style="display: flex; align-items: center; background: white; border: 1px solid var(--hr-border); width: 275px;">
-                                <input type="text" style="flex: 1; border: none; font-size: 0.75rem; padding: 4px 8px; outline: none;" 
-                                       x-model="customerNameInput" list="customer-names" placeholder="Type or Select Customer" @change="onCustomerSelect">
+
+                        <!-- Row 2: Customer -->
+                        <div style="display: flex; align-items: center;">
+                            <div style="width: 90px; text-align: right; margin-right: 5px; font-size: 11px;">Customer</div>
+                            <div style="display: flex; align-items: center; background: white; border: 1px solid var(--hr-border); width: 275px; height: 20px;">
+                                <input type="text" style="flex: 1; border: none; font-size: 11px; padding: 0 4px; outline: none; background: transparent;" 
+                                       x-model="customerNameInput" list="customer-names" @change="onCustomerSelect">
                                 <datalist id="customer-names">
                                     <template x-for="cust in customers" :key="cust">
                                         <option :value="cust"></option>
                                     </template>
                                 </datalist>
-                                <span class="pager-btn" style="border:none; border-left:1px solid var(--hr-border); background:#f1f5f9; cursor:pointer;" @click="lookup('Customer')">...</span>
+                                <span style="background: #e2e8f0; padding: 0 4px; border-left: 1px solid var(--hr-border); color: #64748b; font-size: 10px; cursor:pointer; height: 100%; display:flex; align-items:center;" @click="lookup('Customer')">...</span>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="form-label">From Quotation</div>
-                            <div style="display:flex; margin-right: 15px;">
-                                <input type="text" class="form-input" style="width: 160px;" x-model="selectedContract.quotation">
-                                <span class="pager-btn" style="border-left:none;" @click="lookup('Quotation')">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                </span>
+
+                        <!-- Row 3: From Quotation & Exp. Date & Set as Customer Budget -->
+                        <div style="display: flex; align-items: center;">
+                            <div style="width: 90px; text-align: right; margin-right: 5px; font-size: 11px;">From Quotation</div>
+                            <div style="display:flex;">
+                                <input type="text" class="form-input" style="width: 120px;" x-model="selectedContract.quotation">
+                                <button class="pager-btn" style="border-left:none; height:20px; display:flex; align-items:center; justify-content:center; padding: 0 4px;" @click="lookup('Quotation')">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                </button>
                             </div>
-                            <span style="margin-left: 5px; margin-right: 10px; font-size: 0.75rem; color: #475569;">Exp. Date</span>
-                            <select class="form-select" style="width: 120px;" x-model="selectedContract.exp_date">
+                            <div style="width: 60px; text-align: right; margin-right: 5px; font-size: 11px;">Exp. Date</div>
+                            <select class="form-select" style="width: 90px;" x-model="selectedContract.exp_date">
                                 <option x-text="selectedContract.exp_date"></option>
                             </select>
                             
-                            <label style="margin-left: 50px; display:flex; align-items:center; gap:5px; font-size:0.75rem; color:#334155;">
-                                Set as Customer Budget <input type="checkbox" checked>
+                            <label style="margin-left: 30px; display:flex; align-items:center; gap:5px; font-size:11px; color:#333;">
+                                Set as Customer Budget <input type="checkbox" checked style="margin:0; width:13px; height:13px;">
                             </label>
                         </div>
-                        <div class="form-group">
-                            <div class="form-label">Document Copy</div>
+
+                        <!-- Row 4: Document Copy -->
+                        <div style="display: flex; align-items: center;">
+                            <div style="width: 90px; text-align: right; margin-right: 5px; font-size: 11px;">Document Copy</div>
                             <div style="display:flex;">
-                                <input type="text" class="form-input" style="width: 210px;" x-model="selectedContract.recid">
-                                <span class="pager-btn" style="border-left:none;" @click="lookup('File')">📁</span>
-                                <span class="pager-btn" style="border-left:none;" @click="lookup('Search File')">🔍</span>
+                                <input type="text" class="form-input" style="width: 250px;" x-model="selectedContract.recid">
+                                <button class="pager-btn" style="border-left:none; height:20px; display:flex; align-items:center; justify-content:center; padding: 0 4px;" @click="lookup('File')">📁</button>
+                                <button class="pager-btn" style="border-left:none; height:20px; display:flex; align-items:center; justify-content:center; padding: 0 4px;" @click="lookup('Search File')">🔍</button>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div style="display:flex; flex-direction:column; align-items:flex-end; justify-content:space-between;">
-                    <div style="display:flex; gap: 40px; font-size: 0.8rem; color:#475569; padding-right: 20px;">
-                        <span x-text="selectedContract.userno"></span>
-                        <span x-text="selectedContract.id"></span>
-                    </div>
-                    <div style="font-size: 1.4rem; font-weight: bold; color: #1e293b; padding-right: 5px; margin-bottom: 10px; text-transform: lowercase;">
-                        rembursment
+                    <div style="display:flex; flex-direction:column; align-items:flex-end; justify-content:space-between;">
+                        <div style="display:flex; gap: 40px; font-size: 11px; color:#333; padding-right: 20px;">
+                            <span x-text="selectedContract.userno"></span>
+                            <span x-text="selectedContract.id"></span>
+                        </div>
+                        <div style="font-size: 18px; font-weight: bold; color: #333; padding-right: 5px; margin-bottom: 5px; text-transform: lowercase;">
+                            rembursment
+                        </div>
                     </div>
                 </div>
             </div>
@@ -179,10 +188,11 @@
                     </table>
                 </div>
                 <!-- Inner Grid Footer -->
-                <div style="display:flex; padding: 10px 20px; border-top:1px solid var(--hr-border); background:white;">
-                    <div style="margin-left: 300px; display:flex; gap:35px;">
-                        <input type="text" class="form-input" style="width: 80px; text-align:right;" value="22" readonly>
-                        <input type="text" class="form-input" style="width: 120px; text-align:right;" value="185.000" readonly>
+                <!-- Inner Grid Footer -->
+                <div style="display:flex; padding: 4px; border-top:1px solid var(--hr-border); background:white;">
+                    <div style="margin-left: 280px; display:flex; gap: 35px;">
+                        <input type="text" class="form-input" style="width: 60px; text-align:center;" value="22" readonly>
+                        <input type="text" class="form-input" style="width: 100px; text-align:right;" value="185.000" readonly>
                     </div>
                 </div>
                 <div class="grid-footer" style="padding: 2px 4px; min-height: 25px;">
@@ -197,39 +207,52 @@
             </div>
 
             <!-- Footer Notes & Total Area -->
-            <div style="padding: 10px; display: flex; justify-content: space-between; align-items: flex-start; background:#e2e8f0;">
-                <div style="margin-left: 10px; margin-top: 5px;">
-                    <div style="font-size: 0.75rem; font-weight: bold; color: #475569; margin-bottom: 2px; padding-left:2px; background:#e2e8f0; border:1px solid #cbd5e1; border-bottom:0; width:300px;">Note</div>
+            <!-- Footer Notes & Total Area -->
+            <div style="padding: 4px 10px; display: flex; justify-content: space-between; align-items: flex-start; background:#f0f0f0;">
+                <div style="margin-left: 10px; margin-top: 5px; background: #dcdcdc; padding: 2px; border: 1px solid var(--hr-border); width: 300px;">
+                    <div style="font-size: 11px; font-weight: bold; color: #333; margin-bottom: 2px;">Note</div>
                     <div style="display:flex;">
-                        <textarea style="width: 300px; height: 60px; border: 1px solid var(--hr-border); resize:none;"></textarea>
-                        <div style="display:flex; flex-direction:column; border: 1px solid var(--hr-border); border-left:none; background:#f8fafc; justify-content:space-between;">
-                           <span style="font-size:0.5rem; padding: 2px 4px; cursor:pointer; color:#64748b;">▲</span>
-                           <span style="font-size:0.5rem; padding: 2px 4px; cursor:pointer; color:#64748b;">▼</span>
+                        <textarea style="width: 100%; height: 50px; border: 1px solid var(--hr-border); resize:none; font-size:11px;"></textarea>
+                        <div style="display:flex; flex-direction:column; border: 1px solid var(--hr-border); border-left:none; background:#f8fafc; justify-content:space-between; width: 16px;">
+                           <span style="font-size:8px; display:flex; align-items:center; justify-content:center; flex:1; cursor:pointer; color:#333; border-bottom:1px solid #999;">▲</span>
+                           <span style="font-size:8px; display:flex; align-items:center; justify-content:center; flex:1; cursor:pointer; color:#333;">▼</span>
                         </div>
                     </div>
                 </div>
-                <div style="display:flex; flex-direction:column; gap:4px; margin-right: 10px;" x-show="selectedContract">
-                    <div style="display:flex; justify-content:flex-end; align-items:center; gap:10px;">
-                        <span style="font-size: 0.75rem; color: #475569;">Amount</span>
+                <div style="display:flex; flex-direction:column; gap:2px; margin-right: 10px;" x-show="selectedContract">
+                    <div style="display:flex; justify-content:flex-end; align-items:center; gap:5px;">
+                        <span style="font-size: 11px; color: #333; width: 60px; text-align:right;">Amount</span>
                         <div style="display:flex;">
-                            <input type="text" class="form-input" style="width: 120px; text-align:right; border-right:none;" x-model="selectedContract.amount">
-                            <div style="display:flex; flex-direction:column; border: 1px solid var(--hr-border); background:#f1f5f9;">
-                               <span class="pager-btn" style="font-size:0.4rem; padding: 2px; border:none; line-height: 0.5;" @click="adjustValue('amount', 1000)">▲</span>
-                               <span class="pager-btn" style="font-size:0.4rem; padding: 2px; border:none; line-height: 0.5;" @click="adjustValue('amount', -1000)">▼</span>
+                            <input type="text" class="form-input" style="width: 100px; text-align:right; border-right:none;" x-model="selectedContract.amount">
+                            <div style="display:flex; flex-direction:column; border: 1px solid var(--hr-border); background:#e0e0e0; width: 16px;">
+                               <span class="pager-btn" style="font-size:8px; padding:0; display:flex; align-items:center; justify-content:center; flex:1; border:none; border-bottom:1px solid #999;" @click="adjustValue('amount', 1000)">▲</span>
+                               <span class="pager-btn" style="font-size:8px; padding:0; display:flex; align-items:center; justify-content:center; flex:1; border:none;" @click="adjustValue('amount', -1000)">▼</span>
                             </div>
                         </div>
                     </div>
-                    <div style="display:flex; justify-content:flex-end; align-items:center; gap:10px;">
-                        <span style="font-size: 0.75rem; color: #475569;">TAX</span>
-                        <input type="text" class="form-input" style="width: 135px; text-align:right;" x-model="selectedContract.tax_value">
+                    <div style="display:flex; justify-content:flex-end; align-items:center; gap:5px;">
+                        <span style="font-size: 11px; color: #333; width: 60px; text-align:right;">TAX</span>
+                        <div style="display:flex;">
+                            <input type="text" class="form-input" style="width: 100px; text-align:right; border-right:none;" x-model="selectedContract.tax_value">
+                            <div style="display:flex; flex-direction:column; border: 1px solid var(--hr-border); background:#e0e0e0; width: 16px;">
+                               <span class="pager-btn" style="font-size:8px; padding:0; display:flex; align-items:center; justify-content:center; flex:1; border:none; border-bottom:1px solid #999;">▲</span>
+                               <span class="pager-btn" style="font-size:8px; padding:0; display:flex; align-items:center; justify-content:center; flex:1; border:none;">▼</span>
+                            </div>
+                        </div>
                     </div>
-                    <div style="display:flex; justify-content:flex-end; align-items:center; gap:10px;">
-                        <span style="font-size: 0.75rem; color: #475569;">PPH</span>
-                        <input type="text" class="form-input" style="width: 135px; text-align:right;" x-model="selectedContract.pph_23">
+                    <div style="display:flex; justify-content:flex-end; align-items:center; gap:5px;">
+                        <span style="font-size: 11px; color: #333; width: 60px; text-align:right;">PPH</span>
+                        <div style="display:flex;">
+                            <input type="text" class="form-input" style="width: 100px; text-align:right; border-right:none;" x-model="selectedContract.pph_23">
+                            <div style="display:flex; flex-direction:column; border: 1px solid var(--hr-border); background:#e0e0e0; width: 16px;">
+                               <span class="pager-btn" style="font-size:8px; padding:0; display:flex; align-items:center; justify-content:center; flex:1; border:none; border-bottom:1px solid #999;">▲</span>
+                               <span class="pager-btn" style="font-size:8px; padding:0; display:flex; align-items:center; justify-content:center; flex:1; border:none;">▼</span>
+                            </div>
+                        </div>
                     </div>
-                    <div style="display:flex; justify-content:flex-end; align-items:center; gap:10px;">
-                        <span style="font-size: 0.75rem; color: #475569;">Total</span>
-                        <input type="text" class="form-input" style="width: 135px; text-align:right; font-weight:bold;" x-model="selectedContract.total" readonly>
+                    <div style="display:flex; justify-content:flex-end; align-items:center; gap:5px;">
+                        <span style="font-size: 11px; color: #333; width: 60px; text-align:right;">Total</span>
+                        <input type="text" class="form-input" style="width: 116px; text-align:right; font-weight:bold;" x-model="selectedContract.total" readonly>
                     </div>
                 </div>
             </div>

@@ -49,8 +49,8 @@
 
     <!-- Main Navigation Tabs -->
     <div class="main-tabs" style="background: #e2e8f0; border-bottom: 1px solid var(--hr-border); padding-left: 10px; border-radius: 0; width: 100%;">
-        <button class="main-tab" :class="activeMainTab === 'detail' ? 'active' : ''" @click="activeMainTab = 'detail'">RECORD DETAIL</button>
-        <button class="main-tab" :class="activeMainTab === 'list' ? 'active' : ''" @click="activeMainTab = 'list'">RECORDS LIST</button>
+        <button class="main-tab" :class="activeMainTab === 'detail' ? 'active' : ''" @click="activeMainTab = 'detail'">QUOTATION DETAIL</button>
+        <button class="main-tab" :class="activeMainTab === 'list' ? 'active' : ''" @click="activeMainTab = 'list'">QUOTATION LIST</button>
         <button class="main-tab" :class="activeMainTab === 'detail_list' ? 'active' : ''" @click="activeMainTab = 'detail_list'">DETAIL QUOTATION</button>
     </div>
 
@@ -59,66 +59,79 @@
         <!-- RECORD DETAIL TAB -->
         <div class="tab-pane" :class="activeMainTab === 'detail' ? 'active' : ''">
             <!-- Header forms -->
-            <div class="detail-form-area" style="justify-content: flex-start; gap: 30px;">
-                <div>
-                    <div class="form-group">
-                        <div class="form-label">Date</div>
-                        <input type="date" class="form-input" style="width: 140px;" x-model="formData.date">
+            <div class="detail-form-area" style="justify-content: flex-start; gap: 80px; padding: 4px 15px; background: #f0f0f0;">
+                <!-- Left Column -->
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; width: 220px;">
+                    <!-- Date -->
+                    <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+                        <div style="font-weight: bold; font-size: 10px; color: #333; margin-bottom: 1px;">DATE</div>
+                        <input type="date" class="form-input" style="width: 130px; text-align: center; border: 1px solid #999; height: 18px; font-size: 11px;" x-model="formData.date">
                     </div>
-                    <div class="form-group">
-                        <div class="form-label">Customer Name</div>
-                        <div style="display: flex; align-items: center; background: white; border: 1px solid var(--hr-border); width: 250px;">
-                            <input type="text" style="flex: 1; border: none; font-size: 0.75rem; padding: 4px 8px; outline: none;" 
-                                   x-model="customerNameInput" list="customer-names" placeholder="Type or Select Customer" @change="onCustomerSelect">
-                            <datalist id="customer-names">
-                                <template x-for="cust in customers" :key="cust.id">
-                                    <option :value="cust.name"></option>
-                                </template>
-                            </datalist>
-                            <span style="background: #f1f5f9; padding: 4px 6px; border-left: 1px solid var(--hr-border); color: #64748b; pointer-events: none;">▼</span>
+
+                    <!-- Customer Name -->
+                    <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+                        <div style="font-weight: bold; font-size: 10px; color: #333; text-align: center; margin-bottom: 1px; line-height: 1;">CUSTOMER<br>NAME</div>
+                        <div style="display: flex; align-items: center; background: white; border: 1px solid #999; width: 100%; height: 18px;">
+                            <input type="text" style="flex: 1; border: none; font-size: 11px; padding: 0 4px; outline: none; background: transparent;" 
+                                   x-model="customerNameInput" list="customer-names" @change="onCustomerSelect">
+                            <span style="background: #e2e8f0; padding: 0 4px; border-left: 1px solid #999; color: #64748b; font-size: 9px; cursor:pointer; height: 100%; display:flex; align-items:center;">▼</span>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="form-label">Attentions 1</div>
-                        <input type="text" class="form-input" style="width: 250px;" x-model="formData.attn1">
+
+                    <!-- Attentions 1 -->
+                    <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+                        <div style="font-weight: bold; font-size: 10px; color: #333; margin-bottom: 1px;">ATTENTIONS 1</div>
+                        <input type="text" class="form-input" style="width: 100%; border: 1px solid #999; padding: 0 4px; height: 18px; font-size: 11px;" x-model="formData.attn1">
                     </div>
-                    <div class="form-group">
-                        <div class="form-label">Attentions 2</div>
-                        <input type="text" class="form-input" style="width: 250px;" x-model="formData.attn2">
+
+                    <!-- Attentions 2 -->
+                    <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+                        <div style="font-weight: bold; font-size: 10px; color: #333; margin-bottom: 1px;">ATTENTIONS 2</div>
+                        <input type="text" class="form-input" style="width: 100%; border: 1px solid #999; padding: 0 4px; height: 18px; font-size: 11px;" x-model="formData.attn2">
                     </div>
-                    <div class="form-group">
-                        <div class="form-label">Select Estimation</div>
-                        <div style="display:flex;">
-                            <select class="form-select" style="width: 200px;" x-model="formData.estimationCode" @change="loadEstimationItems()">
-                                <option value="">Select Estimation</option>
-                                <template x-for="est in estimations" :key="est.code">
-                                    <option :value="est.code" x-text="est.code + ' - ' + est.name"></option>
-                                </template>
-                            </select>
-                            <span style="border: 1px solid var(--hr-border); background:#f1f5f9; padding: 4px 6px; border-left:none; cursor: pointer;" @click="selectRandomEstimation()">📁</span>
-                            <span style="border: 1px solid var(--hr-border); background:#f1f5f9; padding: 4px 6px; border-left:none; cursor: pointer;" @click="formData.estimationCode = ''; loadEstimationItems()">✕</span>
+
+                    <!-- Select Estimation -->
+                    <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+                        <div style="font-weight: bold; font-size: 10px; color: #333; text-align: center; margin-bottom: 1px; line-height: 1;">SELECT<br>ESTIMATION</div>
+                        <div style="display:flex; width: 100%; gap: 1px; height: 18px;">
+                            <div style="display: flex; align-items: center; background: white; border: 1px solid #999; flex: 1;">
+                                <select style="flex: 1; border: none; font-size: 11px; padding: 0 4px; outline: none; appearance: none; background: transparent; height: 100%;" x-model="formData.estimationCode" @change="loadEstimationItems()">
+                                    <option value="">Select Estimation</option>
+                                    <template x-for="est in estimations" :key="est.code">
+                                        <option :value="est.code" x-text="est.code + ' - ' + est.name"></option>
+                                    </template>
+                                </select>
+                                <span style="background: #e2e8f0; padding: 0 4px; border-left: 1px solid #999; color: #64748b; font-size: 9px; pointer-events: none; height: 100%; display:flex; align-items:center;">▼</span>
+                            </div>
+                            <button style="border: 1px solid #999; background: #fcd34d; width: 18px; height: 18px; display: flex; justify-content: center; align-items: center; cursor: pointer; padding:0; font-size: 10px;" @click="selectRandomEstimation()">📁</button>
+                            <button style="border: 1px solid #999; background: white; width: 18px; height: 18px; display: flex; justify-content: center; align-items: center; cursor: pointer; padding:0; font-size: 10px;" @click="formData.estimationCode = ''; loadEstimationItems()">✕</button>
                         </div>
                     </div>
                 </div>
 
-                <div>
-                    <div class="form-group">
-                        <div class="form-label" style="text-align: left; width: 80px;">Sales Name</div>
-                        <div style="display:flex;">
-                            <select class="form-select" style="width: 150px;" x-model="formData.salesName">
-                                <option value="">Select Sales</option>
-                                <template x-for="name in salesNames" :key="name">
-                                    <option :value="name" x-text="name"></option>
-                                </template>
-                            </select>
-                            <span style="border: 1px solid var(--hr-border); background:white; padding: 4px 6px; border-left:none; cursor: pointer;">
-                                <div style="width:8px; height:8px; background:#3b82f6;"></div>
-                            </span>
+                <!-- Right Column -->
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; width: 200px;">
+                    <!-- Sales Name -->
+                    <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+                        <div style="font-weight: bold; font-size: 10px; color: #333; margin-bottom: 1px;">SALES NAME</div>
+                        <div style="display:flex; align-items: center; gap: 4px; height: 18px;">
+                            <div style="display: flex; align-items: center; background: white; border: 1px solid #999; width: 130px; height: 100%;">
+                                <select style="flex: 1; border: none; font-size: 11px; padding: 0 4px; outline: none; appearance: none; background: transparent; height: 100%;" x-model="formData.salesName">
+                                    <option value="">Select Sales</option>
+                                    <template x-for="name in salesNames" :key="name">
+                                        <option :value="name" x-text="name"></option>
+                                    </template>
+                                </select>
+                                <span style="background: #e2e8f0; padding: 0 4px; border-left: 1px solid #999; color: #64748b; font-size: 9px; pointer-events: none; height: 100%; display:flex; align-items:center;">▼</span>
+                            </div>
+                            <input type="checkbox" style="margin: 0; width: 12px; height: 12px; border: 1px solid #999; border-radius:0; cursor:pointer;">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="form-label" style="text-align: left; width: 80px;">PO. No.</div>
-                        <input type="text" class="form-input" style="width: 175px;" x-model="formData.poNo">
+
+                    <!-- PO. No. -->
+                    <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+                        <div style="font-weight: bold; font-size: 10px; color: #333; margin-bottom: 1px;">PO. NO.</div>
+                        <input type="text" class="form-input" style="width: 130px; border: 1px solid #999; padding: 0 4px; height: 18px; font-size: 11px;" x-model="formData.poNo">
                     </div>
                 </div>
             </div>
@@ -166,11 +179,13 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div style="display:flex; justify-content:center; gap:60px; padding: 10px 20px; border-top:1px solid var(--hr-border);">
-                            <input type="text" class="form-input" style="width: 100px; text-align:right;" :value="formatCurrency(totalOffers)" readonly>
-                            <input type="text" class="form-input" style="width: 100px; text-align:right;" :value="formatCurrency(totalOffers)" readonly>
+                        <div style="display:flex; padding: 4px 0; background: white; border-top:1px solid var(--hr-border);">
+                            <div style="flex: 0 0 550px;"></div>
+                            <div style="flex: 0 0 100px; padding: 0 4px;"><input type="text" class="form-input" style="width: 100%; text-align:right; border-color: #ccc; color:#000;" :value="formatCurrency(totalOffers)" readonly></div>
+                            <div style="flex: 0 0 100px; padding: 0 4px;"><input type="text" class="form-input" style="width: 100%; text-align:right; border-color: #ccc; color:#000;" :value="formatCurrency(totalOffers)" readonly></div>
+                            <div style="flex: 0 0 100px;"></div>
                         </div>
-                        <div class="grid-footer" style="padding: 2px 4px;">
+                        <div class="grid-footer" style="padding: 2px 4px; background: white; border-top: none;">
                             <button class="pager-btn" @click="navigate('first')">|◀</button> 
                             <button class="pager-btn" @click="navigate('prev')">◀◀</button> 
                             <button class="pager-btn" @click="navigate('prev')">◀</button>
@@ -178,27 +193,35 @@
                             <button class="pager-btn" @click="navigate('next')">▶</button> 
                             <button class="pager-btn" @click="navigate('next')">▶▶</button> 
                             <button class="pager-btn" @click="navigate('last')">▶|</button>
-                            <button class="pager-btn" style="margin-left:5px;" @click="addRow()">+</button> <button class="pager-btn" @click="removeRow(selectedEstimationItems.length - 1)">-</button>
+                            <button class="pager-btn" style="margin-left: 20px;" @click="addRow()">+</button>
+                            <button class="pager-btn" @click="removeRow(selectedEstimationItems.length - 1)">-</button>
+                            <button class="pager-btn">◀</button>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Footer Notes & Total Area -->
-            <div style="padding: 10px; display: flex; justify-content: space-between; align-items: flex-end; background:#e2e8f0;">
+            <div style="padding: 10px; display: flex; justify-content: space-between; align-items: flex-start; background:#f0f0f0;">
                 <div>
-                    <div style="font-size: 0.75rem; font-weight: bold; color: #475569; margin-bottom: 2px; padding-left:2px; background:#e2e8f0; border:1px solid #cbd5e1; border-bottom:0; width:300px;">NOTES</div>
+                    <div style="font-size: 11px; color: #333; margin-bottom: 2px; padding: 2px 4px; background:#f0f0f0; width:200px;">NOTES</div>
                     <div style="display:flex;">
-                        <textarea style="width: 300px; height: 50px; border: 1px solid var(--hr-border); resize:none;" x-model="formData.notes"></textarea>
-                        <div style="display:flex; flex-direction:column; border: 1px solid var(--hr-border); border-left:none; background:#f8fafc; justify-content:space-between;">
-                           <span style="font-size:0.5rem; padding: 2px 4px; cursor:pointer; color:#64748b;">▲</span>
-                           <span style="font-size:0.5rem; padding: 2px 4px; cursor:pointer; color:#64748b;">▼</span>
+                        <textarea style="width: 250px; height: 50px; border: 1px solid var(--hr-border); resize:none; font-size:11px;" x-model="formData.notes"></textarea>
+                        <div style="display:flex; flex-direction:column; border: 1px solid var(--hr-border); border-left:none; background:#e8e8e8; justify-content:space-between; width: 16px;">
+                           <span style="font-size:8px; display:flex; align-items:center; justify-content:center; flex:1; cursor:pointer; color:#333; border-bottom:1px solid #999;">▲</span>
+                           <span style="font-size:8px; display:flex; align-items:center; justify-content:center; flex:1; cursor:pointer; color:#333;">▼</span>
                         </div>
                     </div>
                 </div>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span style="font-size: 0.75rem; font-weight: bold; color: #334155;">Total Offers</span>
-                    <input type="text" class="form-input" style="width: 120px; text-align:right;" :value="formatCurrency(totalOffers)" readonly>
+                <div style="display:flex; align-items:center; gap:5px; margin-top: 15px;">
+                    <span style="font-size: 11px; color: #333;">Total Offers</span>
+                    <div style="display: flex;">
+                        <input type="text" class="form-input" style="width: 120px; text-align:right; border-right: none;" :value="formatCurrency(totalOffers)" readonly>
+                        <div style="display:flex; flex-direction:column; border: 1px solid var(--hr-border); background:#e8e8e8; width: 16px;">
+                           <span style="font-size:8px; display:flex; align-items:center; justify-content:center; flex:1; cursor:pointer; color:#333; border-bottom:1px solid #999; height:9px;">▲</span>
+                           <span style="font-size:8px; display:flex; align-items:center; justify-content:center; flex:1; cursor:pointer; color:#333; height:9px;">▼</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -230,7 +253,7 @@
                     </thead>
                     <tbody>
                         <template x-for="(q, i) in quotationsHistory" :key="i">
-                            <tr>
+                            <tr @click="selectRecord(i)" :class="currentIndex === i ? 'selected' : ''" style="cursor: pointer;">
                                 <td style="text-align:center;"><div style="width:8px; height:8px; background:#3b82f6; margin:0 auto;"></div></td>
                                 <td x-text="q.date"></td>
                                 <td x-text="q.userno"></td>
@@ -305,7 +328,7 @@
                     </thead>
                     <tbody>
                         <template x-for="(item, i) in detailedQuotationItems" :key="i">
-                            <tr>
+                            <tr @click="selectDetailRecord(item)" style="cursor: pointer;">
                                 <td style="text-align:center;"><div style="width:8px; height:8px; background:#3b82f6; margin:0 auto;"></div></td>
                                 <td x-text="item.date"></td>
                                 <td x-text="item.userno"></td>
@@ -444,6 +467,31 @@
 
                 // Load items for this estimation
                 this.loadEstimationItems();
+            },
+
+            selectRecord(index) {
+                this.currentIndex = index;
+                this.loadCurrentRecord();
+                this.activeMainTab = 'detail';
+            },
+
+            selectDetailRecord(item) {
+                // Find matching quote in history
+                let index = this.quotationsHistory.findIndex(q => q.order_no === item.order_no);
+                if (index === -1) {
+                    index = this.quotationsHistory.findIndex(q => q.customer === item.customer && q.date === item.date);
+                }
+                
+                if (index !== -1) {
+                    this.selectRecord(index);
+                } else {
+                    this.formData.date = item.date;
+                    this.formData.poNo = item.order_no;
+                    this.formData.estimationCode = item.est_selected;
+                    this.customerNameInput = item.customer;
+                    this.onCustomerSelect();
+                    this.activeMainTab = 'detail';
+                }
             },
 
             onCustomerSelect() {
