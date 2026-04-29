@@ -96,6 +96,103 @@
         .pager-btn { padding: 2px 6px; border: 1px solid #999; background: #fff; cursor: pointer; min-width: 25px; }
         .pager-btn:hover { background: #eee; }
         .pager-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* ── PRODUCT LIST & TOOLS TAB ── */
+        .list-split-layout { display: flex; flex: 1; overflow: hidden; height: 100%; }
+        .list-col-left { flex: 1; display: flex; flex-direction: column; overflow: hidden; border-right: 1px solid #999; position: relative; }
+        .list-col-right { width: 310px; flex-shrink: 0; flex-direction: column; background: #f5f5f5; position: relative; border-left: 1px solid #ccc; }
+        [x-cloak] { display: none !important; }
+
+        /* grid toolbar */
+        .grid-toolbar { background: #f0f0f0; border-bottom: 1px solid #999; padding: 3px 6px; font-size: 11px; color: #555; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+        .grid-search { border: 1px solid #999; background: #fff; padding: 1px 6px; cursor: pointer; font-size: 13px; }
+
+        /* data table */
+        .data-table-container { flex: 1; overflow: auto; background: #fff; }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        .data-table thead th { background: #e8e8e8; border: 1px solid #aaa; padding: 3px 6px; text-align: left; position: sticky; top: 0; z-index: 5; white-space: nowrap; font-weight: bold; }
+        .data-table tbody td { border: 1px solid #ddd; padding: 2px 6px; white-space: nowrap; }
+        .data-table tbody tr:hover td { background: #e8f0fb; cursor: pointer; }
+        .data-table tbody tr.selected td { background: #3a5a8f; color: #fff; }
+        .data-table td.num { text-align: right; }
+        .data-table td.chk { text-align: center; }
+
+        /* pagination */
+        .pagination-controls { background: #f0f0f0; border-top: 1px solid #999; padding: 3px 8px; display: flex; align-items: center; gap: 3px; font-size: 11px; flex-shrink: 0; }
+        .page-btn { border: 1px solid #999; background: #fff; padding: 1px 6px; cursor: pointer; font-size: 11px; text-decoration: none; color: #333; }
+        .page-btn:hover { background: #eee; }
+
+        /* right panel tabs */
+        .panel-tabs { display: flex; background: #e0e0e0; border-bottom: 1px solid #999; flex-shrink: 0; }
+        .panel-tab { padding: 3px 10px; font-size: 11px; cursor: pointer; border-right: 1px solid #bbb; border-top: 1px solid transparent; }
+        .panel-tab:hover { background: #d0d0d0; }
+        .panel-tab.active { background: #fff; font-weight: bold; border-top: 2px solid #3a5a8f; }
+
+        /* panel content */
+        .panel-content { flex: 1; overflow: auto; background: #fff; position: relative; }
+        
+        /* statistics & detail tables */
+        .stat-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 5px; }
+        .stat-table th { background: transparent; padding: 6px 4px; text-align: center; color: #1e293b; font-weight: 700; text-transform: uppercase; font-size: 10px; border: none; }
+        .stat-table td { padding: 2px 4px; height: 26px; vertical-align: middle; border: none; }
+        .stat-table td:first-child { text-align: right; color: #334155; width: 105px; padding-right: 8px; font-weight: normal; }
+        .stat-table input { border: 1px solid #cbd5e1; background: #fff; height: 22px; text-align: right; padding: 0 4px; font-size: 11px; color: #334155; border-radius: 1px; width: 100%; box-sizing: border-box; }
+        .stat-table input[readonly] { background: #fff; cursor: default; }
+        .stat-table input:focus { border-color: #3a5a8f; outline: none; }
+        .stat-table input::-webkit-inner-spin-button, .stat-table input::-webkit-outer-spin-button { opacity: 0.6; }
+
+        /* panel elements */
+        .panel-footer { display: flex; justify-content: flex-end; gap: 8px; padding: 4px 8px; border-top: 1px solid #ddd; background: #f8f8f8; flex-shrink: 0; }
+        .panel-footer input { width: 50px; text-align: right; border: 1px solid #ccc; font-size: 10px; padding: 1px 3px; background: #fff; height: 18px; }
+        .panel-pager { display: flex; align-items: center; gap: 2px; padding: 3px 8px; border-top: 1px solid #ddd; background: #f8f8f8; font-size: 10px; color: #666; flex-shrink: 0; }
+        
+        .act-filter { display: flex; align-items: center; gap: 6px; padding: 6px 8px; border-bottom: 1px solid #ddd; background: #f8f8f8; font-size: 11px; flex-shrink: 0; }
+        .act-filter input { border: 1px solid #ccc; font-size: 11px; padding: 2px 4px; }
+        
+        .wh-subtabs { display: flex; gap: 2px; background: #e0e0e0; padding: 4px 8px 0; border-bottom: 1px solid #bbb; flex-shrink: 0; }
+        .wh-subtab { padding: 4px 8px; font-size: 10px; cursor: pointer; background: #d0d0d0; border: 1px solid #bbb; border-bottom: none; }
+        .wh-subtab.active { background: #fff; font-weight: bold; }
+        .wh-filter { display: flex; align-items: center; gap: 6px; padding: 5px 8px; border-bottom: 1px solid #ddd; background: #f8f8f8; font-size: 11px; flex-shrink: 0; }
+        .wh-filter select { border: 1px solid #ccc; font-size: 11px; padding: 1px 4px; }
+        .wh-filter label { display: flex; align-items: center; gap: 3px; font-size: 10px; margin-left: 10px; }
+
+        /* right panel content */
+        .panel-content { flex: 1; overflow: auto; background: #fff; }
+        .panel-content table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        .panel-content th { background: #f0f0f0; border: 1px solid #ccc; padding: 3px 6px; font-weight: normal; color: #444; }
+        .panel-content td { border: 1px solid #e8e8e8; padding: 2px 6px; }
+        .panel-content td input[type=text] { border: 1px solid #ccc; font-size: 11px; padding: 1px 3px; text-align: right; background: #fff; }
+
+        /* panel footer */
+        .panel-footer { border-top: 1px solid #ccc; background: #f5f5f5; padding: 3px 6px; display: flex; justify-content: flex-end; gap: 4px; flex-shrink: 0; }
+        .panel-footer input { width: 60px; text-align: right; border: 1px solid #ccc; font-size: 11px; padding: 1px 3px; background: #fff; }
+        .panel-pager { border-top: 1px solid #ccc; background: #f0f0f0; padding: 2px 6px; display: flex; align-items: center; gap: 3px; font-size: 11px; flex-shrink: 0; }
+        .panel-pager button { border: 1px solid #999; background: #fff; padding: 1px 5px; cursor: pointer; font-size: 10px; }
+
+        /* warehouse sub-tabs */
+        .wh-subtabs { display: flex; gap: 2px; background: #e0e0e0; padding: 3px 6px 0; border-bottom: 1px solid #ccc; flex-shrink: 0; }
+        .wh-subtab { padding: 2px 8px; font-size: 11px; border: 1px solid #bbb; border-bottom: none; background: #d0d0d0; cursor: pointer; border-radius: 2px 2px 0 0; }
+        .wh-subtab.active { background: #fff; font-weight: bold; }
+        .wh-filter { padding: 4px 6px; border-bottom: 1px solid #e0e0e0; background: #f5f5f5; display: flex; align-items: center; gap: 4px; font-size: 11px; flex-shrink: 0; }
+        .wh-filter select { font-size: 11px; border: 1px solid #ccc; padding: 1px 4px; }
+        .wh-filter button { border: 1px solid #999; background: #e8e8e8; padding: 1px 5px; cursor: pointer; font-size: 13px; color: green; }
+        .wh-filter label { display: flex; align-items: center; gap: 3px; font-size: 11px; }
+
+        /* activity filter */
+        .act-filter { padding: 4px 6px; border-bottom: 1px solid #e0e0e0; background: #f5f5f5; display: flex; align-items: center; gap: 4px; font-size: 11px; flex-shrink: 0; flex-wrap: wrap; }
+        .act-filter input[type=date] { font-size: 11px; border: 1px solid #ccc; padding: 1px 4px; }
+        .act-filter button { border: 1px solid #999; background: #e8e8e8; padding: 1px 5px; cursor: pointer; font-size: 13px; color: green; }
+
+        /* stat table */
+        .stat-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        .stat-table th { background: #f0f0f0; border: 1px solid #ccc; padding: 3px 8px; font-weight: normal; color: #555; text-align: right; }
+        .stat-table th:first-child { text-align: left; width: 50%; }
+        .stat-table td { border: 1px solid #eee; padding: 2px 8px; }
+        .stat-table td:first-child { color: #444; }
+        .stat-table td input { width: 55px; text-align: right; border: 1px solid #ccc; font-size: 11px; padding: 1px 3px; background: #fafafa; }
+        .stat-table td:last-child input { width: 75px; }
+        .stat-table tr:nth-child(even) { background: #fafafa; }
+        .stat-table tr.selected td { background: #c8d8f0; }
     </style>
 @endpush
 
@@ -325,280 +422,336 @@
     </div><!-- /fa-pane detail -->
         <!-- END TAB 1 -->
 
-    <div class="fa-pane" :class="activeTab === 'list' ? 'active' : ''" 
-         x-data="productAssets()" 
+    <div class="fa-pane" :class="activeTab === 'list' ? 'active' : ''"
+         x-data="productAssets()"
          x-init="init()">
-            <div class="list-split-layout">
-                <!-- Left Grid -->
-                <div class="list-col-left">
-                    <div class="grid-toolbar">
-                        <span>Drag a column header here to group by that column</span>
-                        <div x-show="loading" class="spinner" style="margin-left: 10px;"></div>
-                        <button class="grid-search">⚲</button>
-                    </div>
-                    <div class="data-table-container">
-                        <table class="data-table" id="productGrid">
-                            <thead>
-                                <tr>
-                                    <th style="width: 30px;"></th>
-                                    <th>CODE</th>
-                                    <th>PRODUCT NAME</th>
-                                    <th>COST PRICE</th>
-                                    <th>PRICE (GR)</th>
-                                    <th>PRICE (EC)</th>
-                                    <th>MN. ST</th>
-                                    <th>STOCK</th>
-                                    <th>ON ORDER</th>
-                                    <th>DC</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($products as $product)
-                                <tr class="prod-row" 
-                                    :class="{'selected': selectedProduct && selectedProduct.code === '{{ $product->code }}'}"
-                                    @click="selectProduct(@json($product), {{ $loop->index }})">
-                                    <td></td>
-                                    <td>{{ $product->code }}</td>
-                                    <td>{{ Str::limit($product->product_name, 25) }}</td>
-                                    <td class="num">{{ number_format($product->cost_price, 3, ',', '.') }}</td>
-                                    <td>{{ $product->price_gr ? number_format($product->price_gr, 2, ',', '.') : '' }}</td>
-                                    <td>{{ $product->price_ec ? number_format($product->price_ec, 2, ',', '.') : '' }}</td>
-                                    <td class="num">{{ $product->min_stock }}</td>
-                                    <td class="num">{{ $product->stock }}</td>
-                                    <td class="num">{{ $product->on_order }}</td>
-                                    <td style="text-align:center;"><input type="checkbox" {{ $product->discontinue ? 'checked' : '' }} disabled></td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="10" style="text-align:center; padding: 20px;">No Product Assets Found</td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="pagination-controls" style="border-top: 1px solid #cbd5e1; padding: 6px 12px; background: #fff; position: absolute; bottom: 0; left: 0; right: 0;">
-                        <a href="{{ $products->url(1) }}" class="page-btn" title="First Page" style="text-decoration:none;">⏮</a>
-                        <a href="{{ $products->previousPageUrl() }}" class="page-btn" title="Previous Page" style="text-decoration:none;">◀</a>
-                        
-                        <span style="user-select:none; margin: 0 10px;">Record {{ $products->firstItem() ?? 0 }} of {{ $products->total() }}</span>
-                        
-                        <a href="{{ $products->nextPageUrl() }}" class="page-btn" title="Next Page" style="text-decoration:none;">▶</a>
-                        <a href="{{ $products->url($products->lastPage()) }}" class="page-btn" title="Last Page" style="text-decoration:none;">⏭</a>
+
+        <div class="list-split-layout">
+            <!-- ═══ LEFT: Product Grid ═══ -->
+            <div class="list-col-left">
+                <div class="grid-toolbar">
+                    <span>Drag a column header here to group by that column</span>
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <div x-show="loading" style="width:12px;height:12px;border:2px solid #3a5a8f;border-top-color:transparent;border-radius:50%;animation:spin 0.6s linear infinite;"></div>
+                        <button class="grid-search" title="Search">⚲</button>
                     </div>
                 </div>
-                
-                <!-- Right Panel -->
-                <div class="list-col-right" x-show="selectedProduct" x-transition.opacity.duration.300ms style="display: none; flex-direction:column;">
+                <div class="data-table-container">
+                    <table class="data-table" id="productGrid">
+                        <thead>
+                            <tr>
+                                <th style="width:20px;"></th>
+                                <th>CODE</th>
+                                <th>PRODUCT NAME</th>
+                                <th style="text-align:right;">COST PRICE</th>
+                                <th style="text-align:right;">PRICE (GR)</th>
+                                <th style="text-align:right;">PRICE (EC)</th>
+                                <th style="text-align:right;">MN. ST</th>
+                                <th style="text-align:right;">STOCK</th>
+                                <th style="text-align:right;">ON ORDER</th>
+                                <th style="width:28px;text-align:center;">DC</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($products as $product)
+                            <tr :class="{'selected': selectedProduct && selectedProduct.id === {{ $product->id }}}"
+                                @click="selectProduct({{ json_encode($product) }}, {{ $loop->index }})"
+                                style="cursor: pointer;">
+                                <td style="text-align:center; width: 25px;">
+                                    <template x-if="selectedProduct && selectedProduct.id === {{ $product->id }}">
+                                        <span>▶</span>
+                                    </template>
+                                </td>
+                                <td>{{ $product->code }}</td>
+                                <td>{{ Str::limit($product->product_name, 28) }}</td>
+                                <td class="num">{{ number_format($product->cost_price, 3, ',', '.') }}</td>
+                                <td class="num">{{ $product->price_gr ? number_format($product->price_gr, 2, ',', '.') : '' }}</td>
+                                <td class="num">{{ $product->price_ec ? number_format($product->price_ec, 2, ',', '.') : '' }}</td>
+                                <td class="num">{{ $product->min_stock }}</td>
+                                <td class="num">{{ $product->stock }}</td>
+                                <td class="num">{{ $product->on_order }}</td>
+                                <td class="chk"><input type="checkbox" {{ $product->discontinue ? 'checked' : '' }} disabled style="pointer-events:none;"></td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="10" style="text-align:center;padding:20px;color:#888;">No Product Assets Found</td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination-controls">
+                    <a href="{{ $products->url(1) }}" class="page-btn" title="First">|◀</a>
+                    <a href="{{ $products->previousPageUrl() }}" class="page-btn" title="Prev">◀</a>
+                    <span style="margin:0 8px;">Record {{ $products->firstItem() ?? 0 }} of {{ $products->total() }}</span>
+                    <a href="{{ $products->nextPageUrl() }}" class="page-btn" title="Next">▶</a>
+                    <a href="{{ $products->url($products->lastPage()) }}" class="page-btn" title="Last">▶|</a>
+                </div>
+            </div><!-- /list-col-left -->
 
-                    <!-- Loading Overlay -->
-                    <div x-show="loading" x-transition.opacity
-                         style="position: absolute; inset: 0; background: rgba(255,255,255,0.7); z-index: 10; display: flex; align-items: center; justify-content: center;">
-                        <div class="spinner"></div>
-                    </div>
+            <!-- ═══ RIGHT: Detail Panels ═══ -->
+            <div class="list-col-right" :style="selectedProduct ? 'display:flex;' : 'display:none;'">
 
-                    <!-- Top panel tabs -->
-                    <div class="panel-tabs" style="flex-shrink:0;">
-                        <div class="panel-tab" :class="{'active': activePanel === 'pnl-statistics'}" @click="setActivePanel('pnl-statistics')">Statistics</div>
-                        <div class="panel-tab" :class="{'active': activePanel === 'pnl-summary'}" @click="setActivePanel('pnl-summary')">Summary</div>
-                        <div class="panel-tab" :class="{'active': activePanel === 'pnl-activity'}" @click="setActivePanel('pnl-activity')">Activity</div>
-                        <div class="panel-tab" :class="{'active': activePanel === 'pnl-warehouse'}" @click="setActivePanel('pnl-warehouse')">Warehouse</div>
-                    </div>
+                <!-- Loading Overlay -->
+                <div x-show="loading"
+                     style="position:absolute;inset:0;background:rgba(255,255,255,0.75);z-index:20;display:flex;align-items:center;justify-content:center;">
+                    <div style="width:18px;height:18px;border:2px solid #3a5a8f;border-top-color:transparent;border-radius:50%;animation:spin 0.7s linear infinite;"></div>
+                </div>
 
-                    <!-- ── STATISTICS ── -->
-                    <div class="panel-content" x-show="activePanel === 'pnl-statistics'" style="padding:0; overflow-y:auto; flex:1;">
-                        <table style="width:100%; border-collapse:collapse; font-size:0.72rem;">
-                            <thead>
-                                <tr style="background:#f8fafc;">
-                                    <th style="padding:4px 8px; border:1px solid #e2e8f0; color:#64748b; font-weight:normal; width:50%;"></th>
-                                    <th style="padding:4px 8px; border:1px solid #e2e8f0; color:#64748b; font-weight:normal; text-align:right;">STOCK</th>
-                                    <th style="padding:4px 8px; border:1px solid #e2e8f0; color:#64748b; font-weight:normal; text-align:right;">BALANCE</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                <!-- Panel Tabs -->
+                <div class="panel-tabs">
+                    <div class="panel-tab" :class="{'active': activePanel==='pnl-statistics'}" @click="setActivePanel('pnl-statistics')">Statistics</div>
+                    <div class="panel-tab" :class="{'active': activePanel==='pnl-summary'}"    @click="setActivePanel('pnl-summary')">Summary</div>
+                    <div class="panel-tab" :class="{'active': activePanel==='pnl-activity'}"   @click="setActivePanel('pnl-activity')">Activity</div>
+                    <div class="panel-tab" :class="{'active': activePanel==='pnl-warehouse'}"  @click="setActivePanel('pnl-warehouse')">Warehouse</div>
+                </div>
+
+                <!-- STATISTICS -->
+                <div class="panel-content" x-show="activePanel==='pnl-statistics'" style="overflow-y:auto; padding-top: 10px;">
+                    <table class="stat-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th style="width: 70px;">STOCK</th>
+                                <th style="width: 120px;">BALANCE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Begining Balance</td>
+                                <td><input type="number" :value="pd ? pd.beg_stock : 0" readonly></td>
+                                <td><input type="text" :value="pd ? formatCurr(pd.beg_balance) : '0,00'" readonly></td>
+                            </tr>
+                            <tr>
+                                <td>Current Balance</td>
+                                <td><input type="number" :value="pd ? pd.cur_stock : 0" readonly></td>
+                                <td><input type="text" :value="pd ? formatCurr(pd.cur_balance) : '0,00'" readonly></td>
+                            </tr>
+                            <template x-for="m in months" :key="m.key">
                                 <tr>
-                                    <td style="padding:3px 8px; border:1px solid #f1f5f9; color:#475569;">Begining Balance</td>
-                                    <td style="padding:3px 8px; border:1px solid #f1f5f9; text-align:right;"><input type="text" style="width:50px; text-align:right; border:1px solid #e2e8f0; font-size:0.7rem; padding:1px 3px;" :value="pd ? pd.beg_stock : 0" readonly></td>
-                                    <td style="padding:3px 8px; border:1px solid #f1f5f9; text-align:right;"><input type="text" style="width:80px; text-align:right; border:1px solid #e2e8f0; font-size:0.7rem; padding:1px 3px;" :value="pd ? formatCurr(pd.beg_balance) : '0,00'" readonly></td>
+                                    <td x-text="m.label"></td>
+                                    <td><input type="number" :value="pd ? (pd.monthly_stock[m.key] || 0) : 0" readonly></td>
+                                    <td><input type="text" :value="pd ? formatCurr(pd.monthly_balance[m.key] || 0) : '0,00'" readonly></td>
                                 </tr>
-                                <tr style="background:#f8fafc;">
-                                    <td style="padding:3px 8px; border:1px solid #f1f5f9; color:#475569;">Current Balance</td>
-                                    <td style="padding:3px 8px; border:1px solid #f1f5f9; text-align:right;"><input type="text" style="width:50px; text-align:right; border:1px solid #e2e8f0; font-size:0.7rem; padding:1px 3px;" :value="pd ? pd.cur_stock : 0" readonly></td>
-                                    <td style="padding:3px 8px; border:1px solid #f1f5f9; text-align:right;"><input type="text" style="width:80px; text-align:right; border:1px solid #e2e8f0; font-size:0.7rem; padding:1px 3px;" :value="pd ? formatCurr(pd.cur_balance) : '0,00'" readonly></td>
-                                </tr>
-                                <template x-for="m in months" :key="m.key">
-                                    <tr>
-                                        <td style="padding:3px 8px; border:1px solid #f1f5f9; color:#475569;" x-text="m.label"></td>
-                                        <td style="padding:3px 8px; border:1px solid #f1f5f9; text-align:right;"><input type="text" style="width:50px; text-align:right; border:1px solid #e2e8f0; font-size:0.7rem; padding:1px 3px;" :value="pd ? (pd.monthly_stock[m.key] || 0) : 0" readonly></td>
-                                        <td style="padding:3px 8px; border:1px solid #f1f5f9; text-align:right;"><input type="text" style="width:80px; text-align:right; border:1px solid #e2e8f0; font-size:0.7rem; padding:1px 3px;" :value="pd ? formatCurr(pd.monthly_balance[m.key] || 0) : '0,00'" readonly></td>
-                                    </tr>
-                                </template>
-                            </tbody>
-                        </table>
-                    </div>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
 
-                    <!-- ── SUMMARY (Warehouse list) ── -->
-                    <div class="panel-content" x-show="activePanel === 'pnl-summary'" style="padding:0; overflow-y:auto; flex:1; display:none;">
-                        <table style="width:100%; border-collapse:collapse; font-size:0.72rem;">
+                <!-- SUMMARY -->
+                <div x-show="activePanel==='pnl-summary'" style="display:none;flex-direction:column;flex:1;overflow:hidden;">
+                    <div class="panel-content" style="overflow-y:auto;flex:1;">
+                        <table class="stat-table" style="margin-top: 0;">
                             <thead>
-                                <tr style="background:#f8fafc;">
-                                    <th style="padding:4px 8px; border:1px solid #e2e8f0; color:#64748b; font-weight:normal;">WAREHOUSE</th>
-                                    <th style="padding:4px 8px; border:1px solid #e2e8f0; color:#64748b; font-weight:normal; text-align:right;">STOCK</th>
-                                    <th style="padding:4px 8px; border:1px solid #e2e8f0; color:#64748b; font-weight:normal; text-align:right;">ON TRANSIT</th>
-                                </tr>
+                                <tr><th style="text-align:left; padding-left: 10px;">WAREHOUSE</th><th>STOCK</th><th>ON TRANSIT</th></tr>
                             </thead>
                             <tbody>
-                                <template x-for="(wh, idx) in (pd ? pd.warehouses : [])" :key="idx">
-                                    <tr :class="idx === 0 ? 'selected' : ''" style="cursor:pointer;">
-                                        <td style="padding:3px 8px; border:1px solid #f1f5f9;">
-                                            <span x-show="idx === 0" style="color:#475569;">▶ </span>
-                                            <span x-text="wh.name"></span>
-                                        </td>
-                                        <td style="padding:3px 8px; border:1px solid #f1f5f9; text-align:right;" x-text="wh.stock"></td>
-                                        <td style="padding:3px 8px; border:1px solid #f1f5f9; text-align:right;" x-text="wh.on_transit"></td>
+                                <template x-for="(wh,idx) in (pd ? pd.warehouses : [])" :key="idx">
+                                    <tr :class="{'selected': idx===0}" style="cursor:pointer;">
+                                        <td style="text-align: left; padding-left: 10px; font-size: 10px;"><span x-show="idx===0">▶ </span><span x-text="wh.name"></span></td>
+                                        <td style="text-align:right;"><input type="text" :value="wh.stock" readonly style="width: 60px; height: 18px; border:none; background:transparent; font-size: 11px;"></td>
+                                        <td style="text-align:right;"><input type="text" :value="wh.on_transit" readonly style="width: 60px; height: 18px; border:none; background:transparent; font-size: 11px;"></td>
                                     </tr>
                                 </template>
                             </tbody>
                         </table>
-                        <!-- footer totals -->
-                        <div style="display:flex; justify-content:flex-end; padding:4px 8px; border-top:1px solid #e2e8f0; background:#f8fafc; gap:8px;">
-                            <input type="text" style="width:50px; text-align:right; border:1px solid #e2e8f0; font-size:0.7rem; padding:1px 3px; background:#fff;" :value="pd ? pd.warehouses.reduce((s,w)=>s+w.stock,0) : 0" readonly>
-                            <input type="text" style="width:50px; text-align:right; border:1px solid #e2e8f0; font-size:0.7rem; padding:1px 3px; background:#fff;" :value="pd ? pd.warehouses.reduce((s,w)=>s+w.on_transit,0) : 0" readonly>
-                        </div>
-                        <!-- pager -->
-                        <div style="display:flex; align-items:center; gap:2px; padding:3px 8px; border-top:1px solid #e2e8f0; background:#f8fafc; font-size:0.7rem; color:#64748b;">
-                            <button class="pager-btn" style="padding:1px 5px; font-size:0.6rem;">|◀</button>
-                            <button class="pager-btn" style="padding:1px 5px; font-size:0.6rem;">◀</button>
-                            <span style="padding: 0 6px;" x-text="'Record 1 of ' + (pd ? pd.warehouses.length : 0)"></span>
-                            <button class="pager-btn" style="padding:1px 5px; font-size:0.6rem;">▶</button>
-                            <button class="pager-btn" style="padding:1px 5px; font-size:0.6rem;">▶|</button>
-                        </div>
                     </div>
+                    <div class="panel-footer">
+                        <input type="text" :value="pd ? pd.warehouses.reduce((s,w)=>s+w.stock,0) : 0" readonly>
+                        <input type="text" :value="pd ? pd.warehouses.reduce((s,w)=>s+w.on_transit,0) : 0" readonly>
+                    </div>
+                    <div class="panel-pager">
+                        <button class="pager-btn" style="padding:0 3px;">|◀</button><button class="pager-btn" style="padding:0 3px;">◀</button>
+                        <span style="padding:0 6px;" x-text="'Record 1 of '+(pd ? pd.warehouses.length : 0)"></span>
+                        <span style="margin-left:4px;color:#999;">|◄</span>
+                    </div>
+                </div>
 
-                    <!-- ── ACTIVITY ── -->
-                    <div class="panel-content" x-show="activePanel === 'pnl-activity'" style="padding:0; overflow-y:auto; flex:1; display:none;">
-                        <!-- date range filter -->
-                        <div style="display:flex; align-items:center; gap:6px; padding:6px 8px; border-bottom:1px solid #e2e8f0; background:#f8fafc; font-size:0.72rem; flex-wrap:wrap;">
-                            <span style="color:#475569;">Period</span>
-                            <input type="date" style="border:1px solid #cbd5e1; font-size:0.7rem; padding:2px 4px;" value="2026-03-16">
-                            <span style="color:#475569;">Thru</span>
-                            <input type="date" style="border:1px solid #cbd5e1; font-size:0.7rem; padding:2px 4px;" value="2026-03-16">
-                            <button style="background:#e2e8f0; border:1px solid #cbd5e1; padding:2px 6px; font-size:0.7rem; cursor:pointer;">↻</button>
-                        </div>
-                        <table style="width:100%; border-collapse:collapse; font-size:0.72rem;">
+                <!-- ACTIVITY -->
+                <div x-show="activePanel==='pnl-activity'" style="display:none;flex-direction:column;flex:1;overflow:hidden;">
+                    <div class="act-filter">
+                        <span>Period</span>
+                        <input type="date" value="{{ date('Y-m-d') }}" style="width: 110px;">
+                        <span>Thru</span>
+                        <input type="date" value="{{ date('Y-m-d') }}" style="width: 110px;">
+                        <button class="grid-search" style="font-size: 10px; padding: 0 4px; color: green; font-weight: bold;">⟳</button>
+                    </div>
+                    <div class="panel-content" style="overflow-y:auto;flex:1;">
+                        <table class="stat-table" style="margin-top: 0; min-width: 600px;">
                             <thead>
-                                <tr style="background:#f8fafc;">
-                                    <th style="padding:4px 8px; border:1px solid #e2e8f0; color:#64748b; font-weight:normal;">DATE</th>
-                                    <th style="padding:4px 8px; border:1px solid #e2e8f0; color:#64748b; font-weight:normal;">USERNO</th>
-                                    <th style="padding:4px 8px; border:1px solid #e2e8f0; color:#64748b; font-weight:normal; text-align:right;">IN</th>
-                                    <th style="padding:4px 8px; border:1px solid #e2e8f0; color:#64748b; font-weight:normal; text-align:right;">OUT</th>
-                                    <th style="padding:4px 8px; border:1px solid #e2e8f0; color:#64748b; font-weight:normal; text-align:right;">STO</th>
+                                <tr>
+                                    <th style="width: 25px; border: 1px solid #ccc;"></th>
+                                    <th style="text-align:left; padding-left: 5px; border: 1px solid #ccc;">DATE</th>
+                                    <th style="text-align:left; border: 1px solid #ccc;">USERNO</th>
+                                    <th style="border: 1px solid #ccc;">IN</th>
+                                    <th style="border: 1px solid #ccc;">OUT</th>
+                                    <th style="border: 1px solid #ccc;">STOCK</th>
+                                    <th style="border: 1px solid #ccc;">DEBET</th>
+                                    <th style="border: 1px solid #ccc;">CREDIT</th>
+                                    <th style="border: 1px solid #ccc;">BALANCE</th>
+                                    <th style="border: 1px solid #ccc;">COST</th>
+                                    <th style="border: 1px solid #ccc; width: 20px;"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <template x-if="!pd || !pd.activities || pd.activities.length === 0">
-                                    <tr><td colspan="5" style="text-align:center; padding:20px; color:#94a3b8;">No activity in selected period</td></tr>
+                                    <tr><td colspan="11" style="text-align:center;padding:20px;color:#aaa;">No activity in selected period</td></tr>
                                 </template>
                                 <template x-if="pd && pd.activities && pd.activities.length > 0">
                                     <template x-for="act in pd.activities" :key="act.id">
-                                        <tr>
-                                            <td style="padding:3px 8px; border:1px solid #f1f5f9;" x-text="act.date"></td>
-                                            <td style="padding:3px 8px; border:1px solid #f1f5f9;" x-text="act.userno"></td>
-                                            <td style="padding:3px 8px; border:1px solid #f1f5f9; text-align:right;" x-text="act.in"></td>
-                                            <td style="padding:3px 8px; border:1px solid #f1f5f9; text-align:right;" x-text="act.out"></td>
-                                            <td style="padding:3px 8px; border:1px solid #f1f5f9; text-align:right;" x-text="act.sto"></td>
+                                        <tr style="border-bottom: 1px solid #f0f0f0;">
+                                            <td style="border: 1px solid #eee;"></td>
+                                            <td style="text-align: left; padding-left: 5px; border: 1px solid #eee;" x-text="act.date"></td>
+                                            <td style="text-align: left; border: 1px solid #eee;" x-text="act.userno"></td>
+                                            <td style="text-align:right; border: 1px solid #eee;" x-text="act.in"></td>
+                                            <td style="text-align:right; border: 1px solid #eee;" x-text="act.out"></td>
+                                            <td style="text-align:right; border: 1px solid #eee;" x-text="act.sto"></td>
+                                            <td style="text-align:right; border: 1px solid #eee;">0</td>
+                                            <td style="text-align:right; border: 1px solid #eee;">0</td>
+                                            <td style="text-align:right; border: 1px solid #eee;">0</td>
+                                            <td style="text-align:right; border: 1px solid #eee;">0</td>
+                                            <td style="border: 1px solid #eee;"></td>
                                         </tr>
                                     </template>
                                 </template>
                             </tbody>
                         </table>
-                        <!-- footer -->
-                        <div style="display:flex; justify-content:flex-end; gap:8px; padding:4px 8px; border-top:1px solid #e2e8f0; background:#f8fafc;">
-                            <input type="text" style="width:40px; text-align:right; border:1px solid #e2e8f0; font-size:0.7rem; padding:1px 3px;" value="0" readonly>
-                            <input type="text" style="width:40px; text-align:right; border:1px solid #e2e8f0; font-size:0.7rem; padding:1px 3px;" value="0" readonly>
-                        </div>
-                        <div style="display:flex; align-items:center; gap:2px; padding:3px 8px; border-top:1px solid #e2e8f0; background:#f8fafc; font-size:0.7rem; color:#64748b;">
-                            <button class="pager-btn" style="padding:1px 5px; font-size:0.6rem;">|◀</button>
-                            <button class="pager-btn" style="padding:1px 5px; font-size:0.6rem;">◀</button>
-                            <span style="padding:0 6px;" x-text="'Record 0 of ' + (pd && pd.activities ? pd.activities.length : 0)"></span>
-                            <button class="pager-btn" style="padding:1px 5px; font-size:0.6rem;">▶</button>
-                            <button class="pager-btn" style="padding:1px 5px; font-size:0.6rem;">▶|</button>
-                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <input type="text" value="0" readonly>
+                        <input type="text" value="0" readonly>
+                    </div>
+                    <div class="panel-pager">
+                        <button class="pager-btn" style="padding:0 3px;">|◀</button><button class="pager-btn" style="padding:0 3px;">◀</button>
+                        <span style="padding:0 6px;" x-text="'Record 0 of '+(pd && pd.activities ? pd.activities.length : 0)"></span>
+                        <button class="pager-btn" style="padding:0 3px;">▶</button><button class="pager-btn" style="padding:0 3px;">▶|</button>
+                    </div>
+                </div>
+
+                <!-- WAREHOUSE -->
+                <div x-show="activePanel==='pnl-warehouse'" style="display:none;flex-direction:column;flex:1;overflow:hidden;">
+                    <div class="wh-subtabs">
+                        <div class="wh-subtab" :class="{'active': whSubTab==='stock'}"    @click="whSubTab='stock'">Stock Detail</div>
+                        <div class="wh-subtab" :class="{'active': whSubTab==='stats'}"    @click="whSubTab='stats'">Statistics</div>
+                        <div class="wh-subtab" :class="{'active': whSubTab==='activity'}" @click="whSubTab='activity'">Activity</div>
                     </div>
 
-                    <!-- ── WAREHOUSE ── -->
-                    <div class="panel-content" x-show="activePanel === 'pnl-warehouse'" style="padding:0; overflow-y:auto; flex:1; display:none; flex-direction:column;">
-                        <!-- inner sub-tabs -->
-                        <div style="display:flex; gap:2px; background:#e2e8f0; padding:4px 8px 0; border-bottom:1px solid #cbd5e1; flex-shrink:0;">
-                            <button class="fa-tab active" style="font-size:0.65rem; padding:4px 8px;" @click="whSubTab = 'stock'" :class="whSubTab==='stock'?'active':''">Stock Detail</button>
-                            <button class="fa-tab" style="font-size:0.65rem; padding:4px 8px;" @click="whSubTab = 'stats'" :class="whSubTab==='stats'?'active':''">Statistics</button>
-                            <button class="fa-tab" style="font-size:0.65rem; padding:4px 8px;" @click="whSubTab = 'activity'" :class="whSubTab==='activity'?'active':''">Activity</button>
+                    <!-- SUB: Stock Detail -->
+                    <template x-if="whSubTab==='stock'">
+                        <div style="display:flex;flex-direction:column;flex:1;overflow:hidden;">
+                            <div class="wh-filter">
+                                <span style="font-size: 10px;">Select Warehouse</span>
+                                <select style="width: 150px; font-size: 11px;">
+                                    <template x-for="(wh,i) in (pd ? pd.warehouses : [])" :key="i">
+                                        <option x-text="wh.name"></option>
+                                    </template>
+                                </select>
+                                <button class="grid-search" style="font-size: 10px; padding: 0 4px; color: green; font-weight: bold;">⟳</button>
+                                <label style="font-size: 10px;"><input type="checkbox"> Recalculate stock</label>
+                            </div>
+                            <div class="panel-content" style="overflow-y:auto;flex:1;">
+                                <table class="stat-table" style="margin-top: 0;">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:25px; border: 1px solid #ccc;"></th>
+                                            <th style="text-align:left; border: 1px solid #ccc; padding-left: 5px;">CODE</th>
+                                            <th style="text-align:left; border: 1px solid #ccc;">PRODUCT</th>
+                                            <th style="border: 1px solid #ccc; width: 60px;">STOCK</th>
+                                            <th style="border: 1px solid #ccc; width: 60px;">TRANSIT</th>
+                                            <th style="border: 1px solid #ccc; width: 20px;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td colspan="6" style="text-align:center;padding:20px;color:#aaa;">No data for selected warehouse</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="panel-footer">
+                                <input type="text" value="0" readonly>
+                                <input type="text" value="0" readonly>
+                            </div>
+                            <div class="panel-pager">
+                                <button class="pager-btn" style="padding:0 3px;">|◀</button><button class="pager-btn" style="padding:0 3px;">◀</button>
+                                <span style="padding:0 6px;">Record 0 of 0</span>
+                                <button class="pager-btn" style="padding:0 3px;">▶</button><button class="pager-btn" style="padding:0 3px;">▶|</button>
+                            </div>
                         </div>
-                        <!-- Stock Detail sub-tab -->
-                        <template x-if="whSubTab === 'stock'">
-                            <div style="overflow-y:auto; flex:1;">
-                                <table style="width:100%; border-collapse:collapse; font-size:0.72rem;">
+                    </template>
+
+                    <!-- SUB: Statistics -->
+                    <template x-if="whSubTab==='stats'">
+                        <div style="display:flex;flex-direction:column;flex:1;overflow:hidden; padding-top: 10px;">
+                            <table class="stat-table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th style="width: 80px;">STOCK</th>
+                                        <th style="width: 120px;">BALANCE</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Current Stock</td>
+                                        <td><input type="text" value="0,00" readonly></td>
+                                        <td><input type="number" value="0" readonly></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Begining Balance</td>
+                                        <td><input type="text" value="0,00" readonly></td>
+                                        <td><input type="number" value="0" readonly></td>
+                                    </tr>
+                                    <template x-for="m in months" :key="m.key">
+                                        <tr>
+                                            <td x-text="m.label"></td>
+                                            <td><input type="text" value="0,00" readonly></td>
+                                            <td><input type="number" value="0" readonly></td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </template>
+
+                    <!-- SUB: Activity -->
+                    <template x-if="whSubTab==='activity'">
+                        <div style="display:flex;flex-direction:column;flex:1;overflow:hidden;">
+                            <div class="act-filter" style="border-top: 1px solid #ddd;">
+                                <span>Period</span>
+                                <input type="date" value="{{ date('Y-m-d') }}" style="width: 110px;">
+                                <span>Thru</span>
+                                <input type="date" value="{{ date('Y-m-d') }}" style="width: 110px;">
+                                <button class="grid-search" style="font-size: 10px; padding: 0 4px; color: green; font-weight: bold;">⟳</button>
+                            </div>
+                            <div class="panel-content" style="overflow-y:auto;flex:1;">
+                                <table class="stat-table" style="margin-top: 0;">
                                     <thead>
-                                        <tr style="background:#f8fafc;">
-                                            <th style="padding:4px 8px; border:1px solid #e2e8f0; color:#64748b; font-weight:normal;">WAREHOUSE</th>
-                                            <th style="padding:4px 8px; border:1px solid #e2e8f0; color:#64748b; font-weight:normal; text-align:right;">STOCK</th>
-                                            <th style="padding:4px 8px; border:1px solid #e2e8f0; color:#64748b; font-weight:normal; text-align:right;">ON TRANSIT</th>
+                                        <tr>
+                                            <th style="width: 25px; border: 1px solid #ccc;"></th>
+                                            <th style="text-align:left; padding-left: 5px; border: 1px solid #ccc;">DATE</th>
+                                            <th style="text-align:left; border: 1px solid #ccc;">USERNO</th>
+                                            <th style="border: 1px solid #ccc;">IN</th>
+                                            <th style="border: 1px solid #ccc;">OUT</th>
+                                            <th style="border: 1px solid #ccc;">STOCK</th>
+                                            <th style="border: 1px solid #ccc; width: 20px;"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <template x-for="(wh, i) in (pd ? pd.warehouses : [])" :key="i">
-                                            <tr>
-                                                <td style="padding:3px 8px; border:1px solid #f1f5f9;" x-text="wh.name"></td>
-                                                <td style="padding:3px 8px; border:1px solid #f1f5f9; text-align:right;" x-text="wh.stock"></td>
-                                                <td style="padding:3px 8px; border:1px solid #f1f5f9; text-align:right;" x-text="wh.on_transit"></td>
-                                            </tr>
-                                        </template>
+                                        <tr><td colspan="7" style="text-align:center;padding:20px;color:#aaa;">No warehouse activity</td></tr>
                                     </tbody>
                                 </table>
                             </div>
-                        </template>
-                        <!-- Statistics sub-tab -->
-                        <template x-if="whSubTab === 'stats'">
-                            <div style="overflow-y:auto; flex:1; padding:10px; font-size:0.72rem; color:#64748b;">
-                                <p>Warehouse statistics for selected product.</p>
+                            <div class="panel-footer">
+                                <input type="text" value="0" readonly>
+                                <input type="text" value="0" readonly>
                             </div>
-                        </template>
-                        <!-- Activity sub-tab within Warehouse -->
-                        <template x-if="whSubTab === 'activity'">
-                            <div style="overflow-y:auto; flex:1; display:flex; flex-direction:column;">
-                                <div style="display:flex; gap:6px; padding:5px 8px; border-bottom:1px solid #e2e8f0; background:#f8fafc; font-size:0.72rem; align-items:center; flex-wrap:wrap;">
-                                    <span style="color:#475569;">Period</span>
-                                    <input type="date" style="border:1px solid #cbd5e1; font-size:0.7rem; padding:2px 4px;" value="2026-03-13">
-                                    <span style="color:#475569;">Thru</span>
-                                    <input type="date" style="border:1px solid #cbd5e1; font-size:0.7rem; padding:2px 4px;" value="2026-03-17">
-                                    <button style="background:#e2e8f0; border:1px solid #cbd5e1; padding:2px 6px; font-size:0.7rem; cursor:pointer;">↻</button>
-                                </div>
-                                <table style="width:100%; border-collapse:collapse; font-size:0.72rem; flex:1;">
-                                    <thead>
-                                        <tr style="background:#f8fafc;">
-                                            <th style="padding:4px 8px; border:1px solid #e2e8f0; color:#64748b; font-weight:normal;">DATE</th>
-                                            <th style="padding:4px 8px; border:1px solid #e2e8f0; color:#64748b; font-weight:normal;">USERNO</th>
-                                            <th style="padding:4px 8px; border:1px solid #e2e8f0; color:#64748b; font-weight:normal; text-align:right;">IN</th>
-                                            <th style="padding:4px 8px; border:1px solid #e2e8f0; color:#64748b; font-weight:normal; text-align:right;">OUT</th>
-                                            <th style="padding:4px 8px; border:1px solid #e2e8f0; color:#64748b; font-weight:normal; text-align:right;">STOCK</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr><td colspan="5" style="text-align:center; padding:20px; color:#94a3b8;">No warehouse activity</td></tr>
-                                    </tbody>
-                                </table>
-                                <div style="display:flex; justify-content:flex-end; gap:8px; padding:4px 8px; border-top:1px solid #e2e8f0; background:#f8fafc;">
-                                    <input type="text" style="width:40px; text-align:right; border:1px solid #e2e8f0; font-size:0.7rem; padding:1px 3px;" value="0" readonly>
-                                    <input type="text" style="width:40px; text-align:right; border:1px solid #e2e8f0; font-size:0.7rem; padding:1px 3px;" value="0" readonly>
-                                </div>
-                                <div style="display:flex; align-items:center; gap:2px; padding:3px 8px; border-top:1px solid #e2e8f0; background:#f8fafc; font-size:0.7rem; color:#64748b;">
-                                    <button class="pager-btn" style="padding:1px 5px; font-size:0.6rem;">|◀</button>
-                                    <button class="pager-btn" style="padding:1px 5px; font-size:0.6rem;">◀</button>
-                                    <span style="padding:0 6px;">Record 0 of 0</span>
-                                    <button class="pager-btn" style="padding:1px 5px; font-size:0.6rem;">▶</button>
-                                    <button class="pager-btn" style="padding:1px 5px; font-size:0.6rem;">▶|</button>
-                                </div>
+                            <div class="panel-pager">
+                                <button class="pager-btn" style="padding:0 3px;">|◀</button><button class="pager-btn" style="padding:0 3px;">◀</button>
+                                <span style="padding:0 6px;">Record 0 of 0</span>
+                                <button class="pager-btn" style="padding:0 3px;">▶</button><button class="pager-btn" style="padding:0 3px;">▶|</button>
                             </div>
-                        </template>
+                        </div>
+                    </template>
+                </div> <!-- /pnl-warehouse -->              </template>
                     </div>
 
                 </div><!-- /list-col-right -->
@@ -607,110 +760,95 @@
 
     <div class="fa-pane" :class="activeTab === 'budget' ? 'active' : ''" 
          x-data='productBudget({!! json_encode($customers) !!}, {!! json_encode($products) !!})' x-init="init()">
-        <div class="main-content">
+        <div class="main-content" style="display: flex; flex-direction: column; height: 100%;">
             <!-- Filter Bar -->
-            <div class="budget-filter-bar">
-                <div class="budget-filter-group" style="flex: 1;">
-                    <label>Select Customer</label>
-                    <div class="searchable-select-container">
-                        <input type="text" 
-                               class="searchable-select-input" 
-                               placeholder="Select Customer..." 
-                               x-model="customerSearch"
-                               @focus="showCustomerDropdown = true"
-                               @click="showCustomerDropdown = true"
-                               @click.away="showCustomerDropdown = false">
-                        <div class="searchable-select-dropdown" x-show="showCustomerDropdown" style="max-height: 250px;">
-                            <div class="searchable-select-header">CUSTOMER</div>
-                            <template x-for="cust in filteredCustomers" :key="cust.id">
-                                <div class="searchable-select-option" 
-                                     @click="selectCustomer(cust)"
-                                     x-text="cust.counter_name + (cust.code ? ' - ' + cust.code : '')"></div>
-                            </template>
-                            <div x-show="filteredCustomers.length === 0" class="searchable-select-option" style="color: #94a3b8; cursor: default;">No results found</div>
-                        </div>
-                        <span style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #64748b;">▼</span>
+            <div class="budget-filter-bar" style="padding: 10px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #ccc;">
+                <label style="font-size: 11px; white-space: nowrap;">Select Customer</label>
+                <div class="searchable-select-container" style="flex: 1; max-width: 400px;">
+                    <input type="text" class="searchable-select-input" placeholder="" x-model="customerSearch" @focus="showCustomerDropdown = true" @click="showCustomerDropdown = true" @click.away="showCustomerDropdown = false" style="width: 100%; height: 22px; font-size: 11px; border: 1px solid #aaa;">
+                    <div class="searchable-select-dropdown" x-show="showCustomerDropdown" style="max-height: 250px;">
+                        <template x-for="cust in filteredCustomers" :key="cust.id">
+                            <div class="searchable-select-option" @click="selectCustomer(cust)" x-text="cust.counter_name + (cust.code ? ' - ' + cust.code : '')"></div>
+                        </template>
                     </div>
                 </div>
-
-                <div class="budget-filter-group">
-                    <label>Select Month</label>
-                    <select class="month-select" x-model="$store.assetSync.selectedMonth">
-                        @php
-                            $months = [
-                                '01-2026' => 'January, 2026',
-                                '02-2026' => 'February, 2026',
-                                '03-2026' => 'March, 2026',
-                                '04-2026' => 'April, 2026',
-                                '05-2026' => 'May, 2026',
-                                '06-2026' => 'June, 2026',
-                                '07-2026' => 'July, 2026',
-                                '08-2026' => 'August, 2026',
-                                '09-2026' => 'September, 2026',
-                                '10-2026' => 'October, 2026',
-                                '11-2026' => 'November, 2026',
-                                '12-2026' => 'December, 2026',
-                            ];
-                        @endphp
-                        @foreach($months as $val => $label)
-                            <option value="{{ $val }}">{{ $label }}</option>
-                        @endforeach
-                    </select>
-                    <button class="refresh-btn" @click="refreshData()" title="Refresh Data">
-                        <span style="font-size: 1rem;">↻</span>
-                    </button>
-                </div>
-
-                <div class="budget-filter-group">
-                   <button class="icon-btn" style="margin-left: 20px; cursor: pointer;" @click="refreshData()" title="Search">
-                        <span style="font-size: 1.2rem;">🔍</span>
-                    </button>
-                </div>
+                
+                <label style="font-size: 11px; white-space: nowrap; margin-left: 10px;">Select Month</label>
+                <select class="month-select" x-model="$store.assetSync.selectedMonth" style="height: 22px; font-size: 11px; border: 1px solid #aaa; padding: 0 5px;">
+                    @php
+                        $months = [
+                            '01-2026' => 'January, 2026',
+                            '02-2026' => 'February, 2026',
+                            '03-2026' => 'March, 2026',
+                            '04-2026' => 'April, 2026',
+                            '05-2026' => 'May, 2026',
+                            '06-2026' => 'June, 2026',
+                            '07-2026' => 'July, 2026',
+                            '08-2026' => 'August, 2026',
+                            '09-2026' => 'September, 2026',
+                            '10-2026' => 'October, 2026',
+                            '11-2026' => 'November, 2026',
+                            '12-2026' => 'December, 2026',
+                        ];
+                    @endphp
+                    @foreach($months as $val => $label)
+                        <option value="{{ $val }}">{{ $label }}</option>
+                    @endforeach
+                </select>
+                <button class="refresh-btn" @click="refreshData()" title="Refresh Data" style="background: none; border: 1px solid #aaa; height: 22px; padding: 0 5px; cursor: pointer; color: #3a5a8f;">↻</button>
             </div>
-            <!-- Table Container -->
-            <div class="budget-table-container">
-                <table class="data-table">
+
+            <!-- Grid Toolbar -->
+            <div class="grid-toolbar" style="padding: 5px 10px; background: #f5f5f5; border-bottom: 1px solid #ccc; display: flex; align-items: center;">
+                <span style="font-size: 11px; color: #666;">Drag a column header here to group by that column</span>
+                <button style="margin-left: auto; background: none; border: none; cursor: pointer; font-size: 14px; color: #666;">🔍</button>
+            </div>
+
+            <!-- Table -->
+            <div class="budget-table-container" style="flex: 1; overflow: auto; background: #fff;">
+                <table class="data-table" style="width: 100%; border-collapse: collapse;">
                     <thead>
-                        <tr>
-                            <th style="width: 150px;">CODE</th>
-                            <th>PRODUCT NAME</th>
-                            <th style="width: 150px;">BUDGET</th>
-                            <th style="width: 150px;">REALITY</th>
-                            <th style="width: 150px;">PROFIT/LOSS</th>
+                        <tr style="background: #f0f0f0;">
+                            <th style="width: 25px; border: 1px solid #ccc;"></th>
+                            <th style="width: 120px; border: 1px solid #ccc; text-align: left; padding: 4px 8px; font-weight: normal; font-size: 11px;">CODE</th>
+                            <th style="border: 1px solid #ccc; text-align: left; padding: 4px 8px; font-weight: normal; font-size: 11px;">PRODUCT NAME</th>
+                            <th style="width: 150px; border: 1px solid #ccc; text-align: left; padding: 4px 8px; font-weight: normal; font-size: 11px;">BUDGET</th>
+                            <th style="width: 150px; border: 1px solid #ccc; text-align: left; padding: 4px 8px; font-weight: normal; font-size: 11px;">REALITY</th>
+                            <th style="width: 150px; border: 1px solid #ccc; text-align: left; padding: 4px 8px; font-weight: normal; font-size: 11px;">PROFIT/LOSS</th>
+                            <th style="width: 150px; border: 1px solid #ccc;"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <template x-for="item in items" :key="item.code">
-                            <tr>
-                                <td x-text="item.code"></td>
-                                <td x-text="item.name"></td>
-                                <td class="num">
-                                    <input type="number" class="stat-input" x-model="item.budget" @input="calculateTotals()">
-                                </td>
-                                <td class="num">
-                                    <input type="number" class="stat-input" x-model="item.reality" @input="calculateTotals()">
-                                </td>
-                                <td class="num" :style="item.profit < 0 ? 'color: #ef4444' : 'color: #10b981'" x-text="formatCurr(item.profit)"></td>
+                        <template x-for="(item, idx) in items" :key="item.code">
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="text-align: center; border: 1px solid #eee;"><span x-show="idx===0">▶</span></td>
+                                <td style="padding: 3px 8px; border: 1px solid #eee;" x-text="item.code"></td>
+                                <td style="padding: 3px 8px; border: 1px solid #eee;" x-text="item.name"></td>
+                                <td style="padding: 3px 8px; border: 1px solid #eee; text-align: right;"><input type="number" x-model="item.budget" @input="calculateTotals()" style="width: 100%; border: none; text-align: right; background: transparent; font-size: 11px;"></td>
+                                <td style="padding: 3px 8px; border: 1px solid #eee; text-align: right;"><input type="number" x-model="item.reality" @input="calculateTotals()" style="width: 100%; border: none; text-align: right; background: transparent; font-size: 11px;"></td>
+                                <td style="padding: 3px 8px; border: 1px solid #eee; text-align: right;" :style="item.profit < 0 ? 'color: red' : 'color: green'" x-text="formatCurr(item.profit)"></td>
+                                <td style="border: 1px solid #eee;"></td>
                             </tr>
                         </template>
                         <tr x-show="items.length === 0">
-                            <td colspan="5" style="text-align: center; padding: 20px; color: #64748b;">Select a customer to view budget details</td>
+                            <td colspan="7" style="text-align: center; padding: 40px; color: #999; font-size: 11px;">Select a customer to view budget details</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- Summary Bar -->
-            <div class="budget-summary-bar">
-                <div class="summary-input-group">
-                    <input type="text" :value="formatCurr(totalBudget)" readonly>
+            <!-- Footer Summary Bar -->
+            <div class="budget-summary-bar" style="background: #f0f0f0; border-top: 1px solid #ccc; padding: 5px 10px; display: flex; justify-content: flex-end; gap: 2px;">
+                <div style="width: 150px; display: flex; justify-content: flex-end;">
+                    <input type="text" :value="formatCurr(totalBudget)" readonly style="width: 140px; height: 22px; text-align: right; border: 1px solid #ccc; font-size: 11px; background: #fff; padding: 0 5px;">
                 </div>
-                <div class="summary-input-group">
-                    <input type="text" :value="formatCurr(totalReality)" readonly>
+                <div style="width: 150px; display: flex; justify-content: flex-end;">
+                    <input type="text" :value="formatCurr(totalReality)" readonly style="width: 140px; height: 22px; text-align: right; border: 1px solid #ccc; font-size: 11px; background: #fff; padding: 0 5px;">
                 </div>
-                <div class="summary-input-group">
-                    <input type="text" :value="formatCurr(totalProfit)" readonly>
+                <div style="width: 150px; display: flex; justify-content: flex-end;">
+                    <input type="text" :value="formatCurr(totalProfit)" readonly style="width: 140px; height: 22px; text-align: right; border: 1px solid #ccc; font-size: 11px; background: #fff; padding: 0 5px;">
                 </div>
+                <div style="width: 150px;"></div>
             </div>
         </div>
     </div><!-- /fa-pane budget -->
@@ -777,59 +915,147 @@
                     </button>
                 </div>
             </div>
-            <div class="budget-table-container">
+            
+            <div class="grid-toolbar" style="border-top: 1px solid #aaa; border-bottom: 1px solid #aaa;">
+                <span style="font-size: 11px;">Drag a column header here to group by that column</span>
+                <button class="grid-search" style="margin-left: auto;">⚲</button>
+            </div>
+
+            <div class="budget-table-container" style="flex:1;">
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th style="width: 100px;">CODE</th>
-                            <th>PRODUCT NAME</th>
-                            <th style="width: 120px;">CATEGORY</th>
-                            <th style="width: 100px;">BEG. BALC</th>
-                            <th style="width: 100px;">STOCK IN</th>
-                            <th style="width: 100px;">STOCK OUT</th>
-                            <th style="width: 100px;">CR. STOCK</th>
-                            <th style="width: 120px;">BALANCE</th>
+                            <th style="width:25px; border: 1px solid #aaa;"></th>
+                            <th style="width: 150px; border: 1px solid #aaa;">CODE</th>
+                            <th style="border: 1px solid #aaa;">PRODUCT NAME</th>
+                            <th style="width: 150px; text-align:right; border: 1px solid #aaa;">BUDGET</th>
+                            <th style="width: 150px; text-align:right; border: 1px solid #aaa;">REALITY</th>
+                            <th style="width: 150px; text-align:right; border: 1px solid #aaa;">PROFIT/LOSS</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <template x-for="item in items" :key="item.code">
+                        <template x-for="(item,idx) in items" :key="item.code">
                             <tr>
+                                <td style="text-align:center;"><span x-show="idx===0">▶</span></td>
                                 <td x-text="item.code"></td>
                                 <td x-text="item.name"></td>
-                                <td x-text="item.category"></td>
-                                <td class="num" x-text="item.beg_bal"></td>
-                                <td class="num" style="color: #10b981" x-text="item.stock_in"></td>
-                                <td class="num" style="color: #ef4444" x-text="item.stock_out"></td>
-                                <td class="num" x-text="item.cr_stock"></td>
-                                <td class="num" style="font-weight: 600;" x-text="formatCurr(item.balanceValue)"></td>
+                                <td class="num"><input type="number" class="stat-input" x-model="item.budget" @input="calculateTotals()"></td>
+                                <td class="num"><input type="number" class="stat-input" x-model="item.reality" @input="calculateTotals()"></td>
+                                <td class="num" :style="item.profit < 0 ? 'color: #ef4444' : 'color: #10b981'" x-text="formatCurr(item.profit)"></td>
                             </tr>
                         </template>
                         <tr x-show="items.length === 0">
-                            <td colspan="8" style="text-align: center; padding: 20px; color: #64748b;">Select a customer to view product summary</td>
+                            <td colspan="6" style="text-align: center; padding: 20px; color: #64748b;">Select a customer to view budget details</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <!-- Summary Bar -->
-            <div class="budget-summary-bar">
-                <div class="summary-input-group">
-                    <input type="text" :value="totalBeg" readonly>
-                </div>
-                <div class="summary-input-group">
-                    <input type="text" :value="totalIn" readonly>
-                </div>
-                <div class="summary-input-group">
-                    <input type="text" :value="totalOut" readonly>
-                </div>
-                <div class="summary-input-group">
-                    <input type="text" :value="totalCr" readonly>
-                </div>
-                <div class="summary-input-group">
-                    <input type="text" :value="formatCurr(totalBal)" readonly>
-                </div>
+
+            <!-- Summary Bar (Footer Totals) -->
+            <div class="budget-summary-bar" style="justify-content: flex-end; gap: 2px; border-top: 1px solid #aaa;">
+                <input type="text" :value="formatCurr(totalBudget)" readonly style="width: 150px; text-align:right;">
+                <input type="text" :value="formatCurr(totalReality)" readonly style="width: 150px; text-align:right;">
+                <input type="text" :value="formatCurr(totalProfit)" readonly style="width: 150px; text-align:right;">
             </div>
         </div>
+    </div><!-- /fa-pane budget -->
+    
+    <div class="fa-pane" :class="activeTab === 'summary' ? 'active' : ''" 
+         x-data='productSummary({!! json_encode($customers) !!}, {!! json_encode($products) !!})' x-init="init()">
+        <div class="main-content">
+            <!-- Filter Bar -->
+            <div class="budget-filter-bar">
+                <div class="budget-filter-group" style="flex: 1;">
+                    <label>Select Customer</label>
+                    <div class="searchable-select-container">
+                        <input type="text" class="searchable-select-input" placeholder="Select Customer..." x-model="customerSearch" @focus="showCustomerDropdown = true" @click="showCustomerDropdown = true" @click.away="showCustomerDropdown = false">
+                        <div class="searchable-select-dropdown" x-show="showCustomerDropdown" style="max-height: 250px;">
+                            <div class="searchable-select-header">CUSTOMER</div>
+                            <template x-for="cust in filteredCustomers" :key="cust.id">
+                                <div class="searchable-select-option" @click="selectCustomer(cust)" x-text="cust.counter_name + (cust.code ? ' - ' + cust.code : '')"></div>
+                            </template>
+                        </div>
+                        <span style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #64748b;">▼</span>
+                    </div>
+                </div>
+
+                <div class="budget-filter-group">
+                    <label>Select Month</label>
+                    <select class="month-select" x-model="$store.assetSync.selectedMonth">
+                        @foreach($months as $val => $label)
+                            <option value="{{ $val }}">{{ $label }}</option>
+                        @endforeach
+                    </select>
+                    <button class="refresh-btn" @click="refreshData()" title="Refresh Data">↻</button>
+                </div>
+                <div class="budget-filter-group">
+                   <button class="icon-btn" style="margin-left: 20px; cursor: pointer;" @click="refreshData()" title="Search">🔍</button>
+                </div>
+            </div>
+
+            <div class="grid-toolbar" style="border-top: 1px solid #aaa; border-bottom: 1px solid #aaa;">
+                <span style="font-size: 11px;">Drag a column header here to group by that column</span>
+                <button class="grid-search" style="margin-left: auto;">⚲</button>
+            </div>
+
+            <div class="budget-table-container" style="flex:1;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width:25px; border: 1px solid #aaa;"></th>
+                            <th style="width: 100px; border: 1px solid #aaa;">CODE</th>
+                            <th style="border: 1px solid #aaa;">PRODUCT NAME</th>
+                            <th style="width: 120px; border: 1px solid #aaa;">CATEGORY</th>
+                            <th style="width: 100px; text-align:right; border: 1px solid #aaa;">BEG. BALC</th>
+                            <th style="width: 100px; text-align:right; border: 1px solid #aaa;">STOCK IN</th>
+                            <th style="width: 100px; text-align:right; border: 1px solid #aaa;">STOCK OUT</th>
+                            <th style="width: 100px; text-align:right; border: 1px solid #aaa;">CR. STOCK</th>
+                            <th style="width: 120px; text-align:right; border: 1px solid #aaa;">BALANCE</th>
+                            <th style="width:20px; border: 1px solid #aaa;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template x-for="(item,idx) in items" :key="item.code">
+                            <tr>
+                                <td style="text-align:center;"><span x-show="idx===0">▶</span></td>
+                                <td x-text="item.code"></td>
+                                <td x-text="item.name"></td>
+                                <td x-text="item.category"></td>
+                                <td class="num" x-text="item.beg_bal || 0"></td>
+                                <td class="num" x-text="item.stock_in || '0,00'"></td>
+                                <td class="num" x-text="item.stock_out || '0,00'"></td>
+                                <td class="num" x-text="item.cr_stock || '0,00'"></td>
+                                <td class="num" x-text="formatCurr(item.balanceValue || 0)"></td>
+                                <td></td>
+                            </tr>
+                        </template>
+                        <tr x-show="items.length === 0">
+                            <td colspan="10" style="text-align: center; padding: 20px; color: #64748b;">Select a customer to view summary details</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Summary Bar (Footer Totals) -->
+            <div class="budget-summary-bar" style="justify-content: flex-end; gap: 2px; border-top: 1px solid #aaa; padding-right: 25px;">
+                <input type="text" value="0" readonly style="width: 100px; text-align:right; border:1px solid #ccc; font-size:11px;">
+                <input type="text" value="0" readonly style="width: 100px; text-align:right; border:1px solid #ccc; font-size:11px;">
+                <input type="text" value="0" readonly style="width: 100px; text-align:right; border:1px solid #ccc; font-size:11px;">
+                <input type="text" value="0" readonly style="width: 100px; text-align:right; border:1px solid #ccc; font-size:11px;">
+                <input type="text" value="0" readonly style="width: 120px; text-align:right; border:1px solid #ccc; font-size:11px;">
+            </div>
+            
+            <div class="pagination-controls" style="border-top: 1px solid #aaa;">
+                <button class="page-btn">|◀</button>
+                <button class="page-btn">◀</button>
+                <span style="margin:0 8px;" x-text="'Record 1 of ' + (items.length || 0)"></span>
+                <button class="page-btn">▶</button>
+                <button class="page-btn">▶|</button>
+            </div>
+        </div>
+        </div>
     </div><!-- /fa-pane summary -->
+</div><!-- /fa-window -->
 </div><!-- /fa-window -->
 
 @endsection
@@ -957,20 +1183,30 @@
             },
 
             selectProduct(product, index) {
+                console.log('Selecting product:', product.code); // Debug
                 this.selectedProduct = product;
                 this.loading = true;
-                document.querySelector('.list-col-right').style.display = 'flex';
+                this.activePanel = 'pnl-statistics';
 
-                // Sync with Record Detail Tab
+                // Force visibility of the right column
+                this.$nextTick(() => {
+                    const rightCol = document.querySelector('.list-col-right');
+                    if (rightCol) {
+                        rightCol.style.display = 'flex';
+                    }
+                });
+
+                // Sync with Record Detail Tab if needed
                 window.dispatchEvent(new CustomEvent('select-product-index', { 
-                    detail: { index: index } 
+                    detail: { index: index, product: product } 
                 }));
 
-                // Simulate async load with mock data
+                // Load detail data
                 setTimeout(() => {
                     this.pd = this._buildDetail(product);
                     this.loading = false;
-                }, 200);
+                    console.log('Detail loaded for:', product.code);
+                }, 100);
             },
 
             setActivePanel(panelId) {
