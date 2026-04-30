@@ -97,7 +97,7 @@
         .pager-btn:hover { background: #eee; }
         .pager-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* ── PRODUCT LIST & TOOLS TAB ── */
+        /* â”€â”€ PRODUCT LIST & TOOLS TAB â”€â”€ */
         .list-split-layout { display: flex; flex: 1; overflow: hidden; height: 100%; }
         .list-col-left { flex: 1; display: flex; flex-direction: column; overflow: hidden; border-right: 1px solid #999; position: relative; }
         .list-col-right { width: 310px; flex-shrink: 0; flex-direction: column; background: #f5f5f5; position: relative; border-left: 1px solid #ccc; }
@@ -413,11 +413,11 @@
         </div>
 
         <div class="pager-footer">
-            <button class="pager-btn" @click="goFirst()">|◀</button>
-            <button class="pager-btn" @click="prevRecord()">◀</button>
+            <button class="pager-btn" @click="goFirst()">|â—€</button>
+            <button class="pager-btn" @click="prevRecord()">â—€</button>
             <span style="margin: 0 10px;">Record <span x-text="currentIndex + 1"></span> of <span x-text="records.length"></span></span>
-            <button class="pager-btn" @click="nextRecord()">▶</button>
-            <button class="pager-btn" @click="goLast()">▶|</button>
+            <button class="pager-btn" @click="nextRecord()">â–¶</button>
+            <button class="pager-btn" @click="goLast()">â–¶|</button>
         </div>
     </div><!-- /fa-pane detail -->
         <!-- END TAB 1 -->
@@ -427,13 +427,13 @@
          x-init="init()">
 
         <div class="list-split-layout">
-            <!-- ═══ LEFT: Product Grid ═══ -->
+            <!-- â•â•â• LEFT: Product Grid â•â•â• -->
             <div class="list-col-left">
                 <div class="grid-toolbar">
                     <span>Drag a column header here to group by that column</span>
                     <div style="display:flex;align-items:center;gap:6px;">
                         <div x-show="loading" style="width:12px;height:12px;border:2px solid #3a5a8f;border-top-color:transparent;border-radius:50%;animation:spin 0.6s linear infinite;"></div>
-                        <button class="grid-search" title="Search">⚲</button>
+                        <button class="grid-search" title="Search">âš²</button>
                     </div>
                 </div>
                 <div class="data-table-container">
@@ -459,7 +459,7 @@
                                 style="cursor: pointer;">
                                 <td style="text-align:center; width: 25px;">
                                     <template x-if="selectedProduct && selectedProduct.id === {{ $product->id }}">
-                                        <span>▶</span>
+                                        <span>â–¶</span>
                                     </template>
                                 </td>
                                 <td>{{ $product->code }}</td>
@@ -481,15 +481,15 @@
                     </table>
                 </div>
                 <div class="pagination-controls">
-                    <a href="{{ $products->url(1) }}" class="page-btn" title="First">|◀</a>
-                    <a href="{{ $products->previousPageUrl() }}" class="page-btn" title="Prev">◀</a>
+                    <a href="{{ $products->url(1) }}" class="page-btn" title="First">|â—€</a>
+                    <a href="{{ $products->previousPageUrl() }}" class="page-btn" title="Prev">â—€</a>
                     <span style="margin:0 8px;">Record {{ $products->firstItem() ?? 0 }} of {{ $products->total() }}</span>
-                    <a href="{{ $products->nextPageUrl() }}" class="page-btn" title="Next">▶</a>
-                    <a href="{{ $products->url($products->lastPage()) }}" class="page-btn" title="Last">▶|</a>
+                    <a href="{{ $products->nextPageUrl() }}" class="page-btn" title="Next">â–¶</a>
+                    <a href="{{ $products->url($products->lastPage()) }}" class="page-btn" title="Last">â–¶|</a>
                 </div>
             </div><!-- /list-col-left -->
 
-            <!-- ═══ RIGHT: Detail Panels ═══ -->
+            <!-- â•â•â• RIGHT: Detail Panels â•â•â• -->
             <div class="list-col-right" :style="selectedProduct ? 'display:flex;' : 'display:none;'">
 
                 <!-- Loading Overlay -->
@@ -548,7 +548,7 @@
                             <tbody>
                                 <template x-for="(wh,idx) in (pd ? pd.warehouses : [])" :key="idx">
                                     <tr :class="{'selected': idx===0}" style="cursor:pointer;">
-                                        <td style="text-align: left; padding-left: 10px; font-size: 10px;"><span x-show="idx===0">▶ </span><span x-text="wh.name"></span></td>
+                                        <td style="text-align: left; padding-left: 10px; font-size: 10px;"><span x-show="idx===0">â–¶ </span><span x-text="wh.name"></span></td>
                                         <td style="text-align:right;"><input type="text" :value="wh.stock" readonly style="width: 60px; height: 18px; border:none; background:transparent; font-size: 11px;"></td>
                                         <td style="text-align:right;"><input type="text" :value="wh.on_transit" readonly style="width: 60px; height: 18px; border:none; background:transparent; font-size: 11px;"></td>
                                     </tr>
@@ -561,9 +561,9 @@
                         <input type="text" :value="pd ? pd.warehouses.reduce((s,w)=>s+w.on_transit,0) : 0" readonly>
                     </div>
                     <div class="panel-pager">
-                        <button class="pager-btn" style="padding:0 3px;">|◀</button><button class="pager-btn" style="padding:0 3px;">◀</button>
+                        <button class="pager-btn" style="padding:0 3px;">|â—€</button><button class="pager-btn" style="padding:0 3px;">â—€</button>
                         <span style="padding:0 6px;" x-text="'Record 1 of '+(pd ? pd.warehouses.length : 0)"></span>
-                        <span style="margin-left:4px;color:#999;">|◄</span>
+                        <span style="margin-left:4px;color:#999;">|â—„</span>
                     </div>
                 </div>
 
@@ -574,7 +574,7 @@
                         <input type="date" value="{{ date('Y-m-d') }}" style="width: 110px;">
                         <span>Thru</span>
                         <input type="date" value="{{ date('Y-m-d') }}" style="width: 110px;">
-                        <button class="grid-search" style="font-size: 10px; padding: 0 4px; color: green; font-weight: bold;">⟳</button>
+                        <button class="grid-search" style="font-size: 10px; padding: 0 4px; color: green; font-weight: bold;">âŸ³</button>
                     </div>
                     <div class="panel-content" style="overflow-y:auto;flex:1;">
                         <table class="stat-table" style="margin-top: 0; min-width: 600px;">
@@ -622,9 +622,9 @@
                         <input type="text" value="0" readonly>
                     </div>
                     <div class="panel-pager">
-                        <button class="pager-btn" style="padding:0 3px;">|◀</button><button class="pager-btn" style="padding:0 3px;">◀</button>
+                        <button class="pager-btn" style="padding:0 3px;">|â—€</button><button class="pager-btn" style="padding:0 3px;">â—€</button>
                         <span style="padding:0 6px;" x-text="'Record 0 of '+(pd && pd.activities ? pd.activities.length : 0)"></span>
-                        <button class="pager-btn" style="padding:0 3px;">▶</button><button class="pager-btn" style="padding:0 3px;">▶|</button>
+                        <button class="pager-btn" style="padding:0 3px;">â–¶</button><button class="pager-btn" style="padding:0 3px;">â–¶|</button>
                     </div>
                 </div>
 
@@ -646,7 +646,7 @@
                                         <option x-text="wh.name"></option>
                                     </template>
                                 </select>
-                                <button class="grid-search" style="font-size: 10px; padding: 0 4px; color: green; font-weight: bold;">⟳</button>
+                                <button class="grid-search" style="font-size: 10px; padding: 0 4px; color: green; font-weight: bold;">âŸ³</button>
                                 <label style="font-size: 10px;"><input type="checkbox"> Recalculate stock</label>
                             </div>
                             <div class="panel-content" style="overflow-y:auto;flex:1;">
@@ -671,9 +671,9 @@
                                 <input type="text" value="0" readonly>
                             </div>
                             <div class="panel-pager">
-                                <button class="pager-btn" style="padding:0 3px;">|◀</button><button class="pager-btn" style="padding:0 3px;">◀</button>
+                                <button class="pager-btn" style="padding:0 3px;">|â—€</button><button class="pager-btn" style="padding:0 3px;">â—€</button>
                                 <span style="padding:0 6px;">Record 0 of 0</span>
-                                <button class="pager-btn" style="padding:0 3px;">▶</button><button class="pager-btn" style="padding:0 3px;">▶|</button>
+                                <button class="pager-btn" style="padding:0 3px;">â–¶</button><button class="pager-btn" style="padding:0 3px;">â–¶|</button>
                             </div>
                         </div>
                     </template>
@@ -720,7 +720,7 @@
                                 <input type="date" value="{{ date('Y-m-d') }}" style="width: 110px;">
                                 <span>Thru</span>
                                 <input type="date" value="{{ date('Y-m-d') }}" style="width: 110px;">
-                                <button class="grid-search" style="font-size: 10px; padding: 0 4px; color: green; font-weight: bold;">⟳</button>
+                                <button class="grid-search" style="font-size: 10px; padding: 0 4px; color: green; font-weight: bold;">âŸ³</button>
                             </div>
                             <div class="panel-content" style="overflow-y:auto;flex:1;">
                                 <table class="stat-table" style="margin-top: 0;">
@@ -745,36 +745,41 @@
                                 <input type="text" value="0" readonly>
                             </div>
                             <div class="panel-pager">
-                                <button class="pager-btn" style="padding:0 3px;">|◀</button><button class="pager-btn" style="padding:0 3px;">◀</button>
+                                <button class="pager-btn" style="padding:0 3px;">|â—€</button><button class="pager-btn" style="padding:0 3px;">â—€</button>
                                 <span style="padding:0 6px;">Record 0 of 0</span>
-                                <button class="pager-btn" style="padding:0 3px;">▶</button><button class="pager-btn" style="padding:0 3px;">▶|</button>
+                                <button class="pager-btn" style="padding:0 3px;">â–¶</button><button class="pager-btn" style="padding:0 3px;">â–¶|</button>
                             </div>
                         </div>
                     </template>
-                </div> <!-- /pnl-warehouse -->              </template>
-                    </div>
-
-                </div><!-- /list-col-right -->
-            </div><!-- /list-split-layout -->
+                </div> <!-- /pnl-warehouse -->
+            </div><!-- /list-col-right -->
+        </div><!-- /list-split-layout -->
     </div><!-- /fa-pane list -->
 
+    <!-- â”€â”€ PRODUCT BUDGET TAB â”€â”€ -->
     <div class="fa-pane" :class="activeTab === 'budget' ? 'active' : ''" 
          x-data='productBudget({!! json_encode($customers) !!}, {!! json_encode($products) !!})' x-init="init()">
-        <div class="main-content" style="display: flex; flex-direction: column; height: 100%;">
+        <div class="main-content" style="display: flex; flex-direction: column; height: 100%; padding: 0;">
             <!-- Filter Bar -->
-            <div class="budget-filter-bar" style="padding: 10px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #ccc;">
-                <label style="font-size: 11px; white-space: nowrap;">Select Customer</label>
-                <div class="searchable-select-container" style="flex: 1; max-width: 400px;">
-                    <input type="text" class="searchable-select-input" placeholder="" x-model="customerSearch" @focus="showCustomerDropdown = true" @click="showCustomerDropdown = true" @click.away="showCustomerDropdown = false" style="width: 100%; height: 22px; font-size: 11px; border: 1px solid #aaa;">
-                    <div class="searchable-select-dropdown" x-show="showCustomerDropdown" style="max-height: 250px;">
+            <div style="padding: 8px 10px; display: flex; align-items: center; gap: 8px; background: #f0f0f0; border-bottom: 1px solid #ccc;">
+                <label style="font-size: 11px; color: #333;">Select Customer</label>
+                <div style="position: relative; width: 320px;">
+                    <input type="text" x-model="customerSearch" @focus="showCustomerDropdown = true" @click.away="showCustomerDropdown = false" 
+                           style="width: 100%; height: 22px; border: 1px solid #999; padding: 0 4px; font-size: 11px;" placeholder="">
+                    <div x-show="showCustomerDropdown" style="position: absolute; top: 22px; left: 0; right: 0; background: #fff; border: 1px solid #999; z-index: 100; max-height: 250px; overflow-y: auto; box-shadow: 2px 2px 5px rgba(0,0,0,0.2);">
                         <template x-for="cust in filteredCustomers" :key="cust.id">
-                            <div class="searchable-select-option" @click="selectCustomer(cust)" x-text="cust.counter_name + (cust.code ? ' - ' + cust.code : '')"></div>
+                            <div @click="selectCustomer(cust)" style="padding: 4px 8px; font-size: 11px; cursor: pointer; border-bottom: 1px solid #eee;" 
+                                 :style="customerSearch.includes(cust.counter_name) ? 'background: #3a5a8f; color: #fff;' : 'background: #fff;'"
+                                 x-on:mouseover="$el.style.background='#e8f0fb'; $el.style.color='#000'"
+                                 x-on:mouseout="if(!customerSearch.includes(cust.counter_name)) { $el.style.background='#fff'; $el.style.color='#000' } else { $el.style.background='#3a5a8f'; $el.style.color='#fff' }"
+                                 x-text="cust.counter_name"></div>
                         </template>
                     </div>
+                    <span style="position: absolute; right: 6px; top: 5px; font-size: 10px; color: #666; pointer-events: none;">â–¼</span>
                 </div>
                 
-                <label style="font-size: 11px; white-space: nowrap; margin-left: 10px;">Select Month</label>
-                <select class="month-select" x-model="$store.assetSync.selectedMonth" style="height: 22px; font-size: 11px; border: 1px solid #aaa; padding: 0 5px;">
+                <label style="font-size: 11px; color: #333; margin-left: 10px;">Select Month</label>
+                <select x-model="$store.assetSync.selectedMonth" style="height: 22px; border: 1px solid #999; font-size: 11px; padding: 0 4px; width: 140px;">
                     @php
                         $months = [
                             '01-2026' => 'January, 2026',
@@ -795,267 +800,174 @@
                         <option value="{{ $val }}">{{ $label }}</option>
                     @endforeach
                 </select>
-                <button class="refresh-btn" @click="refreshData()" title="Refresh Data" style="background: none; border: 1px solid #aaa; height: 22px; padding: 0 5px; cursor: pointer; color: #3a5a8f;">↻</button>
+                
+                <button @click="refreshData()" style="width: 24px; height: 22px; background: #fff; border: 1px solid #999; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Refresh">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3a5a8f" stroke-width="3"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                </button>
             </div>
 
-            <!-- Grid Toolbar -->
-            <div class="grid-toolbar" style="padding: 5px 10px; background: #f5f5f5; border-bottom: 1px solid #ccc; display: flex; align-items: center;">
-                <span style="font-size: 11px; color: #666;">Drag a column header here to group by that column</span>
-                <button style="margin-left: auto; background: none; border: none; cursor: pointer; font-size: 14px; color: #666;">🔍</button>
+            <!-- Gray Info Bar -->
+            <div style="background: #e8e8e8; border-bottom: 1px solid #999; padding: 4px 10px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 11px; color: #555;">Drag a column header here to group by that column</span>
+                <button style="background:none; border:none; cursor:pointer; font-size:14px; color:#555;" title="Search">ðŸ”</button>
             </div>
 
             <!-- Table -->
-            <div class="budget-table-container" style="flex: 1; overflow: auto; background: #fff;">
-                <table class="data-table" style="width: 100%; border-collapse: collapse;">
-                    <thead>
+            <div style="flex: 1; overflow: auto; background: #fff;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+                    <thead style="position: sticky; top: 0; z-index: 10;">
                         <tr style="background: #f0f0f0;">
-                            <th style="width: 25px; border: 1px solid #ccc;"></th>
-                            <th style="width: 120px; border: 1px solid #ccc; text-align: left; padding: 4px 8px; font-weight: normal; font-size: 11px;">CODE</th>
-                            <th style="border: 1px solid #ccc; text-align: left; padding: 4px 8px; font-weight: normal; font-size: 11px;">PRODUCT NAME</th>
-                            <th style="width: 150px; border: 1px solid #ccc; text-align: left; padding: 4px 8px; font-weight: normal; font-size: 11px;">BUDGET</th>
-                            <th style="width: 150px; border: 1px solid #ccc; text-align: left; padding: 4px 8px; font-weight: normal; font-size: 11px;">REALITY</th>
-                            <th style="width: 150px; border: 1px solid #ccc; text-align: left; padding: 4px 8px; font-weight: normal; font-size: 11px;">PROFIT/LOSS</th>
+                            <th style="width: 25px; border: 1px solid #ccc; height: 26px;"></th>
+                            <th style="width: 100px; border: 1px solid #ccc; text-align: left; padding: 0 8px; font-weight: normal; color: #444;">CODE</th>
+                            <th style="border: 1px solid #ccc; text-align: left; padding: 0 8px; font-weight: normal; color: #444;">PRODUCT NAME</th>
+                            <th style="width: 130px; border: 1px solid #ccc; text-align: left; padding: 0 8px; font-weight: normal; color: #444;">BUDGET</th>
+                            <th style="width: 130px; border: 1px solid #ccc; text-align: left; padding: 0 8px; font-weight: normal; color: #444;">REALITY</th>
+                            <th style="width: 130px; border: 1px solid #ccc; text-align: left; padding: 0 8px; font-weight: normal; color: #444;">PROFIT/LOSS</th>
                             <th style="width: 150px; border: 1px solid #ccc;"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <template x-for="(item, idx) in items" :key="item.code">
-                            <tr style="border-bottom: 1px solid #eee;">
-                                <td style="text-align: center; border: 1px solid #eee;"><span x-show="idx===0">▶</span></td>
-                                <td style="padding: 3px 8px; border: 1px solid #eee;" x-text="item.code"></td>
-                                <td style="padding: 3px 8px; border: 1px solid #eee;" x-text="item.name"></td>
-                                <td style="padding: 3px 8px; border: 1px solid #eee; text-align: right;"><input type="number" x-model="item.budget" @input="calculateTotals()" style="width: 100%; border: none; text-align: right; background: transparent; font-size: 11px;"></td>
-                                <td style="padding: 3px 8px; border: 1px solid #eee; text-align: right;"><input type="number" x-model="item.reality" @input="calculateTotals()" style="width: 100%; border: none; text-align: right; background: transparent; font-size: 11px;"></td>
-                                <td style="padding: 3px 8px; border: 1px solid #eee; text-align: right;" :style="item.profit < 0 ? 'color: red' : 'color: green'" x-text="formatCurr(item.profit)"></td>
-                                <td style="border: 1px solid #eee;"></td>
+                        <template x-for="(item, idx) in items" :key="idx">
+                            <tr style="background: #fff; border-bottom: 1px solid #eee;">
+                                <td style="border-right: 1px solid #ccc; border-left: 1px solid #ccc; text-align: center;"><span x-show="idx===0">â–¶</span></td>
+                                <td style="border-right: 1px solid #ccc; padding: 3px 8px;" x-text="item.code"></td>
+                                <td style="border-right: 1px solid #ccc; padding: 3px 8px;" x-text="item.name"></td>
+                                <td style="border-right: 1px solid #ccc; padding: 3px 8px; text-align: right;" x-text="formatCurr(item.budget)"></td>
+                                <td style="border-right: 1px solid #ccc; padding: 3px 8px; text-align: right;" x-text="formatCurr(item.reality)"></td>
+                                <td style="border-right: 1px solid #ccc; padding: 3px 8px; text-align: right;" :style="item.profit < 0 ? 'color:red' : ''" x-text="formatCurr(item.profit)"></td>
+                                <td style="border-right: 1px solid #ccc;"></td>
                             </tr>
                         </template>
                         <tr x-show="items.length === 0">
-                            <td colspan="7" style="text-align: center; padding: 40px; color: #999; font-size: 11px;">Select a customer to view budget details</td>
+                            <td colspan="7" style="text-align: center; padding: 60px; color: #999; font-style: italic; border: 1px solid #ccc;">Select a customer to view budget data</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- Footer Summary Bar -->
-            <div class="budget-summary-bar" style="background: #f0f0f0; border-top: 1px solid #ccc; padding: 5px 10px; display: flex; justify-content: flex-end; gap: 2px;">
-                <div style="width: 150px; display: flex; justify-content: flex-end;">
-                    <input type="text" :value="formatCurr(totalBudget)" readonly style="width: 140px; height: 22px; text-align: right; border: 1px solid #ccc; font-size: 11px; background: #fff; padding: 0 5px;">
-                </div>
-                <div style="width: 150px; display: flex; justify-content: flex-end;">
-                    <input type="text" :value="formatCurr(totalReality)" readonly style="width: 140px; height: 22px; text-align: right; border: 1px solid #ccc; font-size: 11px; background: #fff; padding: 0 5px;">
-                </div>
-                <div style="width: 150px; display: flex; justify-content: flex-end;">
-                    <input type="text" :value="formatCurr(totalProfit)" readonly style="width: 140px; height: 22px; text-align: right; border: 1px solid #ccc; font-size: 11px; background: #fff; padding: 0 5px;">
-                </div>
-                <div style="width: 150px;"></div>
+            <!-- Footer -->
+            <div style="background: #f0f0f0; border-top: 1px solid #999; padding: 5px 10px; display: flex; justify-content: flex-end; gap: 4px;">
+                <input type="text" :value="formatCurr(totalBudget)" readonly style="width: 124px; height: 22px; text-align: right; border: 1px solid #ccc; font-size: 11px; padding: 0 6px; background: #fff;">
+                <input type="text" :value="formatCurr(totalReality)" readonly style="width: 124px; height: 22px; text-align: right; border: 1px solid #ccc; font-size: 11px; padding: 0 6px; background: #fff;">
+                <input type="text" :value="formatCurr(totalProfit)" readonly style="width: 124px; height: 22px; text-align: right; border: 1px solid #ccc; font-size: 11px; padding: 0 6px; background: #fff;">
+                <div style="width: 152px;"></div>
             </div>
         </div>
-    </div><!-- /fa-pane budget -->
-    
+    </div>
+
+    <!-- ── PRODUCT SUMMARY TAB ── -->
     <div class="fa-pane" :class="activeTab === 'summary' ? 'active' : ''" 
          x-data='productSummary({!! json_encode($customers) !!}, {!! json_encode($products) !!})' x-init="init()">
-        <div class="main-content">
-            <!-- Filter Bar -->
-            <div class="budget-filter-bar">
-                <div class="budget-filter-group" style="flex: 1;">
-                    <label>Select Customer</label>
-                    <div class="searchable-select-container">
-                        <input type="text" 
-                               class="searchable-select-input" 
-                               placeholder="Select Customer..." 
-                               x-model="customerSearch"
-                               @focus="showCustomerDropdown = true"
-                               @click="showCustomerDropdown = true"
-                               @click.away="showCustomerDropdown = false">
-                        <div class="searchable-select-dropdown" x-show="showCustomerDropdown" style="max-height: 250px;">
-                            <div class="searchable-select-header">CUSTOMER</div>
-                            <template x-for="cust in filteredCustomers" :key="cust.id">
-                                <div class="searchable-select-option" 
-                                     @click="selectCustomer(cust)"
-                                     x-text="cust.counter_name + (cust.code ? ' - ' + cust.code : '')"></div>
-                            </template>
-                            <div x-show="filteredCustomers.length === 0" class="searchable-select-option" style="color: #94a3b8; cursor: default;">No results found</div>
-                        </div>
-                        <span style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #64748b;">▼</span>
+        <div class="main-content" style="display: flex; flex-direction: column; height: 100%; padding: 0;">
+            <!-- Filter Bar (Subtle) -->
+            <div style="padding: 4px 10px; display: flex; align-items: center; gap: 8px; background: #e1e1e1; border-bottom: 1px solid #ccc;">
+                <span style="font-size: 11px; font-weight: bold; color: #444;">Filters:</span>
+                <label style="font-size: 11px; color: #333;">Customer</label>
+                <div style="position: relative; width: 280px;">
+                    <input type="text" x-model="customerSearch" @focus="showCustomerDropdown = true" @click.away="showCustomerDropdown = false" 
+                           style="width: 100%; height: 20px; border: 1px solid #999; padding: 0 4px; font-size: 11px;">
+                    <div x-show="showCustomerDropdown" style="position: absolute; top: 20px; left: 0; right: 0; background: #fff; border: 1px solid #999; z-index: 100; max-height: 250px; overflow-y: auto; box-shadow: 2px 2px 5px rgba(0,0,0,0.2);">
+                        <template x-for="cust in filteredCustomers" :key="cust.id">
+                            <div @click="selectCustomer(cust)" style="padding: 4px 8px; font-size: 11px; cursor: pointer; border-bottom: 1px solid #eee;" 
+                                 :style="customerSearch.includes(cust.counter_name) ? 'background: #3a5a8f; color: #fff;' : 'background: #fff;'"
+                                 x-text="cust.counter_name"></div>
+                        </template>
                     </div>
                 </div>
-
-                <div class="budget-filter-group">
-                    <label>Select Month</label>
-                    <select class="month-select" x-model="$store.assetSync.selectedMonth">
-                        @php
-                            $months = [
-                                '01-2026' => 'January, 2026',
-                                '02-2026' => 'February, 2026',
-                                '03-2026' => 'March, 2026',
-                                '04-2026' => 'April, 2026',
-                                '05-2026' => 'May, 2026',
-                                '06-2026' => 'June, 2026',
-                                '07-2026' => 'July, 2026',
-                                '08-2026' => 'August, 2026',
-                                '09-2026' => 'September, 2026',
-                                '10-2026' => 'October, 2026',
-                                '11-2026' => 'November, 2026',
-                                '12-2026' => 'December, 2026',
-                            ];
-                        @endphp
-                        @foreach($months as $val => $label)
-                            <option value="{{ $val }}">{{ $label }}</option>
-                        @endforeach
-                    </select>
-                    <button class="refresh-btn" @click="refreshData()" title="Refresh Data">
-                        <span style="font-size: 1rem;">↻</span>
-                    </button>
-                </div>
-
-                <div class="budget-filter-group">
-                   <button class="icon-btn" style="margin-left: 20px; cursor: pointer;" @click="refreshData()" title="Search">
-                        <span style="font-size: 1.2rem;">🔍</span>
-                    </button>
-                </div>
-            </div>
-            
-            <div class="grid-toolbar" style="border-top: 1px solid #aaa; border-bottom: 1px solid #aaa;">
-                <span style="font-size: 11px;">Drag a column header here to group by that column</span>
-                <button class="grid-search" style="margin-left: auto;">⚲</button>
+                
+                <label style="font-size: 11px; color: #333; margin-left: 5px;">Month</label>
+                <select x-model="$store.assetSync.selectedMonth" style="height: 20px; border: 1px solid #999; font-size: 11px; padding: 0 4px; width: 120px;">
+                    @foreach($months as $val => $label)
+                        <option value="{{ $val }}">{{ $label }}</option>
+                    @endforeach
+                </select>
+                
+                <button @click="refreshData()" style="width: 22px; height: 20px; background: #fff; border: 1px solid #999; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#3a5a8f" stroke-width="3"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                </button>
             </div>
 
-            <div class="budget-table-container" style="flex:1;">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th style="width:25px; border: 1px solid #aaa;"></th>
-                            <th style="width: 150px; border: 1px solid #aaa;">CODE</th>
-                            <th style="border: 1px solid #aaa;">PRODUCT NAME</th>
-                            <th style="width: 150px; text-align:right; border: 1px solid #aaa;">BUDGET</th>
-                            <th style="width: 150px; text-align:right; border: 1px solid #aaa;">REALITY</th>
-                            <th style="width: 150px; text-align:right; border: 1px solid #aaa;">PROFIT/LOSS</th>
+            <!-- Gray Info Bar -->
+            <div style="background: #efefef; border-bottom: 1px solid #bbb; padding: 4px 10px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 11px; color: #666;">Drag a column header here to group by that column</span>
+                <button style="background:none; border:none; cursor:pointer; font-size:14px; color:#444;" title="Search">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
+            </div>
+
+            <!-- Table -->
+            <div style="flex: 1; overflow: auto; background: #fff;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+                    <thead style="position: sticky; top: 0; z-index: 10;">
+                        <tr style="background: #f5f5f5;">
+                            <th style="width: 25px; border: 1px solid #ccc; height: 26px;"></th>
+                            <th style="width: 120px; border: 1px solid #ccc; text-align: left; padding: 0 6px; font-weight: normal; color: #444; font-size: 11px;">CODE</th>
+                            <th style="width: 25px; border: 1px solid #ccc;"></th>
+                            <th style="border: 1px solid #ccc; text-align: left; padding: 0 6px; font-weight: normal; color: #444; font-size: 11px;">PRODUCT NAME</th>
+                            <th style="width: 150px; border: 1px solid #ccc; text-align: left; padding: 0 6px; font-weight: normal; color: #444; font-size: 11px;">CATEGORY</th>
+                            <th style="width: 100px; border: 1px solid #ccc; text-align: right; padding: 0 6px; font-weight: normal; color: #444; font-size: 11px;">BEG. BALC</th>
+                            <th style="width: 100px; border: 1px solid #ccc; text-align: right; padding: 0 6px; font-weight: normal; color: #444; font-size: 11px;">STOCK IN</th>
+                            <th style="width: 100px; border: 1px solid #ccc; text-align: right; padding: 0 6px; font-weight: normal; color: #444; font-size: 11px;">STOCK OUT</th>
+                            <th style="width: 100px; border: 1px solid #ccc; text-align: right; padding: 0 6px; font-weight: normal; color: #444; font-size: 11px;">CR. STOCK</th>
+                            <th style="width: 120px; border: 1px solid #ccc; text-align: right; padding: 0 6px; font-weight: normal; color: #444; font-size: 11px;">BALANCE</th>
+                            <th style="width: 20px; border: 1px solid #ccc;"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <template x-for="(item,idx) in items" :key="item.code">
-                            <tr>
-                                <td style="text-align:center;"><span x-show="idx===0">▶</span></td>
-                                <td x-text="item.code"></td>
-                                <td x-text="item.name"></td>
-                                <td class="num"><input type="number" class="stat-input" x-model="item.budget" @input="calculateTotals()"></td>
-                                <td class="num"><input type="number" class="stat-input" x-model="item.reality" @input="calculateTotals()"></td>
-                                <td class="num" :style="item.profit < 0 ? 'color: #ef4444' : 'color: #10b981'" x-text="formatCurr(item.profit)"></td>
+                        <template x-for="(item, idx) in items" :key="idx">
+                            <tr style="background: #fff; border-bottom: 1px solid #eee; height: 24px;">
+                                <td style="border: 1px solid #ccc; text-align: center; width: 25px;">
+                                    <div style="width: 14px; height: 14px; background: #e23a3a; color: #fff; border-radius: 50%; font-size: 9px; line-height: 14px; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer;">✕</div>
+                                </td>
+                                <td style="border: 1px solid #ccc; padding: 0 6px; font-size: 11px;" x-text="item.code"></td>
+                                <td style="border: 1px solid #ccc; text-align: center; width: 25px;">
+                                    <div style="width: 14px; height: 14px; background: #e23a3a; color: #fff; border-radius: 50%; font-size: 9px; line-height: 14px; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer;">✕</div>
+                                </td>
+                                <td style="border: 1px solid #ccc; padding: 0 6px; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 300px;" x-text="item.name"></td>
+                                <td style="border: 1px solid #ccc; padding: 0 6px; color: #777; font-size: 11px;" x-text="item.category"></td>
+                                <td style="border: 1px solid #ccc; padding: 0 6px; text-align: right; font-size: 11px;" x-text="item.beg_bal"></td>
+                                <td style="border: 1px solid #ccc; padding: 0 6px; text-align: right; font-size: 11px;" x-text="item.stock_in.toFixed(2).replace('.', ',')"></td>
+                                <td style="border: 1px solid #ccc; padding: 0 6px; text-align: right; font-size: 11px;" x-text="item.stock_out.toFixed(2).replace('.', ',')"></td>
+                                <td style="border: 1px solid #ccc; padding: 0 6px; text-align: right; font-size: 11px;" x-text="item.cr_stock.toFixed(2).replace('.', ',')"></td>
+                                <td style="border: 1px solid #ccc; padding: 0 6px; text-align: right; font-size: 11px;" x-text="item.cr_stock"></td>
+                                <td style="border: 1px solid #ccc;"></td>
                             </tr>
                         </template>
                         <tr x-show="items.length === 0">
-                            <td colspan="6" style="text-align: center; padding: 20px; color: #64748b;">Select a customer to view budget details</td>
+                            <td colspan="11" style="text-align: center; padding: 60px; color: #999; font-style: italic; border: 1px solid #ccc;">Select a customer to view summary data</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- Summary Bar (Footer Totals) -->
-            <div class="budget-summary-bar" style="justify-content: flex-end; gap: 2px; border-top: 1px solid #aaa;">
-                <input type="text" :value="formatCurr(totalBudget)" readonly style="width: 150px; text-align:right;">
-                <input type="text" :value="formatCurr(totalReality)" readonly style="width: 150px; text-align:right;">
-                <input type="text" :value="formatCurr(totalProfit)" readonly style="width: 150px; text-align:right;">
+            <!-- Footer Totals Bar -->
+            <div style="background: #efefef; border-top: 1px solid #999; padding: 5px 10px; display: flex; justify-content: flex-end; gap: 4px; border-bottom: 1px solid #ccc;">
+                <input type="text" :value="totalBeg" readonly style="width: 94px; height: 20px; text-align: right; border: 1px solid #ccc; font-size: 11px; padding: 0 4px; background: #fff;">
+                <input type="text" :value="totalIn" readonly style="width: 94px; height: 20px; text-align: right; border: 1px solid #ccc; font-size: 11px; padding: 0 4px; background: #fff;">
+                <input type="text" :value="totalOut" readonly style="width: 94px; height: 20px; text-align: right; border: 1px solid #ccc; font-size: 11px; padding: 0 4px; background: #fff;">
+                <input type="text" :value="totalCr" readonly style="width: 94px; height: 20px; text-align: right; border: 1px solid #ccc; font-size: 11px; padding: 0 4px; background: #fff;">
+                <input type="text" :value="totalCr" readonly style="width: 114px; height: 20px; text-align: right; border: 1px solid #ccc; font-size: 11px; padding: 0 4px; background: #fff;">
+                <div style="width: 20px;"></div>
             </div>
-        </div>
-    </div><!-- /fa-pane budget -->
-    
-    <div class="fa-pane" :class="activeTab === 'summary' ? 'active' : ''" 
-         x-data='productSummary({!! json_encode($customers) !!}, {!! json_encode($products) !!})' x-init="init()">
-        <div class="main-content">
-            <!-- Filter Bar -->
-            <div class="budget-filter-bar">
-                <div class="budget-filter-group" style="flex: 1;">
-                    <label>Select Customer</label>
-                    <div class="searchable-select-container">
-                        <input type="text" class="searchable-select-input" placeholder="Select Customer..." x-model="customerSearch" @focus="showCustomerDropdown = true" @click="showCustomerDropdown = true" @click.away="showCustomerDropdown = false">
-                        <div class="searchable-select-dropdown" x-show="showCustomerDropdown" style="max-height: 250px;">
-                            <div class="searchable-select-header">CUSTOMER</div>
-                            <template x-for="cust in filteredCustomers" :key="cust.id">
-                                <div class="searchable-select-option" @click="selectCustomer(cust)" x-text="cust.counter_name + (cust.code ? ' - ' + cust.code : '')"></div>
-                            </template>
-                        </div>
-                        <span style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #64748b;">▼</span>
+
+            <!-- Pager Footer -->
+            <div style="background: #f0f0f0; border-top: 1px solid #ccc; padding: 4px 10px; display: flex; align-items: center; font-size: 11px; color: #444;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div style="display: flex; gap: 2px;">
+                        <button style="width: 24px; height: 20px; border: 1px solid #ccc; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold;">|«</button>
+                        <button style="width: 24px; height: 20px; border: 1px solid #ccc; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold;">«</button>
+                        <button style="width: 24px; height: 20px; border: 1px solid #ccc; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold;">‹</button>
+                    </div>
+                    <div style="border: 1px solid #ccc; background: #fff; padding: 2px 10px; min-width: 120px; text-align: center;">Record 1 of 2757</div>
+                    <div style="display: flex; gap: 2px;">
+                        <button style="width: 24px; height: 20px; border: 1px solid #ccc; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold;">›</button>
+                        <button style="width: 24px; height: 20px; border: 1px solid #ccc; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold;">»</button>
+                        <button style="width: 24px; height: 20px; border: 1px solid #ccc; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold;">»|</button>
                     </div>
                 </div>
-
-                <div class="budget-filter-group">
-                    <label>Select Month</label>
-                    <select class="month-select" x-model="$store.assetSync.selectedMonth">
-                        @foreach($months as $val => $label)
-                            <option value="{{ $val }}">{{ $label }}</option>
-                        @endforeach
-                    </select>
-                    <button class="refresh-btn" @click="refreshData()" title="Refresh Data">↻</button>
-                </div>
-                <div class="budget-filter-group">
-                   <button class="icon-btn" style="margin-left: 20px; cursor: pointer;" @click="refreshData()" title="Search">🔍</button>
-                </div>
-            </div>
-
-            <div class="grid-toolbar" style="border-top: 1px solid #aaa; border-bottom: 1px solid #aaa;">
-                <span style="font-size: 11px;">Drag a column header here to group by that column</span>
-                <button class="grid-search" style="margin-left: auto;">⚲</button>
-            </div>
-
-            <div class="budget-table-container" style="flex:1;">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th style="width:25px; border: 1px solid #aaa;"></th>
-                            <th style="width: 100px; border: 1px solid #aaa;">CODE</th>
-                            <th style="border: 1px solid #aaa;">PRODUCT NAME</th>
-                            <th style="width: 120px; border: 1px solid #aaa;">CATEGORY</th>
-                            <th style="width: 100px; text-align:right; border: 1px solid #aaa;">BEG. BALC</th>
-                            <th style="width: 100px; text-align:right; border: 1px solid #aaa;">STOCK IN</th>
-                            <th style="width: 100px; text-align:right; border: 1px solid #aaa;">STOCK OUT</th>
-                            <th style="width: 100px; text-align:right; border: 1px solid #aaa;">CR. STOCK</th>
-                            <th style="width: 120px; text-align:right; border: 1px solid #aaa;">BALANCE</th>
-                            <th style="width:20px; border: 1px solid #aaa;"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <template x-for="(item,idx) in items" :key="item.code">
-                            <tr>
-                                <td style="text-align:center;"><span x-show="idx===0">▶</span></td>
-                                <td x-text="item.code"></td>
-                                <td x-text="item.name"></td>
-                                <td x-text="item.category"></td>
-                                <td class="num" x-text="item.beg_bal || 0"></td>
-                                <td class="num" x-text="item.stock_in || '0,00'"></td>
-                                <td class="num" x-text="item.stock_out || '0,00'"></td>
-                                <td class="num" x-text="item.cr_stock || '0,00'"></td>
-                                <td class="num" x-text="formatCurr(item.balanceValue || 0)"></td>
-                                <td></td>
-                            </tr>
-                        </template>
-                        <tr x-show="items.length === 0">
-                            <td colspan="10" style="text-align: center; padding: 20px; color: #64748b;">Select a customer to view summary details</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Summary Bar (Footer Totals) -->
-            <div class="budget-summary-bar" style="justify-content: flex-end; gap: 2px; border-top: 1px solid #aaa; padding-right: 25px;">
-                <input type="text" value="0" readonly style="width: 100px; text-align:right; border:1px solid #ccc; font-size:11px;">
-                <input type="text" value="0" readonly style="width: 100px; text-align:right; border:1px solid #ccc; font-size:11px;">
-                <input type="text" value="0" readonly style="width: 100px; text-align:right; border:1px solid #ccc; font-size:11px;">
-                <input type="text" value="0" readonly style="width: 100px; text-align:right; border:1px solid #ccc; font-size:11px;">
-                <input type="text" value="0" readonly style="width: 120px; text-align:right; border:1px solid #ccc; font-size:11px;">
-            </div>
-            
-            <div class="pagination-controls" style="border-top: 1px solid #aaa;">
-                <button class="page-btn">|◀</button>
-                <button class="page-btn">◀</button>
-                <span style="margin:0 8px;" x-text="'Record 1 of ' + (items.length || 0)"></span>
-                <button class="page-btn">▶</button>
-                <button class="page-btn">▶|</button>
             </div>
         </div>
-        </div>
-    </div><!-- /fa-pane summary -->
-</div><!-- /fa-window -->
+    </div>
 </div><!-- /fa-window -->
 
 @endsection
@@ -1306,8 +1218,6 @@
             calculateTotals() {
                 this.totalBudget = this.items.reduce((sum, item) => sum + (Number(item.budget) || 0), 0);
                 this.totalReality = this.items.reduce((sum, item) => sum + (Number(item.reality) || 0), 0);
-                this.totalProfit = this.items.reduce((sum, item) => sum + (this.totalReality - this.totalBudget), 0); 
-                // fix: total profit is difference of totals
                 this.totalProfit = this.totalReality - this.totalBudget;
             },
 
@@ -1371,14 +1281,7 @@
 
             refreshData() {
                 const cust = this.$store.assetSync.selectedCustomer;
-                if (!cust) {
-                    this.items = [];
-                    this.calculateTotals();
-                    return;
-                }
-
-                // Deterministic seed based on customer ID
-                const seed = cust.id + (this.$store.assetSync.selectedMonth.split('').reduce((s, c) => s + c.charCodeAt(0), 0));
+                const seed = (cust ? cust.id : 123) + (this.$store.assetSync.selectedMonth.split('').reduce((s, c) => s + c.charCodeAt(0), 0));
                 const rng = (min, max, offset) => min + ((seed + offset) % (max - min + 1));
 
                 // Generate varied summary data per company
@@ -1414,7 +1317,7 @@
             }
         }));
 
-        // ── Product Detail Manager (Record Detail Tab) ──
+        // â”€â”€ Product Detail Manager (Record Detail Tab) â”€â”€
         Alpine.data('productDetailManager', () => ({
             currentIndex: 0,
             records: @json($products->items()),
@@ -1553,23 +1456,5 @@
     });
 
 
-    // Native JS for the main tabs
-    document.addEventListener('DOMContentLoaded', () => {
-        const mainTabs = document.querySelectorAll('.main-tab');
-        const tabPanes = document.querySelectorAll('.tab-pane');
-        
-        mainTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const targetId = tab.getAttribute('data-target');
-                if(!targetId) return;
-                
-                mainTabs.forEach(t => t.classList.remove('active'));
-                tabPanes.forEach(p => p.classList.remove('active'));
-                
-                tab.classList.add('active');
-                document.getElementById(targetId).classList.add('active');
-            });
-        });
-    });
 </script>
 @endpush
